@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { motion } from 'motion/react';
-import { navigateToRoute } from '../_shared/preset-site-routing';
 import { useDraftlyGalleryAutoplay } from '../_shared/hooks/useDraftlyGalleryAutoplay';
 import { HERO_VIDEO } from '../constants';
 

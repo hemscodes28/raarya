@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { navigateToRoute, routeHref } from '../_shared/preset-site-routing';
+import { navigateToRoute } from '../_shared/preset-site-routing';
 import { NAV_ITEMS } from '../routes';
 import { PillNav } from './PillNav';
 
