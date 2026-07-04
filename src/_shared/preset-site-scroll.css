@@ -1,0 +1,4 @@
+/* Smooth scroll behavior for preset sites */
+html {
+  scroll-behavior: smooth;
+}
