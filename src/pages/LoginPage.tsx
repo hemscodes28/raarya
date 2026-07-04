@@ -20,7 +20,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-end pr-6 sm:pr-12 md:pr-20 bg-black overflow-hidden font-sans select-none">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center lg:justify-end px-4 sm:px-8 lg:pr-20 bg-black overflow-hidden font-sans select-none">
       
       {/* Seamless Boomerang Video Background */}
       <BoomerangVideoBg
@@ -50,9 +50,9 @@ export function LoginPage({ onBack }: AuthPageProps) {
         Back to Home
       </button>
 
-      {/* Right Side Auth Card (3/4th Viewport Height) */}
+      {/* Auth Card (Centered on Mobile, Sided to Right on Desktop, 3/4th Viewport Height) */}
       <div 
-        className="relative z-10 w-full max-w-[460px] h-[80vh] rounded-3xl p-8 sm:p-10 text-white shadow-2xl flex flex-col justify-between overflow-y-auto animate-blur-fade-up custom-scrollbar"
+        className="relative z-10 w-full max-w-[440px] h-auto max-h-[85vh] sm:h-[80vh] rounded-3xl p-6 sm:p-10 text-white shadow-2xl flex flex-col justify-between overflow-y-auto animate-blur-fade-up custom-scrollbar"
         style={{
           animationDelay: '150ms',
           background: 'rgba(10, 10, 10, 0.45)',
