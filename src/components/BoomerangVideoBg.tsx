@@ -18,7 +18,7 @@ export default function BoomerangVideoBg({ src, className }: Props) {
     const frames: HTMLCanvasElement[] = [];
     let capturing = true;
     let lastTime = -1;
-    const MAX_WIDTH = 960;
+    const MAX_WIDTH = 1920;
 
     const captureFrame = () => {
       if (!capturing || video.readyState < 2) return;
@@ -38,6 +38,8 @@ export default function BoomerangVideoBg({ src, className }: Props) {
       canvas.height = h;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
+      ctx.imageSmoothingEnabled = true;
+      ctx.imageSmoothingQuality = 'high';
       ctx.drawImage(video, 0, 0, w, h);
       frames.push(canvas);
     };
@@ -102,6 +104,9 @@ export default function BoomerangVideoBg({ src, className }: Props) {
     const first = frames[0];
     canvas.width = first.width;
     canvas.height = first.height;
+
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
 
     let index = 0;
     let direction = 1;
