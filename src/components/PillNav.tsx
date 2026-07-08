@@ -25,6 +25,8 @@ export interface PillNavProps {
   onMobileMenuClick?: () => void;
   onItemClick?: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
   initialLoadAnimation?: boolean;
+  currentUser?: any;
+  onAvatarClick?: () => void;
 }
 
 const DROPDOWNS: Record<string, { label: string; route: string; desc: string }[]> = {
@@ -48,7 +50,9 @@ export function PillNav({
   pillTextColor,
   onMobileMenuClick,
   onItemClick,
-  initialLoadAnimation = true
+  initialLoadAnimation = true,
+  currentUser,
+  onAvatarClick
 }: PillNavProps) {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -407,16 +411,35 @@ export function PillNav({
 
           {/* Mobile Login and CTA */}
           <li className="mt-4 pt-4 border-t border-black/5 flex flex-col gap-2">
-            <a
-              href="#login"
-              className="flex items-center justify-center border border-black/10 bg-white px-6 py-2.5 text-[13px] font-semibold text-[#141414] rounded-full"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                toggleMobileMenu();
-              }}
-            >
-              Login
-            </a>
+            {currentUser ? (
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  toggleMobileMenu();
+                  if (onAvatarClick) onAvatarClick();
+                }}
+                className="flex items-center gap-3 border border-black/10 bg-white px-4 py-2 rounded-full text-left"
+              >
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white uppercase text-xs shrink-0">
+                  {currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)}
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <span className="text-[12px] font-bold text-[#141414] leading-tight truncate">{currentUser.name || 'User'}</span>
+                  <span className="text-[9px] text-slate-500 leading-none truncate">{currentUser.email}</span>
+                </div>
+              </button>
+            ) : (
+              <a
+                href="#login"
+                className="flex items-center justify-center border border-black/10 bg-white px-6 py-2.5 text-[13px] font-semibold text-[#141414] rounded-full"
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  toggleMobileMenu();
+                }}
+              >
+                Login
+              </a>
+            )}
             <a
               href="#contact"
               className="flex items-center justify-center gap-2 bg-[#141414] px-6 py-2.5 text-[13px] font-semibold text-white rounded-full"

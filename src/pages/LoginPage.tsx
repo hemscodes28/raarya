@@ -14,9 +14,84 @@ export function LoginPage({ onBack }: AuthPageProps) {
   const [name, setName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [rememberMe, setRememberMe] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
+    setIsLoading(true);
+
+    if (isSignUp) {
+      if (!name || !email || !password || !confirmPassword) {
+        setError('All fields are required.');
+        setIsLoading(false);
+        return;
+      }
+      if (password !== confirmPassword) {
+        setError('Passwords do not match.');
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5000/api/signup', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password }),
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          setSuccess('Account created successfully! Please log in.');
+          setName('');
+          setEmail('');
+          setPassword('');
+          setConfirmPassword('');
+          setTimeout(() => {
+            setIsSignUp(false);
+            setSuccess('');
+          }, 2000);
+        } else {
+          setError(data.message || 'Signup failed.');
+        }
+      } catch (err) {
+        setError('Unable to connect to the authentication server.');
+      }
+    } else {
+      if (!email || !password) {
+        setError('Email and password are required.');
+        setIsLoading(false);
+        return;
+      }
+
+      try {
+        const response = await fetch('http://localhost:5000/api/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+          setSuccess('Login successful! Welcome back.');
+          if (rememberMe) {
+            localStorage.setItem('rememberUser', JSON.stringify({ email }));
+          } else {
+            localStorage.removeItem('rememberUser');
+          }
+          localStorage.setItem('currentUser', JSON.stringify(data.user));
+          setTimeout(() => {
+            onBack();
+          }, 1500);
+        } else {
+          setError(data.message || 'Login failed.');
+        }
+      } catch (err) {
+        setError('Unable to connect to the authentication server.');
+      }
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -100,6 +175,17 @@ export function LoginPage({ onBack }: AuthPageProps) {
 
         {/* Auth Form */}
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-10">
+          
+          {error && (
+            <div className="bg-red-500/10 border border-red-500/20 text-red-200 text-xs px-4 py-3 rounded-xl animate-blur-fade-up">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-200 text-xs px-4 py-3 rounded-xl animate-blur-fade-up">
+              {success}
+            </div>
+          )}
           
           {/* Name Field (Sign Up Only) */}
           {isSignUp && (
@@ -212,10 +298,15 @@ export function LoginPage({ onBack }: AuthPageProps) {
           {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-white text-black py-4 rounded-xl text-sm font-semibold tracking-wide hover:bg-white/95 active:scale-[0.98] transition-all duration-300 shadow-lg mt-3 animate-blur-fade-up"
+            disabled={isLoading}
+            className="w-full bg-white text-black py-4 rounded-xl text-sm font-semibold tracking-wide hover:bg-white/95 active:scale-[0.98] transition-all duration-300 shadow-lg mt-3 animate-blur-fade-up disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             style={{ animationDelay: '750ms' }}
           >
-            {isSignUp ? 'Create Account' : 'Login'}
+            {isLoading ? (
+              <span className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+            ) : (
+              isSignUp ? 'Create Account' : 'Login'
+            )}
           </button>
         </form>
 

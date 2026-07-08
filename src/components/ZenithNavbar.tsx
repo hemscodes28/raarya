@@ -3,7 +3,12 @@ import { navigateToRoute } from '../_shared/preset-site-routing';
 import { NAV_ITEMS } from '../routes';
 import { PillNav } from './PillNav';
 
-export function ZenithNavbar() {
+interface NavbarProps {
+  currentUser?: any;
+  onAvatarClick?: () => void;
+}
+
+export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState('');
 
@@ -52,16 +57,28 @@ export function ZenithNavbar() {
           pillTextColor="#ffffff" // Text color inside pill initially
           onItemClick={navClick}
           initialLoadAnimation={true}
+          currentUser={currentUser}
+          onAvatarClick={onAvatarClick}
         />
 
-        {/* Desktop Login button only */}
+        {/* Desktop Login button or Avatar */}
         <div className="hidden lg:flex items-center shrink-0">
-          <a
-            href="#login"
-            className="px-7 py-2.5 text-[13px] font-semibold text-[#141414] border border-black/10 bg-white/80 backdrop-blur-md hover:bg-white rounded-full shadow-sm transition-all"
-          >
-            Login
-          </a>
+          {currentUser ? (
+            <button
+              onClick={onAvatarClick}
+              className="w-10 h-10 rounded-full bg-[#141414] hover:bg-black flex items-center justify-center font-bold text-white text-sm uppercase transition-all duration-300 shadow-md border border-white/10"
+              title={currentUser.name || currentUser.email}
+            >
+              {currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)}
+            </button>
+          ) : (
+            <a
+              href="#login"
+              className="px-7 py-2.5 text-[13px] font-semibold text-[#141414] border border-black/10 bg-white/80 backdrop-blur-md hover:bg-white rounded-full shadow-sm transition-all"
+            >
+              Login
+            </a>
+          )}
         </div>
       </div>
     </header>
