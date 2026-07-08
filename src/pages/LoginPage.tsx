@@ -30,6 +30,11 @@ export function LoginPage({ onBack }: AuthPageProps) {
         setIsLoading(false);
         return;
       }
+      if (password.length < 6) {
+        setError('Password must be at least 6 characters long.');
+        setIsLoading(false);
+        return;
+      }
       if (password !== confirmPassword) {
         setError('Passwords do not match.');
         setIsLoading(false);
@@ -125,9 +130,9 @@ export function LoginPage({ onBack }: AuthPageProps) {
         Back to Home
       </button>
 
-      {/* Auth Card (Centered on Mobile, Sided to Right on Desktop, 3/4th Viewport Height) */}
+      {/* Auth Card (Centered on Mobile, Sided to Right on Desktop, Compact Size) */}
       <div 
-        className="relative z-10 w-full max-w-[440px] h-auto max-h-[85vh] sm:h-[80vh] rounded-3xl p-6 sm:p-10 text-white shadow-2xl flex flex-col justify-between overflow-y-auto animate-blur-fade-up custom-scrollbar"
+        className="relative z-10 w-full max-w-[420px] h-auto rounded-3xl p-5 sm:p-7 text-white shadow-2xl flex flex-col justify-between overflow-hidden animate-blur-fade-up"
         style={{
           animationDelay: '150ms',
           background: 'rgba(10, 10, 10, 0.45)',
@@ -142,22 +147,22 @@ export function LoginPage({ onBack }: AuthPageProps) {
         <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-white/5 blur-3xl pointer-events-none" />
 
         {/* Card Header (Logo & Welcome) */}
-        <div className="flex flex-col items-center mb-8 relative z-10">
+        <div className="flex flex-col items-center mb-5 relative z-10">
           {/* Logo badge */}
           <div 
-            className="flex items-center gap-2.5 px-4 py-2 rounded-2xl border border-white/10 mb-6 bg-white/5 backdrop-blur-md animate-blur-fade-up"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl border border-white/10 mb-4 bg-white/5 backdrop-blur-md animate-blur-fade-up"
             style={{ animationDelay: '300ms' }}
           >
             <img
               src="/preset-sites/zenith-realty/logo.png"
               alt="RAARYA"
-              className="h-6 w-6 object-contain"
+              className="h-5 w-5 object-contain"
             />
-            <span className="text-xs font-semibold tracking-widest uppercase">Raarya Groups</span>
+            <span className="text-[10px] font-semibold tracking-widest uppercase">Raarya Groups</span>
           </div>
 
           <h2 
-            className="text-center text-3xl font-bold tracking-tight animate-blur-fade-up"
+            className="text-center text-2xl font-bold tracking-tight animate-blur-fade-up"
             style={{ 
               animationDelay: '400ms',
               fontFamily: "'PP Editorial New', 'Playfair Display', Georgia, serif" 
@@ -166,7 +171,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
             {isSignUp ? 'Create Your Account' : 'Welcome Back'}
           </h2>
           <p 
-            className="text-center text-white/50 text-xs mt-2 animate-blur-fade-up"
+            className="text-center text-white/50 text-[11px] mt-1 animate-blur-fade-up"
             style={{ animationDelay: '500ms' }}
           >
             {isSignUp ? 'Sign up to discover luxury villa plots' : 'Sign in to access premium listings'}
@@ -174,7 +179,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
         </div>
 
         {/* Auth Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative z-10">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-3 relative z-10">
           
           {error && (
             <div className="bg-red-500/10 border border-red-500/20 text-red-200 text-xs px-4 py-3 rounded-xl animate-blur-fade-up">
@@ -190,7 +195,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
           {/* Name Field (Sign Up Only) */}
           {isSignUp && (
             <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
-              <label className="block text-[11px] font-semibold text-white/60 uppercase tracking-widest mb-1.5 ml-1">
+              <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
                 Full Name
               </label>
               <div className="relative">
@@ -202,7 +207,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
                   placeholder="Enter your full name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-3.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
                 />
               </div>
             </div>
@@ -210,7 +215,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
 
           {/* Email Field */}
           <div className="animate-blur-fade-up" style={{ animationDelay: '600ms' }}>
-            <label className="block text-[11px] font-semibold text-white/60 uppercase tracking-widest mb-1.5 ml-1">
+            <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
               Your Email
             </label>
             <div className="relative">
@@ -222,14 +227,14 @@ export function LoginPage({ onBack }: AuthPageProps) {
                 placeholder="Enter your email id here"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-3.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
               />
             </div>
           </div>
 
           {/* Password Field */}
           <div className="animate-blur-fade-up" style={{ animationDelay: '650ms' }}>
-            <label className="block text-[11px] font-semibold text-white/60 uppercase tracking-widest mb-1.5 ml-1">
+            <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
               Password
             </label>
             <div className="relative">
@@ -241,7 +246,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
                 placeholder="Enter your password here"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-3.5 pr-12 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2.5 pr-12 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
               />
               <button
                 type="button"
@@ -251,12 +256,18 @@ export function LoginPage({ onBack }: AuthPageProps) {
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+            {isSignUp && password.length > 0 && password.length < 6 && (
+              <p className="mt-1 ml-1 text-[10px] font-semibold text-amber-400 flex items-center gap-1.5 animate-pulse">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Password must be at least 6 characters ({6 - password.length} more needed)
+              </p>
+            )}
           </div>
 
           {/* Confirm Password Field (Sign Up Only) */}
           {isSignUp && (
             <div className="animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
-              <label className="block text-[11px] font-semibold text-white/60 uppercase tracking-widest mb-1.5 ml-1">
+              <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
                 Confirm Password
               </label>
               <div className="relative">
@@ -268,7 +279,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
                   placeholder="Confirm your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-3.5 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
                 />
               </div>
             </div>
@@ -299,11 +310,11 @@ export function LoginPage({ onBack }: AuthPageProps) {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-white text-black py-4 rounded-xl text-sm font-semibold tracking-wide hover:bg-white/95 active:scale-[0.98] transition-all duration-300 shadow-lg mt-3 animate-blur-fade-up disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-white text-black py-2.5 rounded-xl text-xs font-semibold tracking-wide hover:bg-white/95 active:scale-[0.98] transition-all duration-300 shadow-lg mt-2 animate-blur-fade-up disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             style={{ animationDelay: '750ms' }}
           >
             {isLoading ? (
-              <span className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
             ) : (
               isSignUp ? 'Create Account' : 'Login'
             )}
@@ -311,17 +322,17 @@ export function LoginPage({ onBack }: AuthPageProps) {
         </form>
 
         {/* Divider */}
-        <div className="flex items-center gap-3 my-6 relative z-10 animate-blur-fade-up" style={{ animationDelay: '800ms' }}>
+        <div className="flex items-center gap-3 my-4 relative z-10 animate-blur-fade-up" style={{ animationDelay: '800ms' }}>
           <div className="flex-1 h-px bg-white/10" />
           <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider">OR</span>
           <div className="flex-1 h-px bg-white/10" />
         </div>
 
         {/* Social Authentication */}
-        <div className="flex flex-col sm:flex-row gap-3 relative z-10 animate-blur-fade-up" style={{ animationDelay: '850ms' }}>
+        <div className="relative z-10 animate-blur-fade-up" style={{ animationDelay: '850ms' }}>
           <button
             type="button"
-            className="flex-1 flex items-center justify-center gap-2.5 rounded-xl py-3 text-xs font-semibold transition-all duration-300 liquid-glass hover:bg-white/5 active:scale-[0.98]"
+            className="w-full flex items-center justify-center gap-2.5 rounded-xl py-2.5 text-xs font-semibold transition-all duration-300 liquid-glass hover:bg-white/5 active:scale-[0.98]"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -329,21 +340,12 @@ export function LoginPage({ onBack }: AuthPageProps) {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            Google
-          </button>
-          <button
-            type="button"
-            className="flex-1 flex items-center justify-center gap-2.5 rounded-xl py-3 text-xs font-semibold transition-all duration-300 liquid-glass hover:bg-white/5 active:scale-[0.98]"
-          >
-            <svg className="w-4 h-4" fill="white" viewBox="0 0 24 24">
-              <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
-            </svg>
-            Apple
+            Continue with Google
           </button>
         </div>
 
         {/* Toggle Login/Signup Switcher */}
-        <p className="text-center text-xs text-white/50 mt-8 relative z-10 animate-blur-fade-up" style={{ animationDelay: '900ms' }}>
+        <p className="text-center text-xs text-white/50 mt-4 relative z-10 animate-blur-fade-up" style={{ animationDelay: '900ms' }}>
           {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
           <button
             type="button"

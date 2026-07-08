@@ -196,18 +196,26 @@
 
 .mobile-menu-popover {
   position: absolute;
-  top: 4em;
+  top: 100%;
+  margin-top: 12px;
   left: 0;
   right: 0;
   background: var(--base, #fff);
   border-radius: 20px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
   border: 1px solid rgba(0, 0, 0, 0.05);
   z-index: 998;
   opacity: 0;
   transform-origin: top center;
   visibility: hidden;
-  padding: 8px;
+  padding: 10px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+  scrollbar-width: none; /* Hide scrollbar for clean look in Firefox */
+}
+
+.mobile-menu-popover::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome/Safari */
 }
 
 .mobile-menu-list {
@@ -216,20 +224,20 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 5px;
 }
 
 .mobile-menu-popover .mobile-menu-link {
   display: block;
-  padding: 12px 16px;
+  padding: 9px 16px;
   color: var(--pill-text, #fff);
   background-color: var(--pill-bg, #141414);
   text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   border-radius: 50px;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.7px;
   transition: all 0.2s ease;
 }
 

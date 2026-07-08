@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
-import { ChevronRight, Check, Building2, MapPin, Image, IndianRupee, ArrowRight, AlertCircle } from 'lucide-react';
+import { ChevronRight, Check, Building2, MapPin, Image, IndianRupee, ArrowRight, AlertCircle, X } from 'lucide-react';
 
 interface AddPropertyTabProps {
   user: { email: string; name: string; phone?: string };
@@ -52,6 +52,8 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
   const [area, setArea] = useState('');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [coverImage, setCoverImage] = useState('');
+  const [coverFileName, setCoverFileName] = useState('');
   const [price, setPrice] = useState('');
   const [priceType, setPriceType] = useState('Total Price');
   const [contactMobile, setContactMobile] = useState(user.phone || '');
@@ -85,6 +87,18 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
     return true;
   };
 
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setCoverFileName(file.name);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCoverImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const next = () => {
     if (validateStep()) {
       if (step < 5) setStep(s => s + 1);
@@ -108,8 +122,8 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
         body: JSON.stringify({
           userEmail: user.email, userName: user.name,
           youAre, propertyFor, state, district, city, locality, mapLink,
-          propertyType, areaUnit, area, title, description, price, priceType,
-          contactMobile, contactEmail,
+          propertyType, areaUnit, area, title, description, coverImage,
+          price, priceType, contactMobile, contactEmail,
         }),
       });
       const data = await res.json();
@@ -126,7 +140,6 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
       setStep(targetStep);
       setStepError('');
     } else {
-      // Validate up to the target step
       let tempStep = step;
       let valid = true;
       while (tempStep < targetStep) {
@@ -162,7 +175,7 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
           <p className="text-sm text-slate-500 mt-2 leading-relaxed">Your property "<strong>{title}</strong>" has been submitted for review and will be live shortly.</p>
         </div>
         <button
-          onClick={() => { setSubmitted(false); setStep(1); setTitle(''); setPrice(''); setArea(''); setLocality(''); }}
+          onClick={() => { setSubmitted(false); setStep(1); setTitle(''); setPrice(''); setArea(''); setLocality(''); setCoverImage(''); setCoverFileName(''); }}
           className="flex items-center gap-2 px-6 py-3 bg-[#141414] text-white text-xs font-bold rounded-xl hover:bg-black hover:scale-[1.02] transition-all duration-300"
         >
           Add Another Property <ArrowRight className="w-3.5 h-3.5" />
@@ -374,15 +387,29 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className={labelCls}>Cover / Featured Image</label>
+                  {coverImage && (
+                    <div className="w-full max-h-48 rounded-2xl overflow-hidden border border-slate-100 shadow-sm relative group mb-2">
+                      <img src={coverImage} alt="Cover Preview" className="w-full h-full object-cover" />
+                      <button 
+                        type="button"
+                        onClick={() => { setCoverImage(''); setCoverFileName(''); }}
+                        className="absolute top-2 right-2 bg-black/60 hover:bg-black text-white p-1.5 rounded-full transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )}
                   <label className="flex items-center gap-3 px-4 py-3 border border-slate-200 border-dashed rounded-xl cursor-pointer hover:border-[#141414] hover:bg-slate-50 transition-all duration-300 group/upload">
                     <div className="w-9 h-9 rounded-lg bg-slate-100 flex items-center justify-center text-slate-400 group-hover/upload:bg-[#141414] group-hover/upload:text-white transition-all duration-300">
                       <Image className="w-4 h-4" />
                     </div>
                     <div>
-                      <p className="text-xs font-semibold text-slate-600 group-hover/upload:text-[#141414] transition-colors">Choose file</p>
+                      <p className="text-xs font-semibold text-slate-600 group-hover/upload:text-[#141414] transition-colors">
+                        {coverFileName ? coverFileName : 'Choose file'}
+                      </p>
                       <p className="text-[10px] text-slate-400">JPG, PNG up to 10MB</p>
                     </div>
-                    <input type="file" accept="image/*" className="hidden" />
+                    <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                   </label>
                 </div>
               </div>

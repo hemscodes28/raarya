@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { User, Lock, Camera, Save, KeyRound, Quote } from 'lucide-react';
 
 interface ProfileTabProps {
-  user: { name: string; email: string; phone?: string; whatsapp?: string };
+  user: { name: string; email: string; phone?: string; whatsapp?: string; avatar?: string };
   onUserUpdate: (u: any) => void;
 }
 
@@ -20,6 +20,7 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
   const [name, setName] = useState(user.name || '');
   const [phone, setPhone] = useState(user.phone || '');
   const [whatsapp, setWhatsapp] = useState(user.whatsapp || '');
+  const [avatar, setAvatar] = useState(user.avatar || '');
   const [profileStatus, setProfileStatus] = useState('');
   const [profileError, setProfileError] = useState('');
   const [profileLoading, setProfileLoading] = useState(false);
@@ -35,18 +36,29 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
   const initials = name ? name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase() : user.email.charAt(0).toUpperCase();
   const firstName = name ? name.split(' ')[0] : 'User';
 
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   const handleProfileSave = async () => {
     setProfileStatus(''); setProfileError(''); setProfileLoading(true);
     try {
       const res = await fetch('http://localhost:5000/api/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, name, phone, whatsapp }),
+        body: JSON.stringify({ email: user.email, name, phone, whatsapp, avatar }),
       });
       const data = await res.json();
       if (data.success) {
         setProfileStatus('Profile updated successfully!');
-        onUserUpdate({ ...user, name, phone, whatsapp });
+        onUserUpdate({ ...user, name, phone, whatsapp, avatar });
       } else {
         setProfileError(data.message || 'Update failed.');
       }
@@ -131,19 +143,24 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
           {/* Avatar */}
           <div className="flex items-center gap-5">
             <div className="relative group/avatar shrink-0">
-              <div className="w-20 h-20 rounded-2xl bg-[#141414] flex items-center justify-center text-white font-bold text-2xl border-4 border-slate-100 shadow-md">
-                {initials}
+              <div className="w-20 h-20 rounded-2xl bg-[#141414] flex items-center justify-center text-white font-bold text-2xl border-4 border-slate-100 shadow-md overflow-hidden">
+                {avatar ? (
+                  <img src={avatar} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  initials
+                )}
               </div>
-              <button className="absolute inset-0 rounded-2xl bg-black/50 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300 cursor-pointer">
+              <label className="absolute inset-0 rounded-2xl bg-black/50 flex items-center justify-center opacity-0 group-hover/avatar:opacity-100 transition-opacity duration-300 cursor-pointer">
                 <Camera className="w-5 h-5 text-white" />
-              </button>
+                <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
+              </label>
             </div>
             <div>
               <p className="text-sm font-semibold text-[#141414] mb-1">Profile Avatar</p>
               <label className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-slate-200 text-xs font-semibold text-slate-600 hover:bg-slate-50 hover:border-slate-300 cursor-pointer transition-all duration-200 group/upload">
                 <Camera className="w-3.5 h-3.5 group-hover/upload:scale-110 transition-transform" />
                 Upload Avatar
-                <input type="file" accept="image/*" className="hidden" />
+                <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
               </label>
               <p className="text-[10px] text-slate-400 mt-1.5">Recommended: 100 × 100 px</p>
             </div>

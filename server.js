@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 5000;
 const DB_FILE = path.join(__dirname, 'user_database.json');
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
 
 function readDatabase() {
   try {
@@ -75,7 +75,7 @@ app.post('/api/signup', (req, res) => {
     ipAddress: req.ip || '127.0.0.1'
   });
   writeDatabase(db);
-  res.status(201).json({ success: true, message: 'Signup successful!', user: { name, email, phone: '', whatsapp: '' } });
+  res.status(201).json({ success: true, message: 'Signup successful!', user: { name, email, phone: '', whatsapp: '', avatar: '' } });
 });
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
@@ -110,13 +110,13 @@ app.post('/api/login', (req, res) => {
   writeDatabase(db);
   res.status(200).json({
     success: true, message: 'Login successful!',
-    user: { name: user.name, email: user.email, phone: user.phone || '', whatsapp: user.whatsapp || '' }
+    user: { name: user.name, email: user.email, phone: user.phone || '', whatsapp: user.whatsapp || '', avatar: user.avatar || '' }
   });
 });
 
 // ─── UPDATE PROFILE ───────────────────────────────────────────────────────────
 app.put('/api/profile', (req, res) => {
-  const { email, name, phone, whatsapp } = req.body;
+  const { email, name, phone, whatsapp, avatar } = req.body;
   if (!email) return res.status(400).json({ success: false, message: 'Email is required.' });
 
   const db = readDatabase();
@@ -126,11 +126,12 @@ app.put('/api/profile', (req, res) => {
   if (name) user.name = name;
   if (phone !== undefined) user.phone = phone;
   if (whatsapp !== undefined) user.whatsapp = whatsapp;
+  if (avatar !== undefined) user.avatar = avatar;
 
   writeDatabase(db);
   res.json({
     success: true, message: 'Profile updated successfully.',
-    user: { name: user.name, email: user.email, phone: user.phone, whatsapp: user.whatsapp }
+    user: { name: user.name, email: user.email, phone: user.phone, whatsapp: user.whatsapp, avatar: user.avatar || '' }
   });
 });
 

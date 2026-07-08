@@ -420,8 +420,12 @@ export function PillNav({
                 }}
                 className="flex items-center gap-3 border border-black/10 bg-white px-4 py-2 rounded-full text-left"
               >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white uppercase text-xs shrink-0">
-                  {currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)}
+                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white uppercase text-xs shrink-0 overflow-hidden">
+                  {currentUser.avatar ? (
+                    <img src={currentUser.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                  ) : (
+                    currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)
+                  )}
                 </div>
                 <div className="flex flex-col min-w-0">
                   <span className="text-[12px] font-bold text-[#141414] leading-tight truncate">{currentUser.name || 'User'}</span>

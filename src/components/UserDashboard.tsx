@@ -11,7 +11,7 @@ import { EnquiryTab } from './EnquiryTab';
 import { AddPropertyTab } from './AddPropertyTab';
 
 interface UserDashboardProps {
-  user: { name: string; email: string; phone?: string; whatsapp?: string };
+  user: { name: string; email: string; phone?: string; whatsapp?: string; avatar?: string };
   onClose: () => void;
   onLogout: () => void;
   onUserUpdate: (u: any) => void;
@@ -249,8 +249,12 @@ export function UserDashboard({ user, onClose, onLogout, onUserUpdate }: UserDas
 
         {/* User Card Badge */}
         <div className="mx-4 my-5 p-4 rounded-2xl bg-gradient-to-r from-slate-50 to-white border border-slate-100 flex items-center gap-3.5 group hover:bg-slate-100/50 hover:shadow-md hover:shadow-slate-100/80 transition-all duration-300 cursor-default">
-          <div className="w-10 h-10 rounded-xl bg-[#141414] flex items-center justify-center font-bold text-sm text-white shrink-0 shadow-md group-hover:scale-105 transition-transform">
-            {initials}
+          <div className="w-10 h-10 rounded-xl bg-[#141414] flex items-center justify-center font-bold text-sm text-white shrink-0 shadow-md group-hover:scale-105 transition-transform overflow-hidden">
+            {user.avatar ? (
+              <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+            ) : (
+              initials
+            )}
           </div>
           <div className="flex flex-col min-w-0">
             <div className="flex items-center gap-1">

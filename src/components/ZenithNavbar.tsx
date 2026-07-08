@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { navigateToRoute } from '../_shared/preset-site-routing';
 import { NAV_ITEMS } from '../routes';
 import { PillNav } from './PillNav';
+import { LayoutGrid } from 'lucide-react';
 
 interface NavbarProps {
   currentUser?: any;
@@ -66,10 +67,24 @@ export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
           {currentUser ? (
             <button
               onClick={onAvatarClick}
-              className="w-10 h-10 rounded-full bg-[#141414] hover:bg-black flex items-center justify-center font-bold text-white text-sm uppercase transition-all duration-300 shadow-md border border-white/10"
+              className="flex items-center gap-2.5 pl-2.5 pr-4 py-1.5 rounded-full bg-gradient-to-r from-[#141414] to-[#201d18] hover:from-black hover:to-[#1c1813] border border-amber-500/25 shadow-md shadow-amber-500/5 hover:shadow-amber-500/15 hover:border-amber-500/45 transition-all duration-300 hover:scale-[1.03] group cursor-pointer"
               title={currentUser.name || currentUser.email}
             >
-              {currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)}
+              {/* Avatar circle */}
+              <div className="w-7 h-7 rounded-full bg-amber-500/10 flex items-center justify-center font-bold text-xs text-amber-400 uppercase overflow-hidden shrink-0 ring-2 ring-amber-500/25 group-hover:ring-amber-500/45 transition-all duration-300">
+                {currentUser.avatar ? (
+                  <img src={currentUser.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                ) : (
+                  currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)
+                )}
+              </div>
+              <div className="flex flex-col items-start min-w-0">
+                <span className="text-[8px] text-amber-500/60 font-bold uppercase tracking-[0.2em] leading-none">My Space</span>
+                <span className="text-[11px] text-white group-hover:text-amber-200 font-extrabold leading-tight truncate max-w-[80px] mt-0.5 transition-colors">
+                  {currentUser.name ? currentUser.name.split(' ')[0] : 'User'}
+                </span>
+              </div>
+              <LayoutGrid className="w-3.5 h-3.5 text-amber-500/45 group-hover:text-amber-400 group-hover:rotate-45 transition-all duration-300 shrink-0 ml-1" />
             </button>
           ) : (
             <a
