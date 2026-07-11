@@ -47,7 +47,7 @@ export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
         <PillNav
-          logo="/preset-sites/zenith-realty/logo.png"
+          logo={`${import.meta.env.BASE_URL}logo.png`}
           logoAlt="RAARYA"
           items={NAV_ITEMS.map((item) => ({ label: item.label, href: item.route }))}
           activeHref={activeHref}

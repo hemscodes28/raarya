@@ -154,7 +154,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
             style={{ animationDelay: '300ms' }}
           >
             <img
-              src="/preset-sites/zenith-realty/logo.png"
+              src={`${import.meta.env.BASE_URL}logo.png`}
               alt="RAARYA"
               className="h-5 w-5 object-contain"
             />

@@ -238,7 +238,7 @@ export function UserDashboard({ user, onClose, onLogout, onUserUpdate }: UserDas
         <div className="px-7 pt-8 pb-6 border-b border-slate-50">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-2xl bg-slate-50 border border-slate-100 shadow-inner group hover:rotate-6 transition-transform duration-300">
-              <img src="/preset-sites/zenith-realty/logo.png" alt="RAARYA" className="h-7 w-7 object-contain" />
+              <img src={`${import.meta.env.BASE_URL}logo.png`} alt="RAARYA" className="h-7 w-7 object-contain" />
             </div>
             <div>
               <p className="text-xs font-black tracking-[0.25em] uppercase text-[#141414]">RAARYA</p>
