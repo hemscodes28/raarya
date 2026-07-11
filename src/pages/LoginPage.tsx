@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import BoomerangVideoBg from '../components/BoomerangVideoBg';
 import { apiSignup, apiLogin } from '../utils/api';
+import { signInWithGoogle } from '../utils/supabaseClient';
 
 interface AuthPageProps {
   onBack: () => void;
+  onSuccess: (user: any) => void;
 }
 
-export function LoginPage({ onBack }: AuthPageProps) {
+export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
@@ -18,6 +20,26 @@ export function LoginPage({ onBack }: AuthPageProps) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleGoogleSignIn = async () => {
+    setError('');
+    setSuccess('');
+    setIsLoading(true);
+    try {
+      const res = await signInWithGoogle();
+      if (res.success) {
+        setSuccess('Successfully authenticated with Google!');
+        setTimeout(() => {
+          onSuccess(res.user);
+        }, 1500);
+      } else {
+        setError(res.error?.message || 'Google Sign-In failed.');
+      }
+    } catch (err) {
+      setError('Unable to authenticate with Google.');
+    }
+    setIsLoading(false);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -78,7 +100,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
           }
           localStorage.setItem('currentUser', JSON.stringify(data.user));
           setTimeout(() => {
-            onBack();
+            onSuccess(data.user);
           }, 1500);
         } else {
           setError(data.message || 'Login failed.');
@@ -323,7 +345,7 @@ export function LoginPage({ onBack }: AuthPageProps) {
         <div className="relative z-10 animate-blur-fade-up" style={{ animationDelay: '850ms' }}>
           <button
             type="button"
-            className="w-full flex items-center justify-center gap-2.5 rounded-xl py-2.5 text-xs font-semibold transition-all duration-300 liquid-glass hover:bg-white/5 active:scale-[0.98]"
+            onClick={handleGoogleSignIn} disabled={isLoading} className="w-full flex items-center justify-center gap-2.5 rounded-xl py-2.5 text-xs font-semibold transition-all duration-300 liquid-glass hover:bg-white/5 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>

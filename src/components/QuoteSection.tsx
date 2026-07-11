@@ -1,6 +1,68 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
+import { motion } from "motion/react";
+import { Search, Home, ChevronDown, Check } from "lucide-react";
 
-import { Search, Home, ChevronDown } from "lucide-react";
+// --- Custom Select Dropdown Component for Premium Feel ---
+interface CustomSelectProps {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (val: string) => void;
+}
+
+function CustomSelect({ label, value, options, onChange }: CustomSelectProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown if clicked outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  return (
+    <div className="flex flex-col gap-1.5 lg:col-span-2 relative" ref={containerRef}>
+      <label className="text-[9px] font-extrabold tracking-wider uppercase text-slate-400 select-none">
+        {label}
+      </label>
+      
+      {/* Trigger Button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full bg-white border border-zinc-200 hover:border-zinc-400 rounded-xl px-3.5 py-3 text-xs md:text-[13px] font-semibold text-slate-700 flex items-center justify-between transition-all duration-300 shadow-sm cursor-pointer"
+      >
+        <span className="truncate">{value}</span>
+        <ChevronDown className={`w-4 h-4 text-slate-400 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {/* Floating Options Menu */}
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-zinc-200 rounded-2xl shadow-xl z-50 py-2 max-h-60 overflow-y-auto animate-in fade-in slide-in-from-top-2 duration-200">
+          {options.map((option) => (
+            <button
+              key={option}
+              type="button"
+              onClick={() => {
+                onChange(option);
+                setIsOpen(false);
+              }}
+              className="w-full px-4 py-2.5 text-left text-xs md:text-[13px] font-semibold text-slate-700 hover:bg-slate-50 hover:text-black flex items-center justify-between transition-colors duration-200 cursor-pointer"
+            >
+              <span>{option}</span>
+              {value === option && <Check className="w-3.5 h-3.5 text-[#141414]" />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function QuoteSection() {
   const [activeTab, setActiveTab] = useState<"buy" | "rent" | "pg-hostel">("buy");
@@ -11,10 +73,7 @@ export function QuoteSection() {
   const [budget, setBudget] = useState("Select Budget");
 
   const handleSearch = () => {
-    // Dynamically update the active tab in PropertiesSection by changing the window hash
     window.location.hash = activeTab;
-    
-    // Smooth scroll to the target property section
     const targetElement = document.getElementById(activeTab);
     if (targetElement) {
       targetElement.scrollIntoView({ behavior: "smooth" });
@@ -37,145 +96,115 @@ export function QuoteSection() {
         <p className="text-lg md:text-2xl font-serif italic text-[#141414]/90 tracking-tight leading-relaxed">
           "Don't wait to buy land. Buy land and wait."
           <span className="text-xs md:text-sm font-sans font-bold uppercase tracking-[0.2em] text-[#141414]/40 ml-3.5 whitespace-nowrap">
-            — Will Rogers
+            ï¿½ Will Rogers
           </span>
         </p>
       </div>
 
-      {/* 2. Premium Real Estate Search Widget */}
-      <div className="w-full max-w-6xl bg-white border border-black/[0.04] rounded-3xl shadow-[0_15px_50px_rgba(0,0,0,0.06)] p-5 md:p-7 select-none">
+      {/* 2. Premium Real Estate Search Widget - Black & White minimalist theme with distinct light background and clear border */}
+      <div className="w-full max-w-6xl bg-zinc-50 border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-5 md:p-7 select-none">
         
         {/* Top bar: Tabs and Post Property */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-slate-100 pb-5">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-zinc-200 pb-5">
+          
           {/* Tabs */}
-          <div className="flex gap-1.5 bg-slate-50 p-1.5 rounded-2xl border border-slate-100/80">
+          <div className="flex gap-4 bg-white px-4 py-2 rounded-2xl border border-zinc-200/80 items-center shadow-sm">
             {(["buy", "rent", "pg-hostel"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-5 py-2 text-xs md:text-[13px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300 ${
+                className={`px-4 py-2 text-xs md:text-[13px] font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 cursor-pointer ${
                   activeTab === tab
-                    ? "bg-[#2563EB] text-white shadow-md shadow-blue-500/20"
-                    : "text-slate-500 hover:text-slate-800 hover:bg-slate-100/50"
+                    ? "bg-[#141414] text-white shadow-md shadow-black/10"
+                    : "text-slate-400 hover:text-slate-700"
                 }`}
               >
-                {tab === "pg-hostel" ? "PG / HOSTEL" : tab}
+                {tab === "pg-hostel" ? "PG / HOSTEL" : tab === "rent" ? "RENT" : "BUY"}
               </button>
             ))}
           </div>
 
-          {/* Post Property button with FREE badge */}
-          <button
+          {/* Post Property button with FREE badge (Black theme & innovative floating animation) */}
+          <motion.button
             onClick={handlePostProperty}
-            className="relative flex items-center gap-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white px-5 py-2.5 rounded-2xl text-[13px] font-bold shadow-lg shadow-blue-500/10 hover:shadow-blue-500/20 transition-all duration-300 hover:scale-[1.02] active:scale-95 group cursor-pointer"
+            whileHover={{ scale: 1.025, y: -1 }}
+            whileTap={{ scale: 0.975 }}
+            className="relative flex items-center gap-2 bg-[#141414] hover:bg-[#1f1f1f] text-white px-5 py-2.5 rounded-2xl text-[13px] font-bold shadow-lg shadow-black/10 transition-colors duration-300 group cursor-pointer border border-white/5"
           >
-            <Home className="w-4 h-4 transition-transform group-hover:rotate-12" />
-            <span>POST YOUR PROPERTY</span>
-            {/* Free Badge */}
-            <span className="absolute -top-3 -right-3 bg-red-500 text-[9px] font-black uppercase text-white px-2 py-0.5 rounded-full rotate-12 shadow-sm border border-white">
+            {/* Inner Shimmer Container to support overflow-hidden */}
+            <div className="absolute inset-0 rounded-2xl overflow-hidden pointer-events-none z-0">
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
+            </div>
+
+            <Home className="w-4 h-4 transition-transform duration-300 group-hover:rotate-12 relative z-10" />
+            <span className="tracking-wide relative z-10">POST YOUR PROPERTY</span>
+
+            {/* Innovative Floating & Pulsing FREE Badge */}
+            <motion.span
+              animate={{ 
+                y: [0, -4, 0],
+                scale: [1, 1.06, 1]
+              }}
+              transition={{ 
+                repeat: Infinity, 
+                duration: 2.2, 
+                ease: "easeInOut" 
+              }}
+              className="absolute -top-3 -right-2 bg-gradient-to-r from-rose-500 to-red-600 text-[9px] font-black uppercase tracking-wider text-white px-2.5 py-0.5 rounded-full shadow-[0_4px_12px_rgba(239,68,68,0.4)] border border-white select-none pointer-events-none z-20"
+            >
               FREE
-            </span>
-          </button>
+            </motion.span>
+          </motion.button>
         </div>
 
-        {/* Filters grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-5 items-end">
+        {/* Filters grid: 12-column layout to prevent column squeezing with Custom dropdowns */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
           
           {/* State */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-extrabold tracking-wider uppercase text-slate-400">STATE</label>
-            <div className="relative">
-              <select
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                className="w-full bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-xl px-3.5 py-3 text-xs md:text-[13px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer transition-colors"
-              >
-                <option value="Tamil Nadu">Tamil Nadu</option>
-                <option value="Karnataka">Karnataka</option>
-                <option value="Kerala">Kerala</option>
-              </select>
-              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
+          <CustomSelect
+            label="STATE"
+            value={state}
+            options={["Tamil Nadu", "Karnataka", "Kerala"]}
+            onChange={setState}
+          />
 
           {/* District */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-extrabold tracking-wider uppercase text-slate-400">DISTRICT</label>
-            <div className="relative">
-              <select
-                value={district}
-                onChange={(e) => setDistrict(e.target.value)}
-                className="w-full bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-xl px-3.5 py-3 text-xs md:text-[13px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer transition-colors"
-              >
-                <option value="Coimbatore">Coimbatore</option>
-                <option value="Chennai">Chennai</option>
-                <option value="Madurai">Madurai</option>
-                <option value="Salem">Salem</option>
-              </select>
-              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
+          <CustomSelect
+            label="DISTRICT"
+            value={district}
+            options={["Coimbatore", "Chennai", "Madurai", "Salem"]}
+            onChange={setDistrict}
+          />
 
           {/* City / Town */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-extrabold tracking-wider uppercase text-slate-400">CITY / TOWN</label>
-            <div className="relative">
-              <select
-                value={city}
-                onChange={(e) => setCity(e.target.value)}
-                className="w-full bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-xl px-3.5 py-3 text-xs md:text-[13px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer transition-colors"
-              >
-                <option value="Select City">Select City</option>
-                <option value="Saravanampatti">Saravanampatti</option>
-                <option value="Kovaipudur">Kovaipudur</option>
-                <option value="Peelamedu">Peelamedu</option>
-                <option value="RS Puram">RS Puram</option>
-              </select>
-              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
+          <CustomSelect
+            label="CITY / TOWN"
+            value={city}
+            options={["Select City", "Saravanampatti", "Kovaipudur", "Peelamedu", "RS Puram"]}
+            onChange={setCity}
+          />
 
           {/* Property Type */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-extrabold tracking-wider uppercase text-slate-400">PROPERTY TYPE</label>
-            <div className="relative">
-              <select
-                value={propertyType}
-                onChange={(e) => setPropertyType(e.target.value)}
-                className="w-full bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-xl px-3.5 py-3 text-xs md:text-[13px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer transition-colors"
-              >
-                <option value="Select Property Type">Select Type</option>
-                <option value="Villa">Villa</option>
-                <option value="Plot">Villa Plot</option>
-                <option value="Apartment">Apartment</option>
-                <option value="Commercial">Commercial</option>
-              </select>
-              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
+          <CustomSelect
+            label="PROPERTY TYPE"
+            value={propertyType}
+            options={["Select Property Type", "Villa", "Plot", "Apartment", "Commercial"]}
+            onChange={setPropertyType}
+          />
 
-          {/* Budget / Search */}
-          <div className="flex flex-col gap-5 md:flex-row md:items-end">
-            <div className="flex flex-col gap-1.5 flex-grow">
-              <label className="text-[10px] font-extrabold tracking-wider uppercase text-slate-400">BUDGET</label>
-              <div className="relative">
-                <select
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                  className="w-full bg-slate-50/50 border border-slate-200/80 hover:border-slate-300 rounded-xl px-3.5 py-3 text-xs md:text-[13px] font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 appearance-none cursor-pointer transition-colors"
-                >
-                  <option value="Select Budget">Select Budget</option>
-                  <option value="< 50 Lakhs">Under ?50 Lakhs</option>
-                  <option value="50 Lakhs - 1.5 Crore">?50 Lakhs - ?1.5 Cr</option>
-                  <option value="> 1.5 Crore">Over ?1.5 Crore</option>
-                </select>
-                <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-              </div>
-            </div>
+          {/* Budget */}
+          <CustomSelect
+            label="BUDGET"
+            value={budget}
+            options={["Select Budget", "Under ?50 L", "?50 L - ?1.5 Cr", "Over ?1.5 Cr"]}
+            onChange={setBudget}
+          />
 
+          {/* Search Button (Separate column, black theme) */}
+          <div className="lg:col-span-2">
             <button
               onClick={handleSearch}
-              className="bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold text-sm px-6 py-3 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-blue-500/20 hover:shadow-blue-500/35 hover:scale-[1.02] active:scale-95 transition-all duration-300 cursor-pointer w-full md:w-auto"
+              className="bg-[#141414] hover:bg-[#202020] text-white font-bold text-sm px-6 py-3 rounded-2xl flex items-center justify-center gap-2 shadow-lg shadow-black/10 hover:scale-[1.02] active:scale-95 transition-all duration-300 cursor-pointer w-full"
             >
               <Search className="w-4 h-4" />
               <span>Search</span>

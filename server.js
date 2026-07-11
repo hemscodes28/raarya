@@ -1,3 +1,4 @@
+import nodemailer from 'nodemailer';
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
@@ -7,8 +8,45 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// Manually parse .env file to load variables on server startup
+try {
+  const envPath = path.join(__dirname, '.env');
+  if (fs.existsSync(envPath)) {
+    const envContent = fs.readFileSync(envPath, 'utf8');
+    envContent.split(/\r?\n/).forEach(line => {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) return;
+      const index = trimmed.indexOf('=');
+      if (index !== -1) {
+        const key = trimmed.substring(0, index).trim();
+        let val = trimmed.substring(index + 1).trim();
+        if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+          val = val.substring(1, val.length - 1);
+        }
+        process.env[key] = val;
+      }
+    });
+    console.log('Loaded variables from .env file successfully!');
+  }
+} catch (err) {
+  console.error('Error loading .env file manually:', err);
+}
+
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// OTP temporary store (email -> { otp, expiresAt })
+const pendingOtps = new Map();
+
+// Configure Mail Transporter
+const mailConfig = {
+  host: process.env.SMTP_HOST || 'smtp.gmail.com',
+  port: parseInt(process.env.SMTP_PORT || '587'),
+  auth: {
+    user: process.env.SMTP_USER || '',
+    pass: process.env.SMTP_PASS || ''
+  }
+};
 const DB_FILE = path.join(__dirname, 'user_database.json');
 
 app.use(cors());
@@ -197,6 +235,75 @@ app.get('/api/history', (req, res) => {
     propertiesCount: db.properties.length,
     properties: db.properties
   });
+});
+
+// ─── SEND OTP ──────────────────────────────────────────────────────────────────
+app.post('/api/send-otp', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ success: false, message: 'Email required.' });
+
+  const otp = Math.floor(100000 + Math.random() * 900000).toString();
+  pendingOtps.set(email.toLowerCase(), { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
+
+  console.log(`[SECURITY] Generated OTP for ${email}: ${otp}`);
+
+  // Check if SMTP user/pass is set in .env
+  if (mailConfig.auth.user && mailConfig.auth.pass) {
+    try {
+      const transporter = nodemailer.createTransport(mailConfig);
+      await transporter.sendMail({
+        from: `"Raarya Groups Security" <${mailConfig.auth.user}>`,
+        to: email,
+        subject: 'Raarya Groups - Verification Code',
+        html: `
+          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 30px; border: 1px solid #e4e4e7; border-radius: 20px; background-color: #ffffff; box-shadow: 0 10px 25px rgba(0,0,0,0.02);">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <span style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #a1a1aa; border: 1px solid #e4e4e7; padding: 6px 12px; border-radius: 99px; background: #fafafa;">Raarya Groups</span>
+            </div>
+            <h2 style="color: #18181b; font-size: 20px; font-weight: 700; text-align: center; margin-top: 0; margin-bottom: 8px;">Two-Factor Authentication</h2>
+            <p style="color: #71717a; font-size: 13px; text-align: center; line-height: 1.5; margin-bottom: 24px;">Please enter the following verification code to unlock your Zenith Realty portal access.</p>
+            <div style="background-color: #f4f4f5; border: 1px solid #e4e4e7; padding: 18px; border-radius: 14px; text-align: center; margin: 24px 0;">
+              <span style="font-size: 32px; font-weight: 800; letter-spacing: 8px; color: #18181b; font-family: monospace;">${otp}</span>
+            </div>
+            <p style="color: #a1a1aa; font-size: 11px; text-align: center; line-height: 1.5; margin-top: 24px;">This security code will expire in 10 minutes. If you did not request this code, you can safely ignore this email.</p>
+            <div style="border-top: 1px solid #f4f4f5; margin-top: 30px; padding-top: 20px; text-align: center;">
+              <p style="color: #71717a; font-size: 12px; margin: 0;">Best regards,</p>
+              <p style="color: #18181b; font-size: 13px; font-weight: 600; margin: 4px 0 0 0;">Raarya Groups Security Team</p>
+            </div>
+          </div>
+        `
+      });
+      return res.json({ success: true, message: 'Verification code sent to your email.' });
+    } catch (err) {
+      console.error('SMTP Email sending error:', err);
+      return res.status(500).json({ success: false, message: 'SMTP error sending email.' });
+    }
+  } else {
+    // Falls back to terminal logging if SMTP is not yet set up
+    console.log(`[DEV ALERT] SMTP keys missing in .env. Logging OTP to console: ${otp}`);
+    return res.json({ success: true, isMocked: true, otp, message: 'Dev Mode: OTP logged to server terminal console.' });
+  }
+});
+
+// ─── VERIFY OTP ───────────────────────────────────────────────────────────────
+app.post('/api/verify-otp', (req, res) => {
+  const { email, otp } = req.body;
+  if (!email || !otp) return res.status(400).json({ success: false, message: 'Email and OTP are required.' });
+
+  const record = pendingOtps.get(email.toLowerCase());
+  if (!record) return res.status(400).json({ success: false, message: 'No OTP generated for this email.' });
+
+  if (Date.now() > record.expiresAt) {
+    pendingOtps.delete(email.toLowerCase());
+    return res.status(400).json({ success: false, message: 'OTP code has expired.' });
+  }
+
+  if (record.otp === otp) {
+    pendingOtps.delete(email.toLowerCase());
+    return res.json({ success: true, message: 'OTP verified.' });
+  } else {
+    return res.status(400).json({ success: false, message: 'Incorrect OTP code.' });
+  }
 });
 
 app.listen(PORT, () => {
