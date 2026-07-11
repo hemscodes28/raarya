@@ -5,10 +5,10 @@
 }
 
 .pill-nav {
-  --nav-h: 38px;
-  --logo: 32px;
-  --pill-pad-x: 15px;
-  --pill-gap: 3px;
+  --nav-h: 46px;
+  --logo: 40px;
+  --pill-pad-x: 18px;
+  --pill-gap: 4px;
   width: 100%;
   display: flex;
   align-items: center;
@@ -39,8 +39,8 @@
 }
 
 .pill-logo {
-  height: 76px;
-  width: 76px;
+  height: 96px;
+  width: 96px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -82,11 +82,11 @@
   text-decoration: none;
   border-radius: 9999px;
   box-sizing: border-box;
-  font-weight: 600;
-  font-size: 12px;
+  font-weight: 700;
+  font-size: 13px;
   line-height: 1;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   white-space: nowrap;
   cursor: pointer;
   position: relative;
