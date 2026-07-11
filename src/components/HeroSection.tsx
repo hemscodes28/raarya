@@ -61,22 +61,22 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative bg-[#F8F8F8] flex flex-col pt-[160px] pb-6"
+      className="relative bg-[#F8F8F8] flex flex-col pt-[92px] md:pt-[120px] lg:pt-[150px] pb-6"
     >
-      {/* Quote — single line, left-aligned, above banner */}
+      {/* Quote — left-aligned, responsive font, wrapped correctly on all mobile screens */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="px-4 md:px-6 lg:px-8 mb-5 flex items-baseline gap-4 select-none"
+        className="px-4 md:px-6 lg:px-8 mb-4 flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-4 select-none"
       >
         <span
-          className="text-xl md:text-3xl lg:text-[32px] font-serif italic font-medium text-[#141414] tracking-tight whitespace-nowrap"
+          className="text-lg md:text-2xl lg:text-[28px] font-serif italic font-medium text-[#141414] tracking-tight leading-snug"
           style={{ fontFamily: "'PP Editorial New', 'Playfair Display', Georgia, serif" }}
         >
           "The best investment on Earth is Earth."
         </span>
-        <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.25em] text-[#141414]/50 whitespace-nowrap">
+        <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-[0.22em] text-[#141414]/40 whitespace-nowrap">
           — RAARYA GROUPS
         </span>
       </motion.div>
@@ -97,12 +97,12 @@ export function HeroSection() {
             className="absolute inset-0 z-10 pointer-events-none rounded-[20px] md:rounded-[28px]"
             style={{
               boxShadow:
-                "inset 50px 0 70px -15px rgba(0,0,0,0.3), inset -50px 0 70px -15px rgba(0,0,0,0.3), inset 0 -30px 50px -5px rgba(0,0,0,0.2), inset 0 20px 40px -5px rgba(0,0,0,0.12)",
+                "inset 30px 0 50px -15px rgba(0,0,0,0.25), inset -30px 0 50px -15px rgba(0,0,0,0.25), inset 0 -20px 40px -5px rgba(0,0,0,0.15), inset 0 15px 30px -5px rgba(0,0,0,0.1)",
             }}
           />
 
-          {/* Slide area with banner aspect ratio 16:5.4 */}
-          <div className="relative w-full overflow-hidden" style={{ aspectRatio: "16/4.8" }}>
+          {/* Slide area with responsive banner aspect ratios to display perfectly on all phones/tablets/desktops */}
+          <div className="relative w-full overflow-hidden aspect-[16/6] sm:aspect-[16/5.2] md:aspect-[16/4.8]">
             <AnimatePresence initial={false} custom={direction} mode="popLayout">
               <motion.img
                 key={currentIndex}
@@ -123,31 +123,31 @@ export function HeroSection() {
           {/* Left arrow */}
           <button
             onClick={goPrev}
-            className="absolute left-4 md:left-7 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/25 hover:bg-white text-white hover:text-[#141414] border border-white/30 hover:border-white/70 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 cursor-pointer"
+            className="absolute left-3 md:left-7 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/25 hover:bg-white text-white hover:text-[#141414] border border-white/30 hover:border-white/70 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:scale-110 active:scale-95 cursor-pointer"
             aria-label="Previous banner"
           >
-            <span className="text-xl md:text-2xl font-thin leading-none select-none">&lt;</span>
+            <span className="text-sm md:text-xl font-light leading-none select-none">&lt;</span>
           </button>
 
           {/* Right arrow */}
           <button
             onClick={goNext}
-            className="absolute right-4 md:right-7 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-10 h-10 md:w-12 md:h-12 rounded-full bg-black/25 hover:bg-white text-white hover:text-[#141414] border border-white/30 hover:border-white/70 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out opacity-0 group-hover:opacity-100 hover:scale-110 active:scale-95 cursor-pointer"
+            className="absolute right-3 md:right-7 top-1/2 -translate-y-1/2 z-20 flex items-center justify-center w-8 h-8 md:w-12 md:h-12 rounded-full bg-black/25 hover:bg-white text-white hover:text-[#141414] border border-white/30 hover:border-white/70 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_6px_30px_rgba(0,0,0,0.4)] transition-all duration-300 ease-out opacity-100 md:opacity-0 md:group-hover:opacity-100 hover:scale-110 active:scale-95 cursor-pointer"
             aria-label="Next banner"
           >
-            <span className="text-xl md:text-2xl font-thin leading-none select-none">&gt;</span>
+            <span className="text-sm md:text-xl font-light leading-none select-none">&gt;</span>
           </button>
 
           {/* Dot indicators */}
-          <div className="absolute bottom-4 md:bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-2">
+          <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 z-20 flex items-center gap-1.5 md:gap-2">
             {IMAGES.map((_, index) => (
               <button
                 key={index}
                 onClick={() => goTo(index)}
                 className={`rounded-full transition-all duration-300 ease-out cursor-pointer ${
                   index === currentIndex
-                    ? "w-7 md:w-9 h-2 md:h-2.5 bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]"
-                    : "w-2 md:w-2.5 h-2 md:h-2.5 bg-white/40 hover:bg-white/75"
+                    ? "w-5 md:w-9 h-1.5 md:h-2.5 bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]"
+                    : "w-1.5 md:w-2.5 h-1.5 md:h-2.5 bg-white/40 hover:bg-white/75"
                 }`}
                 aria-label={`Go to banner ${index + 1}`}
               />
@@ -171,4 +171,3 @@ export function HeroSection() {
     </section>
   );
 }
-
