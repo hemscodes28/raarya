@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react';
 import BoomerangVideoBg from '../components/BoomerangVideoBg';
+import { apiSignup, apiLogin } from '../utils/api';
 
 interface AuthPageProps {
   onBack: () => void;
@@ -42,14 +43,9 @@ export function LoginPage({ onBack }: AuthPageProps) {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/api/signup', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password }),
-        });
-        const data = await response.json();
-        if (response.ok && data.success) {
-          setSuccess('Account created successfully! Please log in.');
+        const data = await apiSignup({ name, email, password });
+        if (data.success) {
+          setSuccess(data.message || 'Account created successfully! Please log in.');
           setName('');
           setEmail('');
           setPassword('');
@@ -72,13 +68,8 @@ export function LoginPage({ onBack }: AuthPageProps) {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/api/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        });
-        const data = await response.json();
-        if (response.ok && data.success) {
+        const data = await apiLogin({ email, password });
+        if (data.success) {
           setSuccess('Login successful! Welcome back.');
           if (rememberMe) {
             localStorage.setItem('rememberUser', JSON.stringify({ email }));

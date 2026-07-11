@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { ChevronRight, Check, Building2, MapPin, Image, IndianRupee, ArrowRight, AlertCircle, X } from 'lucide-react';
+import { apiAddProperty } from '../utils/api';
 
 interface AddPropertyTabProps {
   user: { email: string; name: string; phone?: string };
@@ -19,10 +20,10 @@ const pill = (label: string, active: boolean, onClick: () => void) => (
     key={label}
     type="button"
     onClick={onClick}
-    className={`px-5 py-2.5 rounded-xl text-sm font-semibold border transition-all duration-300 ${
+    className={`px-5 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all duration-300 ${
       active
-        ? 'bg-[#141414] text-white border-[#141414] shadow-md shadow-black/10'
-        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-300 hover:text-[#141414] hover:scale-[1.02]'
+        ? 'bg-[#141414] text-white shadow-md'
+        : 'bg-white text-slate-500 border border-slate-100 hover:bg-slate-50'
     }`}
   >
     {label}
@@ -34,16 +35,16 @@ const labelCls = 'text-[11px] font-bold text-slate-500 uppercase tracking-widest
 
 export function AddPropertyTab({ user }: AddPropertyTabProps) {
   const [step, setStep] = useState(1);
-  const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [stepError, setStepError] = useState('');
   const [error, setError] = useState('');
+  const [stepError, setStepError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
-  // Form state
+  // Form States
   const [youAre, setYouAre] = useState('Owner');
   const [propertyFor, setPropertyFor] = useState('Sell');
-  const [state, setState] = useState('');
-  const [district, setDistrict] = useState('');
+  const [state, setState] = useState('Tamil Nadu');
+  const [district, setDistrict] = useState('Coimbatore');
   const [city, setCity] = useState('');
   const [locality, setLocality] = useState('');
   const [mapLink, setMapLink] = useState('');
@@ -61,32 +62,6 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
 
   const progress = ((step - 1) / (STEPS.length - 1)) * 100;
 
-  const validateStep = () => {
-    setStepError('');
-    if (step === 1) {
-      if (!youAre || !propertyFor) {
-        setStepError('Please select both your profile type and property listing intent.');
-        return false;
-      }
-    } else if (step === 2) {
-      if (!state || !district || !city) {
-        setStepError('Please select State, District, and City to locate the property.');
-        return false;
-      }
-    } else if (step === 3) {
-      if (!propertyType || !area || parseFloat(area) <= 0) {
-        setStepError('Please select property type and input a valid positive area size.');
-        return false;
-      }
-    } else if (step === 4) {
-      if (!title.trim() || title.trim().length < 5) {
-        setStepError('Please enter a descriptive property title of at least 5 characters.');
-        return false;
-      }
-    }
-    return true;
-  };
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -97,6 +72,29 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const validateStep = (): boolean => {
+    setStepError('');
+    if (step === 1) {
+      if (!youAre || !propertyFor) { setStepError('Please select all details.'); return false; }
+    } else if (step === 2) {
+      if (!state.trim() || !district.trim() || !city.trim() || !locality.trim()) {
+        setStepError('Please fill in all address fields.');
+        return false;
+      }
+    } else if (step === 3) {
+      if (!propertyType || !area.trim() || parseFloat(area) <= 0) {
+        setStepError('Please enter a valid property area.');
+        return false;
+      }
+    } else if (step === 4) {
+      if (!title.trim() || !description.trim() || !coverImage) {
+        setStepError('Please provide a title, description, and cover photo.');
+        return false;
+      }
+    }
+    return true;
   };
 
   const next = () => {
@@ -116,17 +114,12 @@ export function AddPropertyTab({ user }: AddPropertyTabProps) {
     if (!contactMobile || contactMobile.trim().length < 10) { setError('Please enter a valid 10-digit mobile number.'); return; }
     setLoading(true); setError('');
     try {
-      const res = await fetch('http://localhost:5000/api/properties', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userEmail: user.email, userName: user.name,
-          youAre, propertyFor, state, district, city, locality, mapLink,
-          propertyType, areaUnit, area, title, description, coverImage,
-          price, priceType, contactMobile, contactEmail,
-        }),
+      const data = await apiAddProperty({
+        userEmail: user.email, userName: user.name,
+        youAre, propertyFor, state, district, city, locality, mapLink,
+        propertyType, areaUnit, area, title, description, coverImage,
+        price, priceType, contactMobile, contactEmail,
       });
-      const data = await res.json();
       if (data.success) setSubmitted(true);
       else setError(data.message || 'Failed to submit property.');
     } catch {

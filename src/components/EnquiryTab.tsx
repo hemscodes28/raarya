@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Search, MessageSquare, RefreshCw, User, Phone, Tag, HelpCircle, Calendar, FileText } from 'lucide-react';
+import { apiGetEnquiries } from '../utils/api';
 
 interface EnquiryTabProps {
   user: { email: string };
@@ -14,8 +15,7 @@ export function EnquiryTab({ user }: EnquiryTabProps) {
   const fetchEnquiries = async () => {
     setLoading(true);
     try {
-      const res = await fetch(`http://localhost:5000/api/enquiries/${encodeURIComponent(user.email)}`);
-      const data = await res.json();
+      const data = await apiGetEnquiries(user.email);
       if (data.success) setEnquiries(data.enquiries || []);
     } catch { /* server may not be reachable */ }
     setLoading(false);

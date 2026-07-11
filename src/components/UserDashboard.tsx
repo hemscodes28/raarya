@@ -9,6 +9,7 @@ import {
 import { ProfileTab } from './ProfileTab';
 import { EnquiryTab } from './EnquiryTab';
 import { AddPropertyTab } from './AddPropertyTab';
+import { apiGetProperties } from '../utils/api';
 
 interface UserDashboardProps {
   user: { name: string; email: string; phone?: string; whatsapp?: string; avatar?: string };
@@ -31,8 +32,7 @@ function DashboardHome({ user }: { user: any }) {
   const firstName = user.name ? user.name.split(' ')[0] : 'User';
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/properties/${encodeURIComponent(user.email)}`)
-      .then(r => r.json())
+    apiGetProperties(user.email)
       .then(d => { if (d.success) setProperties(d.properties || []); })
       .catch(() => {});
   }, [user.email]);

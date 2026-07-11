@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { User, Lock, Camera, Save, KeyRound, Quote } from 'lucide-react';
+import { apiUpdateProfile, apiChangePassword } from '../utils/api';
 
 interface ProfileTabProps {
   user: { name: string; email: string; phone?: string; whatsapp?: string; avatar?: string };
@@ -50,12 +51,7 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
   const handleProfileSave = async () => {
     setProfileStatus(''); setProfileError(''); setProfileLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/profile', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, name, phone, whatsapp, avatar }),
-      });
-      const data = await res.json();
+      const data = await apiUpdateProfile({ email: user.email, name, phone, whatsapp, avatar });
       if (data.success) {
         setProfileStatus('Profile updated successfully!');
         onUserUpdate({ ...user, name, phone, whatsapp, avatar });
@@ -75,12 +71,7 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
     if (newPass.length < 6) { setPassError('Password must be at least 6 characters.'); return; }
     setPassLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/change-password', {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: user.email, oldPassword: oldPass, newPassword: newPass }),
-      });
-      const data = await res.json();
+      const data = await apiChangePassword({ email: user.email, oldPassword: oldPass, newPassword: newPass });
       if (data.success) {
         setPassStatus('Password changed successfully!');
         setOldPass(''); setNewPass(''); setConfirmPass('');
