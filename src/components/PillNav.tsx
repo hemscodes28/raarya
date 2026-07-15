@@ -223,12 +223,12 @@ export function PillNav({
         gsap.set(menu, { visibility: 'visible' });
         gsap.fromTo(
           menu,
-          { opacity: 0, scale: 0.9, x: '-50%', y: '-45%' },
+          { opacity: 0, scale: 0.9, xPercent: -50, yPercent: -45 },
           {
             opacity: 1,
             scale: 1,
-            x: '-50%',
-            y: '-50%',
+            xPercent: -50,
+            yPercent: -50,
             duration: 0.4,
             ease: 'back.out(1.5)',
             transformOrigin: 'center center'
@@ -238,8 +238,8 @@ export function PillNav({
         gsap.to(menu, {
           opacity: 0,
           scale: 0.9,
-          x: '-50%',
-          y: '-45%',
+          xPercent: -50,
+          yPercent: -45,
           duration: 0.25,
           ease: 'power2.in',
           transformOrigin: 'center center',
@@ -370,7 +370,27 @@ export function PillNav({
         />
       )}
 
-      <div className="mobile-menu-popover mobile-only" ref={mobileMenuRef} style={cssVars}>
+      <div 
+        className="mobile-menu-popover mobile-only" 
+        ref={mobileMenuRef} 
+        style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          width: '90%',
+          maxWidth: '350px',
+          maxHeight: '85vh',
+          overflowY: 'auto',
+          background: '#ffffff',
+          borderRadius: '28px',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.4)',
+          border: '1px solid rgba(0, 0, 0, 0.05)',
+          padding: '24px',
+          boxSizing: 'border-box',
+          zIndex: 999,
+          ...cssVars
+        }}
+      >
         {/* Mobile Header: Gold Logo + Close button */}
         <div className="flex justify-between items-center mb-6 pb-4 border-b border-black/5 relative z-10 select-none">
           <img 
