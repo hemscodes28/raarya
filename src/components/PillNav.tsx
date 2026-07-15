@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ChevronDown, Home } from 'lucide-react';
+import { ChevronDown, Home, X } from 'lucide-react';
+import { motion } from 'motion/react';
 import { ZenithLogo } from './ZenithLogo';
 import { routeHref } from '../_shared/preset-site-routing';
 import './PillNav.css';
@@ -222,24 +223,26 @@ export function PillNav({
         gsap.set(menu, { visibility: 'visible' });
         gsap.fromTo(
           menu,
-          { opacity: 0, y: 10, scaleY: 1 },
+          { opacity: 0, scale: 0.9, x: '-50%', y: '-45%' },
           {
             opacity: 1,
-            y: 0,
-            scaleY: 1,
-            duration: 0.3,
-            ease,
-            transformOrigin: 'top center'
+            scale: 1,
+            x: '-50%',
+            y: '-50%',
+            duration: 0.4,
+            ease: 'back.out(1.5)',
+            transformOrigin: 'center center'
           }
         );
       } else {
         gsap.to(menu, {
           opacity: 0,
-          y: 10,
-          scaleY: 1,
-          duration: 0.2,
-          ease,
-          transformOrigin: 'top center',
+          scale: 0.9,
+          x: '-50%',
+          y: '-45%',
+          duration: 0.25,
+          ease: 'power2.in',
+          transformOrigin: 'center center',
           onComplete: () => {
             gsap.set(menu, { visibility: 'hidden' });
           }
@@ -356,12 +359,43 @@ export function PillNav({
         </button>
       </nav>
 
+      {/* Glassmorphic Mobile Menu Backdrop Overlay */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/65 backdrop-blur-[6px] z-[998] transition-all duration-300 mobile-only"
+          onClick={() => {
+            setIsMobileMenuOpen(false);
+            toggleMobileMenu();
+          }}
+        />
+      )}
+
       <div className="mobile-menu-popover mobile-only" ref={mobileMenuRef} style={cssVars}>
+        {/* Mobile Header: Gold Logo + Close button */}
+        <div className="flex justify-between items-center mb-6 pb-4 border-b border-black/5 relative z-10 select-none">
+          <img 
+            src={`${import.meta.env.BASE_URL}logo.png`} 
+            alt="Raarya Logo" 
+            className="h-12 object-contain"
+          />
+          <button
+            type="button"
+            onClick={() => {
+              setIsMobileMenuOpen(false);
+              toggleMobileMenu();
+            }}
+            className="w-10 h-10 rounded-full bg-[#141414] hover:bg-black text-white flex items-center justify-center active:scale-90 transition-all z-20 cursor-pointer shadow-md"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
         <ul className="mobile-menu-list">
           {items.map((item, i) => (
             <li key={item.href || `mobile-item-${i}`} className="flex flex-col">
               <div className="flex items-center justify-between w-full">
-                <a
+                <motion.a
                   href={item.href}
                   className={`mobile-menu-link flex-grow ${activeHref === item.href ? ' is-active' : ''}`}
                   onClick={(e) => {
@@ -369,9 +403,11 @@ export function PillNav({
                     toggleMobileMenu();
                     if (onItemClick) onItemClick(e, item.href);
                   }}
+                  whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
+                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 >
                   {item.label}
-                </a>
+                </motion.a>
                 {DROPDOWNS[item.label] && (
                   <button
                     type="button"
@@ -390,7 +426,7 @@ export function PillNav({
               {DROPDOWNS[item.label] && mobileExpanded === item.label && (
                 <div className="flex flex-col gap-1 pl-4 border-l border-black/10 mt-1 mb-2">
                   {DROPDOWNS[item.label].map((subItem) => (
-                    <a
+                    <motion.a
                       key={subItem.label}
                       href={subItem.route}
                       onClick={(e) => {
@@ -398,11 +434,12 @@ export function PillNav({
                         toggleMobileMenu();
                         if (onItemClick) onItemClick(e, subItem.route);
                       }}
-                      className="flex flex-col py-2 px-3 rounded-lg hover:bg-black/[0.02]"
+                      className="flex flex-col py-2.5 px-4 rounded-xl hover:bg-black/[0.02] text-left"
+                      whileTap={{ scale: 0.97, backgroundColor: 'rgba(197, 168, 128, 0.1)' }}
                     >
                       <span className="text-[13px] font-semibold text-[#141414]">{subItem.label}</span>
                       <span className="text-[10px] text-[#A5A5A5] mt-0.5">{subItem.desc}</span>
-                    </a>
+                    </motion.a>
                   ))}
                 </div>
               )}
@@ -412,13 +449,14 @@ export function PillNav({
           {/* Mobile Login and CTA */}
           <li className="mt-4 pt-4 border-t border-black/5 flex flex-col gap-2">
             {currentUser ? (
-              <button
+              <motion.button
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   toggleMobileMenu();
                   if (onAvatarClick) onAvatarClick();
                 }}
-                className="flex items-center gap-3 border border-black/10 bg-white px-4 py-2 rounded-full text-left"
+                className="flex items-center gap-3 border border-black/10 bg-white px-4 py-2 rounded-full text-left cursor-pointer"
+                whileTap={{ scale: 0.96 }}
               >
                 <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white uppercase text-xs shrink-0 overflow-hidden">
                   {currentUser.avatar ? (
@@ -431,31 +469,33 @@ export function PillNav({
                   <span className="text-[12px] font-bold text-[#141414] leading-tight truncate">{currentUser.name || 'User'}</span>
                   <span className="text-[9px] text-slate-500 leading-none truncate">{currentUser.email}</span>
                 </div>
-              </button>
+              </motion.button>
             ) : (
-              <a
+              <motion.a
                 href="#login"
-                className="flex items-center justify-center border border-black/10 bg-white px-6 py-2.5 text-[13px] font-semibold text-[#141414] rounded-full"
+                className="flex items-center justify-center border border-black/10 bg-white px-6 py-2.5 text-[13px] font-semibold text-[#141414] rounded-full cursor-pointer"
                 onClick={() => {
                   setIsMobileMenuOpen(false);
                   toggleMobileMenu();
                 }}
+                whileTap={{ scale: 0.96, backgroundColor: '#141414', color: '#ffffff' }}
               >
                 Login
-              </a>
+              </motion.a>
             )}
-            <a
+            <motion.a
               href="#contact"
-              className="flex items-center justify-center gap-2 bg-[#141414] px-6 py-2.5 text-[13px] font-semibold text-white rounded-full"
+              className="flex items-center justify-center gap-2 bg-[#141414] px-6 py-2.5 text-[13px] font-semibold text-white rounded-full cursor-pointer"
               onClick={(e) => {
                 setIsMobileMenuOpen(false);
                 toggleMobileMenu();
                 if (onItemClick) onItemClick(e, '#contact');
               }}
+              whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
             >
               <Home className="size-4" />
               Book Consultation
-            </a>
+            </motion.a>
           </li>
         </ul>
       </div>
