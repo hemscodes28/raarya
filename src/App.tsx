@@ -149,7 +149,7 @@ export default function App() {
           onUserUpdate={handleUserUpdate}
         />
       )}
-      <FloatingContactWidget />
+      {!showLogin && !showOtpVerification && <FloatingContactWidget />}
     </div>
   );
 }
