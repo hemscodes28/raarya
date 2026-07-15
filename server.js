@@ -1,4 +1,4 @@
-import nodemailer from 'nodemailer';
+
 import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
@@ -35,18 +35,9 @@ try {
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// OTP temporary store (email -> { otp, expiresAt })
+// OTP temporary store (phone -> { otp, expiresAt })
 const pendingOtps = new Map();
 
-// Configure Mail Transporter
-const mailConfig = {
-  host: process.env.SMTP_HOST || 'smtp.gmail.com',
-  port: parseInt(process.env.SMTP_PORT || '587'),
-  auth: {
-    user: process.env.SMTP_USER || '',
-    pass: process.env.SMTP_PASS || ''
-  }
-};
 const DB_FILE = path.join(__dirname, 'user_database.json');
 
 app.use(cors());
@@ -80,67 +71,84 @@ function writeDatabase(data) {
 
 // ─── SIGNUP ───────────────────────────────────────────────────────────────────
 app.post('/api/signup', (req, res) => {
-  const { name, email, password } = req.body;
-  if (!name || !email || !password)
-    return res.status(400).json({ success: false, message: 'All fields are required.' });
+  const { name, phone, email, password } = req.body;
+  if (!name || !phone || !password)
+    return res.status(400).json({ success: false, message: 'Name, Phone, and Password are required.' });
 
   const db = readDatabase();
-  const existingUser = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
-
-  if (existingUser) {
+  
+  // Check unique phone number
+  const existingPhone = db.users.find(u => u.phone === phone);
+  if (existingPhone) {
     db.history.unshift({
       id: 'log_' + Date.now(),
-      name, email, action: 'signup', status: 'failure', message: 'Email already registered',
+      name, email: email || 'No Email', action: 'signup', status: 'failure', message: 'Phone number already registered',
       timestamp: new Date().toISOString(),
       userAgent: req.headers['user-agent'] || 'Unknown',
       ipAddress: req.ip || '127.0.0.1'
     });
     writeDatabase(db);
-    return res.status(400).json({ success: false, message: 'Email is already registered.' });
+    return res.status(400).json({ success: false, message: 'Phone number is already registered.' });
+  }
+
+  // Check unique email (if email is provided)
+  if (email) {
+    const existingEmail = db.users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase());
+    if (existingEmail) {
+      db.history.unshift({
+        id: 'log_' + Date.now(),
+        name, email, action: 'signup', status: 'failure', message: 'Email already registered',
+        timestamp: new Date().toISOString(),
+        userAgent: req.headers['user-agent'] || 'Unknown',
+        ipAddress: req.ip || '127.0.0.1'
+      });
+      writeDatabase(db);
+      return res.status(400).json({ success: false, message: 'Email is already registered.' });
+    }
   }
 
   const newUser = {
     id: 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
-    name, email, password, phone: '', whatsapp: '', avatarColor: '#141414',
+    name, email: email || '', password, phone, whatsapp: '', avatarColor: '#141414',
     createdAt: new Date().toISOString()
   };
   db.users.push(newUser);
   db.history.unshift({
     id: 'log_' + Date.now(),
-    name, email, action: 'signup', status: 'success',
+    name, email: email || 'No Email', action: 'signup', status: 'success',
     timestamp: new Date().toISOString(),
     userAgent: req.headers['user-agent'] || 'Unknown',
     ipAddress: req.ip || '127.0.0.1'
   });
   writeDatabase(db);
-  res.status(201).json({ success: true, message: 'Signup successful!', user: { name, email, phone: '', whatsapp: '', avatar: '' } });
+  res.status(201).json({ success: true, message: 'Signup successful!', user: { name, email: newUser.email, phone, whatsapp: '', avatar: '' } });
 });
 
 // ─── LOGIN ────────────────────────────────────────────────────────────────────
 app.post('/api/login', (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password)
-    return res.status(400).json({ success: false, message: 'Email and password are required.' });
+  const { phone, password } = req.body;
+  if (!phone || !password)
+    return res.status(400).json({ success: false, message: 'Phone and password are required.' });
 
   const db = readDatabase();
-  const user = db.users.find(u => u.email.toLowerCase() === email.toLowerCase());
+  const user = db.users.find(u => u.phone === phone);
 
   if (!user || user.password !== password) {
     db.history.unshift({
       id: 'log_' + Date.now(),
-      name: user ? user.name : 'Unknown User', email, action: 'login', status: 'failure',
+      name: user ? user.name : 'Unknown User', email: user ? user.email : 'No Email', action: 'login', status: 'failure',
       message: !user ? 'User not found' : 'Incorrect password',
       timestamp: new Date().toISOString(),
       userAgent: req.headers['user-agent'] || 'Unknown',
       ipAddress: req.ip || '127.0.0.1'
     });
     writeDatabase(db);
-    return res.status(401).json({ success: false, message: 'Invalid email or password.' });
+    return res.status(401).json({ success: false, message: 'Invalid phone number or password.' });
   }
 
   db.history.unshift({
     id: 'log_' + Date.now(),
-    name: user.name, email: user.email, action: 'login', status: 'success',
+    name: user.name, email: user.email || 'No Email', action: 'login', status: 'success',
     timestamp: new Date().toISOString(),
     userAgent: req.headers['user-agent'] || 'Unknown',
     ipAddress: req.ip || '127.0.0.1'
@@ -148,7 +156,7 @@ app.post('/api/login', (req, res) => {
   writeDatabase(db);
   res.status(200).json({
     success: true, message: 'Login successful!',
-    user: { name: user.name, email: user.email, phone: user.phone || '', whatsapp: user.whatsapp || '', avatar: user.avatar || '' }
+    user: { name: user.name, email: user.email || '', phone: user.phone, whatsapp: user.whatsapp || '', avatar: user.avatar || '' }
   });
 });
 
@@ -237,69 +245,88 @@ app.get('/api/history', (req, res) => {
   });
 });
 
+// ─── FAST2SMS SENDER HELPER ────────────────────────────────────────────────────
+async function sendFast2Sms(phone, otp) {
+  const apiKey = process.env.FAST2SMS_API_KEY;
+  const isMock = !apiKey || process.env.VITE_MOCK_SMS === 'true';
+  if (isMock) {
+    console.log(`
+    ======================================================
+    [WARNING] Fast2SMS SMS Simulation active.
+    Mock verification code generated: ${otp}
+    ======================================================
+    `);
+    return { return: true, isMocked: true, otp };
+  }
+
+  const cleanedPhone = phone.replace(/\D/g, '').slice(-10);
+
+  try {
+    const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+      method: 'POST',
+      headers: {
+        'authorization': apiKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        route: 'q',
+        message: `Raarya Groups: ${otp}`,
+        numbers: cleanedPhone
+      })
+    });
+
+    const result = await response.json();
+    console.log('[Fast2SMS API Response]:', result);
+    return result;
+  } catch (err) {
+    console.error('[Fast2SMS error]:', err);
+    return { return: false, message: 'Failed to connect to Fast2SMS API.' };
+  }
+}
+
 // ─── SEND OTP ──────────────────────────────────────────────────────────────────
 app.post('/api/send-otp', async (req, res) => {
-  const { email } = req.body;
-  if (!email) return res.status(400).json({ success: false, message: 'Email required.' });
+  const { phone } = req.body;
+  if (!phone) return res.status(400).json({ success: false, message: 'Phone number required.' });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  pendingOtps.set(email.toLowerCase(), { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
+  pendingOtps.set(phone, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-  console.log(`[SECURITY] Generated OTP for ${email}: ${otp}`);
+  const smsResult = await sendFast2Sms(phone, otp);
 
-  // Check if SMTP user/pass is set in .env
-  if (mailConfig.auth.user && mailConfig.auth.pass) {
-    try {
-      const transporter = nodemailer.createTransport(mailConfig);
-      await transporter.sendMail({
-        from: `"Raarya Groups Security" <${mailConfig.auth.user}>`,
-        to: email,
-        subject: 'Raarya Groups - Verification Code',
-        html: `
-          <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 500px; margin: 0 auto; padding: 30px; border: 1px solid #e4e4e7; border-radius: 20px; background-color: #ffffff; box-shadow: 0 10px 25px rgba(0,0,0,0.02);">
-            <div style="text-align: center; margin-bottom: 24px;">
-              <span style="font-size: 10px; font-weight: 800; letter-spacing: 2px; text-transform: uppercase; color: #a1a1aa; border: 1px solid #e4e4e7; padding: 6px 12px; border-radius: 99px; background: #fafafa;">Raarya Groups</span>
-            </div>
-            <h2 style="color: #18181b; font-size: 20px; font-weight: 700; text-align: center; margin-top: 0; margin-bottom: 8px;">Two-Factor Authentication</h2>
-            <p style="color: #71717a; font-size: 13px; text-align: center; line-height: 1.5; margin-bottom: 24px;">Please enter the following verification code to unlock your Zenith Realty portal access.</p>
-            <div style="background-color: #f4f4f5; border: 1px solid #e4e4e7; padding: 18px; border-radius: 14px; text-align: center; margin: 24px 0;">
-              <span style="font-size: 32px; font-weight: 800; letter-spacing: 8px; color: #18181b; font-family: monospace;">${otp}</span>
-            </div>
-            <p style="color: #a1a1aa; font-size: 11px; text-align: center; line-height: 1.5; margin-top: 24px;">This security code will expire in 10 minutes. If you did not request this code, you can safely ignore this email.</p>
-            <div style="border-top: 1px solid #f4f4f5; margin-top: 30px; padding-top: 20px; text-align: center;">
-              <p style="color: #71717a; font-size: 12px; margin: 0;">Best regards,</p>
-              <p style="color: #18181b; font-size: 13px; font-weight: 600; margin: 4px 0 0 0;">Raarya Groups Security Team</p>
-            </div>
-          </div>
-        `
-      });
-      return res.json({ success: true, message: 'Verification code sent to your email.' });
-    } catch (err) {
-      console.error('SMTP Email sending error:', err);
-      return res.status(500).json({ success: false, message: 'SMTP error sending email.' });
-    }
-  } else {
-    // Falls back to terminal logging if SMTP is not yet set up
-    console.log(`[DEV ALERT] SMTP keys missing in .env. Logging OTP to console: ${otp}`);
-    return res.json({ success: true, isMocked: true, otp, message: 'Dev Mode: OTP logged to server terminal console.' });
+  // If Fast2SMS was active, return success without revealing the OTP.
+  // If we are in mock mode (no key), we return isMocked = true and the OTP so local browser testing continues smoothly!
+  if (smsResult.isMocked) {
+    return res.json({ 
+      success: true, 
+      isMocked: true, 
+      otp: smsResult.otp, 
+      message: 'Verification code simulated (on-screen).' 
+    });
   }
+
+  res.json({ 
+    success: smsResult.return, 
+    isMocked: false,
+    message: smsResult.return ? 'Verification code sent to your phone number.' : 'Failed to send SMS code. Check server configuration.' 
+  });
 });
 
 // ─── VERIFY OTP ───────────────────────────────────────────────────────────────
 app.post('/api/verify-otp', (req, res) => {
-  const { email, otp } = req.body;
-  if (!email || !otp) return res.status(400).json({ success: false, message: 'Email and OTP are required.' });
+  const { phone, otp } = req.body;
+  if (!phone || !otp) return res.status(400).json({ success: false, message: 'Phone and OTP are required.' });
 
-  const record = pendingOtps.get(email.toLowerCase());
-  if (!record) return res.status(400).json({ success: false, message: 'No OTP generated for this email.' });
+  const record = pendingOtps.get(phone);
+  if (!record) return res.status(400).json({ success: false, message: 'No OTP generated for this phone number.' });
 
   if (Date.now() > record.expiresAt) {
-    pendingOtps.delete(email.toLowerCase());
+    pendingOtps.delete(phone);
     return res.status(400).json({ success: false, message: 'OTP code has expired.' });
   }
 
   if (record.otp === otp) {
-    pendingOtps.delete(email.toLowerCase());
+    pendingOtps.delete(phone);
     return res.json({ success: true, message: 'OTP verified.' });
   } else {
     return res.status(400).json({ success: false, message: 'Incorrect OTP code.' });

@@ -5,7 +5,8 @@ import { HomePage } from './pages/HomePage';
 import { LoginPage } from './pages/LoginPage';
 import { OtpVerification } from './components/OtpVerification';
 import { UserDashboard } from './components/UserDashboard';
-import { supabase } from './utils/supabaseClient';
+import { onAuthStateChangedWrapper, signOutUser } from './utils/firebaseClient';
+import FloatingContactWidget from './components/FloatingContactWidget';
 
 export default function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -13,6 +14,7 @@ export default function App() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [pendingUser, setPendingUser] = useState<any>(null);
   const [showOtpVerification, setShowOtpVerification] = useState(false);
+  const [mockOtp, setMockOtp] = useState<string>('');
 
   const syncUserFromStorage = () => {
     const storedUser = localStorage.getItem('currentUser');
@@ -25,34 +27,31 @@ export default function App() {
     applyPresetHashOnLoad();
     syncUserFromStorage();
 
-    if (supabase) {
-      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-        if (session && session.user) {
-          const userMeta = session.user.user_metadata;
-          const safeUser = {
-            name: userMeta.full_name || userMeta.name || session.user.email?.split('@')[0] || 'User',
-            email: session.user.email,
-            phone: session.user.phone || '',
-            whatsapp: '',
-            avatar: userMeta.avatar_url || ''
-          };
-          const storedUser = localStorage.getItem('currentUser');
-          if (!storedUser) {
-            setPendingUser(safeUser);
-            setShowOtpVerification(true);
-            setShowLogin(true); // Ensure login overlay is visible so they see OTP
-          } else {
-            setCurrentUser(JSON.parse(storedUser));
-          }
-          
-          // Clear access token hash from URL if present
-          if (window.location.hash.includes('access_token')) {
-            window.location.hash = '';
-          }
+    const unsubscribe = onAuthStateChangedWrapper((user) => {
+      if (user) {
+        const safeUser = {
+          name: user.name,
+          email: user.email,
+          phone: user.phone || '',
+          whatsapp: '',
+          avatar: user.avatar || ''
+        };
+        const storedUser = localStorage.getItem('currentUser');
+        if (!storedUser) {
+          setPendingUser(safeUser);
+          setShowOtpVerification(true);
+          setShowLogin(true); // Ensure login overlay is visible so they see OTP
+        } else {
+          setCurrentUser(JSON.parse(storedUser));
         }
-      });
-      return () => subscription.unsubscribe();
-    }
+        
+        // Clear access token hash from URL if present
+        if (window.location.hash.includes('access_token')) {
+          window.location.hash = '';
+        }
+      }
+    });
+    return () => unsubscribe();
   }, []);
 
   useEffect(() => {
@@ -68,6 +67,7 @@ export default function App() {
     localStorage.removeItem('currentUser');
     setCurrentUser(null);
     setShowDashboard(false);
+    signOutUser();
   };
 
   const handleUserUpdate = (updatedUser: any) => {
@@ -75,18 +75,33 @@ export default function App() {
     setCurrentUser(updatedUser);
   };
 
-  const handleOtpVerifySuccess = () => {
+  const handleOtpVerifySuccess = (verifiedPhone: string) => {
     if (pendingUser) {
-      localStorage.setItem('currentUser', JSON.stringify(pendingUser));
-      setCurrentUser(pendingUser);
-      setPendingUser(null);
-      setShowOtpVerification(false);
-      setShowLogin(false);
+      const finalUser = {
+        ...pendingUser,
+        phone: verifiedPhone
+      };
       
-      // Force clean up URL redirect hash
-      if (window.location.hash.includes('access_token')) {
-        window.location.hash = '';
-      }
+      const saveAndComplete = async () => {
+        if (finalUser.email) {
+          try {
+            const { apiUpdateProfile } = await import('./utils/api');
+            await apiUpdateProfile({ email: finalUser.email, phone: verifiedPhone, name: finalUser.name });
+          } catch {}
+        }
+        localStorage.setItem('currentUser', JSON.stringify(finalUser));
+        setCurrentUser(finalUser);
+        setPendingUser(null);
+        setShowOtpVerification(false);
+        setShowLogin(false);
+        
+        // Force clean up URL redirect hash
+        if (window.location.hash.includes('access_token')) {
+          window.location.hash = '';
+        }
+      };
+      
+      saveAndComplete();
     }
   };
 
@@ -94,12 +109,14 @@ export default function App() {
     <div className="min-h-screen bg-[#F8F8F8] font-lato text-[#141414]">
       {showOtpVerification && pendingUser && (
         <OtpVerification
-          email={pendingUser.email}
+          phone={pendingUser.phone}
+          mockOtp={mockOtp}
           onVerify={handleOtpVerifySuccess}
           onCancel={() => {
             setShowOtpVerification(false);
             setPendingUser(null);
-            if (supabase) supabase.auth.signOut();
+            setMockOtp('');
+            signOutUser();
           }}
         />
       )}
@@ -116,8 +133,9 @@ export default function App() {
             syncUserFromStorage();
             history.pushState('', '', window.location.pathname);
           }}
-          onSuccess={(user: any) => {
+          onSuccess={(user: any, mockOtp?: string) => {
             setPendingUser(user);
+            setMockOtp(mockOtp || '');
             setShowOtpVerification(true);
           }}
         />
@@ -131,6 +149,7 @@ export default function App() {
           onUserUpdate={handleUserUpdate}
         />
       )}
+      <FloatingContactWidget />
     </div>
   );
 }

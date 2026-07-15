@@ -1,14 +1,88 @@
-import { createClient } from '@supabase/supabase-js';
+import { initializeApp, getApps, getApp } from "firebase/app";
+import { 
+  getAuth, 
+  signInWithPopup, 
+  GoogleAuthProvider, 
+  signOut as fbSignOut, 
+  onAuthStateChanged as fbOnAuthStateChanged,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
+  ConfirmationResult
+} from "firebase/auth";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || '';
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || '';
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+};
 
-// Initialize only if keys are present
-export const supabase = supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null;
+const isFirebaseConfigured = !!firebaseConfig.apiKey;
+
+const app = isFirebaseConfigured
+  ? (getApps().length ? getApp() : initializeApp(firebaseConfig))
+  : null;
+
+export const auth = app ? getAuth(app) : null;
+
+// Mock listeners list for simulation mode
+const mockAuthListeners: Array<(user: any | null) => void> = [];
+let mockCurrentUser: any | null = null;
+
+// Synchronize with initial local storage state for simulation mode
+try {
+  const stored = localStorage.getItem('currentUser');
+  if (stored) {
+    mockCurrentUser = JSON.parse(stored);
+  }
+} catch (e) {}
+
+function triggerMockAuthChange() {
+  mockAuthListeners.forEach(listener => listener(mockCurrentUser));
+}
+
+export function onAuthStateChangedWrapper(callback: (user: any | null) => void) {
+  if (auth) {
+    return fbOnAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Map Firebase User to our App User structure
+        callback({
+          name: user.displayName || user.email?.split('@')[0] || 'User',
+          email: user.email,
+          phone: user.phoneNumber || '',
+          whatsapp: '',
+          avatar: user.photoURL || ''
+        });
+      } else {
+        callback(null);
+      }
+    });
+  } else {
+    mockAuthListeners.push(callback);
+    // Call immediately with current state
+    setTimeout(() => callback(mockCurrentUser), 0);
+    return () => {
+      const idx = mockAuthListeners.indexOf(callback);
+      if (idx !== -1) mockAuthListeners.splice(idx, 1);
+    };
+  }
+}
+
+export async function signOutUser(): Promise<void> {
+  if (auth) {
+    await fbSignOut(auth);
+  } else {
+    mockCurrentUser = null;
+    localStorage.removeItem('currentUser');
+    triggerMockAuthChange();
+  }
+}
 
 export async function signInWithGoogle(): Promise<{ success: boolean; user?: any; error?: any }> {
-  if (!supabase) {
-    console.log("Supabase keys not found. Simulating Google Popup Sign-In...");
+  if (!auth) {
+    console.log("Firebase config not found. Simulating Google Popup Sign-In...");
     return new Promise((resolve) => {
       const width = 500;
       const height = 550;
@@ -135,14 +209,21 @@ export async function signInWithGoogle(): Promise<{ success: boolean; user?: any
             popup.close();
             window.removeEventListener('message', listener);
             const mockUser = {
-              name: event.data.name,
+              displayName: event.data.name,
               email: event.data.email,
-              phone: '9876543210',
-              whatsapp: '9876543210',
-              avatar: event.data.avatar
+              phoneNumber: '9876543210',
+              photoURL: event.data.avatar
             };
-            localStorage.setItem('currentUser', JSON.stringify(mockUser));
-            resolve({ success: true, user: mockUser });
+            mockCurrentUser = {
+              name: mockUser.displayName,
+              email: mockUser.email,
+              phone: mockUser.phoneNumber,
+              whatsapp: '9876543210',
+              avatar: mockUser.photoURL
+            };
+            localStorage.setItem('currentUser', JSON.stringify(mockCurrentUser));
+            triggerMockAuthChange();
+            resolve({ success: true, user: mockCurrentUser });
           }
         };
         
@@ -151,12 +232,71 @@ export async function signInWithGoogle(): Promise<{ success: boolean; user?: any
     });
   }
 
-  // Real Supabase OAuth flow
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: window.location.origin + window.location.pathname
+  // Real Firebase Google Auth flow
+  const provider = new GoogleAuthProvider();
+  try {
+    const result = await signInWithPopup(auth, provider);
+    const user = {
+      name: result.user.displayName || result.user.email?.split('@')[0] || 'User',
+      email: result.user.email,
+      phone: result.user.phoneNumber || '',
+      whatsapp: '',
+      avatar: result.user.photoURL || ''
+    };
+    return { success: true, user };
+  } catch (error: any) {
+    return { success: false, error: error };
+  }
+}
+
+export function setupRecaptcha(containerId: string) {
+  const isMockSms = !auth || import.meta.env.VITE_MOCK_SMS === 'true';
+  if (isMockSms) return null;
+
+  if (auth) {
+    try {
+      return new RecaptchaVerifier(auth, containerId, {
+        size: "invisible",
+        callback: () => {
+          // reCAPTCHA solved
+        }
+      });
+    } catch (e) {
+      console.error("Error setting up RecaptchaVerifier:", e);
+      return null;
     }
-  });
-  return { success: !error, error };
+  }
+  return null;
+}
+
+export function formatPhoneNumber(phone: string): string {
+  const cleaned = phone.replace(/\D/g, '');
+  if (cleaned.length === 10) {
+    return `+91${cleaned}`;
+  }
+  if (cleaned.length > 10 && !phone.startsWith('+')) {
+    return `+${cleaned}`;
+  }
+  return phone.startsWith('+') ? phone : `+${phone}`;
+}
+
+export async function sendSmsOtp(
+  phone: string, 
+  appVerifier: any
+): Promise<{ success: boolean; confirmationResult?: ConfirmationResult | null; mockOtp?: string; error?: any }> {
+  const isMockSms = !auth || import.meta.env.VITE_MOCK_SMS === 'true';
+  if (isMockSms) {
+    console.log("Firebase SMS simulation mode active.");
+    const mockOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    return { success: true, confirmationResult: null, mockOtp };
+  }
+
+  const formattedPhone = formatPhoneNumber(phone);
+  try {
+    const confirmationResult = await signInWithPhoneNumber(auth!, formattedPhone, appVerifier);
+    return { success: true, confirmationResult };
+  } catch (error) {
+    console.error("Error in signInWithPhoneNumber:", error);
+    return { success: false, error };
+  }
 }

@@ -1,17 +1,18 @@
-import { useState } from 'react';
-import { Eye, EyeOff, Mail, Lock, User, ArrowLeft } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Phone } from 'lucide-react';
 import BoomerangVideoBg from '../components/BoomerangVideoBg';
-import { apiSignup, apiLogin } from '../utils/api';
-import { signInWithGoogle } from '../utils/supabaseClient';
+import { apiSignup, apiLogin, apiSendOtp } from '../utils/api';
+import { signInWithGoogle } from '../utils/firebaseClient';
 
 interface AuthPageProps {
   onBack: () => void;
-  onSuccess: (user: any) => void;
+  onSuccess: (user: any, mockOtp?: string) => void;
 }
 
 export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -20,6 +21,16 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('rememberUser');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed.phone) setPhone(parsed.phone);
+      }
+    } catch {}
+  }, []);
 
   const handleGoogleSignIn = async () => {
     setError('');
@@ -48,8 +59,8 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     setIsLoading(true);
 
     if (isSignUp) {
-      if (!name || !email || !password || !confirmPassword) {
-        setError('All fields are required.');
+      if (!name || !phone || !password || !confirmPassword) {
+        setError('Name, Phone, and Password are required.');
         setIsLoading(false);
         return;
       }
@@ -65,17 +76,18 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       }
 
       try {
-        const data = await apiSignup({ name, email, password });
+        const data = await apiSignup({ name, phone, email: email || undefined, password });
         if (data.success) {
-          setSuccess(data.message || 'Account created successfully! Please log in.');
-          setName('');
-          setEmail('');
-          setPassword('');
-          setConfirmPassword('');
-          setTimeout(() => {
-            setIsSignUp(false);
-            setSuccess('');
-          }, 2000);
+          setSuccess('Signup successful! Sending security code...');
+          const otpRes = await apiSendOtp(phone, email || undefined);
+          if (otpRes.success) {
+            setSuccess('SMS verification code sent!');
+            setTimeout(() => {
+              onSuccess(data.user, otpRes.isMocked ? otpRes.otp : undefined);
+            }, 1000);
+          } else {
+            setError(otpRes.message || 'Failed to send SMS verification code.');
+          }
         } else {
           setError(data.message || 'Signup failed.');
         }
@@ -83,25 +95,30 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         setError('Unable to connect to the authentication server.');
       }
     } else {
-      if (!email || !password) {
-        setError('Email and password are required.');
+      if (!phone || !password) {
+        setError('Phone number and password are required.');
         setIsLoading(false);
         return;
       }
 
       try {
-        const data = await apiLogin({ email, password });
+        const data = await apiLogin({ phone, password });
         if (data.success) {
-          setSuccess('Login successful! Welcome back.');
+          setSuccess('Login successful! Sending security code...');
           if (rememberMe) {
-            localStorage.setItem('rememberUser', JSON.stringify({ email }));
+            localStorage.setItem('rememberUser', JSON.stringify({ phone }));
           } else {
             localStorage.removeItem('rememberUser');
           }
-          localStorage.setItem('currentUser', JSON.stringify(data.user));
-          setTimeout(() => {
-            onSuccess(data.user);
-          }, 1500);
+          const otpRes = await apiSendOtp(phone, data.user.email || undefined);
+          if (otpRes.success) {
+            setSuccess('SMS verification code sent!');
+            setTimeout(() => {
+              onSuccess(data.user, otpRes.isMocked ? otpRes.otp : undefined);
+            }, 1000);
+          } else {
+            setError(otpRes.message || 'Failed to send SMS verification code.');
+          }
         } else {
           setError(data.message || 'Login failed.');
         }
@@ -209,7 +226,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
           {isSignUp && (
             <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
               <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
-                Full Name
+                Full Name <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
@@ -226,10 +243,30 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
             </div>
           )}
 
-          {/* Email Field */}
-          <div className="animate-blur-fade-up" style={{ animationDelay: '600ms' }}>
+          {/* Phone Field (Compulsory for both) */}
+          <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
             <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
-              Your Email
+              Phone Number <span className="text-rose-500">*</span>
+            </label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                <Phone className="w-4 h-4" />
+              </span>
+              <input
+                type="tel"
+                placeholder="Enter your phone number"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                maxLength={15}
+                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+              />
+            </div>
+          </div>
+
+          {/* Email Field (Optional for both) */}
+          <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
+            <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
+              Email Address <span className="text-white/30 lowercase font-medium">(optional)</span>
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
@@ -237,7 +274,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
               </span>
               <input
                 type="email"
-                placeholder="Enter your email id here"
+                placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
@@ -248,7 +285,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
           {/* Password Field */}
           <div className="animate-blur-fade-up" style={{ animationDelay: '650ms' }}>
             <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
-              Password
+              Password <span className="text-rose-500">*</span>
             </label>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
@@ -281,7 +318,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
           {isSignUp && (
             <div className="animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
               <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-1 ml-1">
-                Confirm Password
+                Confirm Password <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">

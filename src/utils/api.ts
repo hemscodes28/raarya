@@ -70,7 +70,7 @@ function saveLocalDB(db: LocalDB) {
   localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
-export async function apiSignup(userData: any) {
+export async function apiSignup(userData: { name: string; phone: string; email?: string; password?: string }) {
   try {
     const response = await fetch(`${BASE_URL}/signup`, {
       method: 'POST',
@@ -80,13 +80,28 @@ export async function apiSignup(userData: any) {
     return await response.json();
   } catch (err) {
     const db = getLocalDB();
-    const existing = db.users.find(u => u.email.toLowerCase() === userData.email.toLowerCase());
-    if (existing) {
-      return { success: false, message: 'Email already registered.' };
+    
+    // Check phone number uniqueness
+    const existingPhone = db.users.find(u => u.phone === userData.phone);
+    if (existingPhone) {
+      return { success: false, message: 'Phone number already registered.' };
     }
+    
+    // Check email uniqueness (if email is provided)
+    if (userData.email) {
+      const existingEmail = db.users.find(u => u.email && u.email.toLowerCase() === userData.email!.toLowerCase());
+      if (existingEmail) {
+        return { success: false, message: 'Email already registered.' };
+      }
+    }
+
     const newUser = {
       id: 'user_' + Date.now(),
-      ...userData,
+      name: userData.name,
+      phone: userData.phone,
+      email: userData.email || '',
+      password: userData.password,
+      whatsapp: '',
       createdAt: new Date().toISOString()
     };
     db.users.push(newUser);
@@ -95,7 +110,7 @@ export async function apiSignup(userData: any) {
   }
 }
 
-export async function apiLogin(credentials: any) {
+export async function apiLogin(credentials: { phone: string; password?: string }) {
   try {
     const response = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
@@ -106,17 +121,17 @@ export async function apiLogin(credentials: any) {
   } catch (err) {
     const db = getLocalDB();
     const user = db.users.find(
-      u => u.email.toLowerCase() === credentials.email.toLowerCase() && u.password === credentials.password
+      u => u.phone === credentials.phone && u.password === credentials.password
     );
     if (user) {
       const { password, ...safeUser } = user;
       return { success: true, user: safeUser };
     }
-    if (credentials.email.toLowerCase() === 'hem@example.com' && credentials.password === 'password') {
-      const seedUser = { name: 'Hemkumar Ramesh', email: 'hem@example.com', phone: '9876543210', whatsapp: '9876543210' };
+    if (credentials.phone === '9876543210' && credentials.password === 'password') {
+      const seedUser = { name: 'Hemkumar Ramesh', email: 'hemkumarr2803@gmail.com', phone: '9876543210', whatsapp: '9876543210' };
       return { success: true, user: seedUser };
     }
-    return { success: false, message: 'Invalid email or password.' };
+    return { success: false, message: 'Invalid phone number or password.' };
   }
 }
 
@@ -204,35 +219,37 @@ export async function apiGetEnquiries(email: string) {
   }
 }
 
-export async function apiSendOtp(email: string) {
+export async function apiSendOtp(phone: string, email?: string) {
   try {
     const response = await fetch(`${BASE_URL}/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ phone, email }),
     });
     return await response.json();
   } catch (err) {
     const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    sessionStorage.setItem(`otp_${email.toLowerCase()}`, fallbackOtp);
+    sessionStorage.setItem(`otp_${phone}`, fallbackOtp);
     return { success: true, isMocked: true, otp: fallbackOtp };
   }
 }
 
-export async function apiVerifyOtp(email: string, otp: string) {
+export async function apiVerifyOtp(phone: string, otp: string) {
   try {
     const response = await fetch(`${BASE_URL}/verify-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, otp }),
+      body: JSON.stringify({ phone, otp }),
     });
     return await response.json();
   } catch (err) {
-    const stored = sessionStorage.getItem(`otp_${email.toLowerCase()}`);
+    const stored = sessionStorage.getItem(`otp_${phone}`);
     if (stored === otp) {
-      sessionStorage.removeItem(`otp_${email.toLowerCase()}`);
+      sessionStorage.removeItem(`otp_${phone}`);
       return { success: true };
     }
     return { success: false, message: 'Invalid OTP code.' };
   }
 }
+
+
