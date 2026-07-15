@@ -222,139 +222,141 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
             </div>
           )}
           
-          {/* Name Field (Sign Up Only) */}
-          {isSignUp && (
-            <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
+          <div className="flex flex-col gap-2 max-h-[190px] sm:max-h-[260px] overflow-y-auto pr-1.5 custom-scrollbar">
+            {/* Name Field (Sign Up Only) */}
+            {isSignUp && (
+              <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
+                <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
+                  Full Name <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                    <User className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Enter your full name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Phone Field (Compulsory for both) */}
+            <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
               <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-                Full Name <span className="text-rose-500">*</span>
+                Phone Number <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-                  <User className="w-4 h-4" />
+                  <Phone className="w-4 h-4" />
                 </span>
                 <input
-                  type="text"
-                  placeholder="Enter your full name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  type="tel"
+                  placeholder="Enter your phone number"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                  maxLength={15}
                   className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
                 />
               </div>
             </div>
-          )}
 
-          {/* Phone Field (Compulsory for both) */}
-          <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
-            <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-              Phone Number <span className="text-rose-500">*</span>
-            </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-                <Phone className="w-4 h-4" />
-              </span>
-              <input
-                type="tel"
-                placeholder="Enter your phone number"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                maxLength={15}
-                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
-              />
-            </div>
-          </div>
-
-          {/* Email Field (Optional for both) */}
-          <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
-            <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-              Email Address <span className="text-white/30 lowercase font-medium">(optional)</span>
-            </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-                <Mail className="w-4 h-4" />
-              </span>
-              <input
-                type="email"
-                placeholder="Enter your email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
-              />
-            </div>
-          </div>
-
-          {/* Password Field */}
-          <div className="animate-blur-fade-up" style={{ animationDelay: '650ms' }}>
-            <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-              Password <span className="text-rose-500">*</span>
-            </label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-                <Lock className="w-4 h-4" />
-              </span>
-              <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password here"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 pr-12 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-            {isSignUp && password.length > 0 && password.length < 6 && (
-              <p className="mt-1 ml-1 text-[10px] font-semibold text-amber-400 flex items-center gap-1.5 animate-pulse">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                Password must be at least 6 characters ({6 - password.length} more needed)
-              </p>
-            )}
-          </div>
-
-          {/* Confirm Password Field (Sign Up Only) */}
-          {isSignUp && (
-            <div className="animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
+            {/* Email Field (Optional for both) */}
+            <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
               <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-                Confirm Password <span className="text-rose-500">*</span>
+                Email Address <span className="text-white/30 lowercase font-medium">(optional)</span>
+              </label>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                  <Mail className="w-4 h-4" />
+                </span>
+                <input
+                  type="email"
+                  placeholder="Enter your email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div className="animate-blur-fade-up" style={{ animationDelay: '650ms' }}>
+              <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
+                Password <span className="text-rose-500">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
                   <Lock className="w-4 h-4" />
                 </span>
                 <input
-                  type="password"
-                  placeholder="Confirm your password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password here"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 pr-12 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+              {isSignUp && password.length > 0 && password.length < 6 && (
+                <p className="mt-1 ml-1 text-[10px] font-semibold text-amber-400 flex items-center gap-1.5 animate-pulse">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  Password must be at least 6 characters ({6 - password.length} more needed)
+                </p>
+              )}
             </div>
-          )}
 
-          {/* Remember Me & Forgot Password (Login Only) */}
-          {!isSignUp && (
-            <div className="flex items-center justify-between mt-1 text-xs text-white/60 animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
-              <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors select-none">
-                <input
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) => setRememberMe(e.target.checked)}
-                  className="w-4 h-4 rounded border-white/10 bg-white/5 accent-white cursor-pointer"
-                />
-                Remember me
-              </label>
-              <button
-                type="button"
-                className="font-medium hover:text-white transition-colors hover:underline"
-              >
-                Forgot Password?
-              </button>
-            </div>
-          )}
+            {/* Confirm Password Field (Sign Up Only) */}
+            {isSignUp && (
+              <div className="animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
+                <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
+                  Confirm Password <span className="text-rose-500">*</span>
+                </label>
+                <div className="relative">
+                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                    <Lock className="w-4 h-4" />
+                  </span>
+                  <input
+                    type="password"
+                    placeholder="Confirm your password"
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Remember Me & Forgot Password (Login Only) */}
+            {!isSignUp && (
+              <div className="flex items-center justify-between mt-1 text-xs text-white/60 animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
+                <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors select-none">
+                  <input
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="w-4 h-4 rounded border-white/10 bg-white/5 accent-white cursor-pointer"
+                  />
+                  Remember me
+                </label>
+                <button
+                  type="button"
+                  className="font-medium hover:text-white transition-colors hover:underline"
+                >
+                  Forgot Password?
+                </button>
+              </div>
+            )}
+          </div>
 
           {/* Submit Button */}
           <button
