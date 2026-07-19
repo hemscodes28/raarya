@@ -30,7 +30,7 @@ function CustomSelect({ label, value, options, onChange }: CustomSelectProps) {
       <label className="text-[9px] font-extrabold tracking-wider uppercase text-slate-400 select-none">
         {label}
       </label>
-      
+
       {/* Trigger Button */}
       <button
         type="button"
@@ -103,21 +103,20 @@ export function QuoteSection() {
 
       {/* 2. Premium Real Estate Search Widget - Black & White minimalist theme with distinct light background and clear border */}
       <div className="w-full max-w-6xl bg-zinc-50 border border-zinc-200 rounded-3xl shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-5 md:p-7 select-none">
-        
+
         {/* Top bar: Tabs and Post Property */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 border-b border-zinc-200 pb-5">
-          
+
           {/* Tabs */}
           <div className="flex gap-4 bg-white px-4 py-2 rounded-2xl border border-zinc-200/80 items-center shadow-sm">
             {(["buy", "rent", "pg-hostel"] as const).map((tab) => (
               <button
                 key={tab}
                 onClick={() => setActiveTab(tab)}
-                className={`px-4 py-2 text-xs md:text-[13px] font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 cursor-pointer ${
-                  activeTab === tab
+                className={`px-4 py-2 text-xs md:text-[13px] font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 cursor-pointer ${activeTab === tab
                     ? "bg-[#141414] text-white shadow-md shadow-black/10"
                     : "text-slate-400 hover:text-slate-700"
-                }`}
+                  }`}
               >
                 {tab === "pg-hostel" ? "PG / HOSTEL" : tab === "rent" ? "RENT" : "BUY"}
               </button>
@@ -141,14 +140,14 @@ export function QuoteSection() {
 
             {/* Innovative Floating & Pulsing FREE Badge */}
             <motion.span
-              animate={{ 
+              animate={{
                 y: [0, -4, 0],
                 scale: [1, 1.06, 1]
               }}
-              transition={{ 
-                repeat: Infinity, 
-                duration: 2.2, 
-                ease: "easeInOut" 
+              transition={{
+                repeat: Infinity,
+                duration: 2.2,
+                ease: "easeInOut"
               }}
               className="absolute -top-3 -right-2 bg-gradient-to-r from-rose-500 to-red-600 text-[9px] font-black uppercase tracking-wider text-white px-2.5 py-0.5 rounded-full shadow-[0_4px_12px_rgba(239,68,68,0.4)] border border-white select-none pointer-events-none z-20"
             >
@@ -159,7 +158,7 @@ export function QuoteSection() {
 
         {/* Filters grid: 12-column layout to prevent column squeezing with Custom dropdowns */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-4 items-end">
-          
+
           {/* State */}
           <CustomSelect
             label="STATE"

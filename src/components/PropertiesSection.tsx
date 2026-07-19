@@ -77,13 +77,13 @@ export function PropertiesSection() {
         {/* Animated Properties Grid */}
         <div className="grid gap-8 md:grid-cols-3 min-h-[350px]">
           <AnimatePresence mode="wait">
-            {filteredProperties.map((property, i) => (
+            {filteredProperties.slice(0, 9).map((property, i) => (
               <motion.div
-                key={property.title}
+                key={property.id || `${property.title}-${i}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: i * 0.1, duration: 0.5 }}
+                transition={{ delay: i * 0.05, duration: 0.4 }}
               >
                 <PropertyCard property={property} />
               </motion.div>
@@ -91,10 +91,21 @@ export function PropertiesSection() {
           </AnimatePresence>
           {filteredProperties.length === 0 && (
             <div className="col-span-full flex flex-col items-center justify-center py-20 text-center">
-              <p className="text-[#A5A5A5]">No listings found for this category.</p>
+              <p className="text-[#A5A5A5]">No listings found for this category currently.</p>
             </div>
           )}
         </div>
+
+        {filteredProperties.length > 9 && (
+          <div className="mt-12 text-center">
+            <a
+              href="#/properties"
+              className="inline-flex items-center justify-center px-8 py-3.5 bg-[#141414] text-white text-[13px] font-medium tracking-wide transition-all duration-300 hover:bg-black/80"
+            >
+              View All {filteredProperties.length} {activeTab.toUpperCase()} Properties
+            </a>
+          </div>
+        )}
       </div>
     </section>
   );

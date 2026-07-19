@@ -38,12 +38,11 @@ export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
   };
 
   return (
-    <header 
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
-        scrolled 
-          ? 'py-2 bg-white/80 backdrop-blur-md shadow-sm border-b border-black/5 px-5 md:px-10' 
+    <header
+      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled
+          ? 'py-2 bg-white/80 backdrop-blur-md shadow-sm border-b border-black/5 px-5 md:px-10'
           : 'py-3 bg-transparent px-5 md:px-10'
-      }`}
+        }`}
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
         <PillNav

@@ -220,17 +220,17 @@ export function PillNav({
 
     if (menu) {
       if (newState) {
-        gsap.set(menu, { visibility: 'visible' });
+        gsap.set(menu, { visibility: 'visible', left: '50%', top: '50%', xPercent: -50, yPercent: -50 });
         gsap.fromTo(
           menu,
-          { opacity: 0, scale: 0.9, xPercent: -50, yPercent: -45 },
+          { opacity: 0, scale: 0.9, xPercent: -50, yPercent: -50 },
           {
             opacity: 1,
             scale: 1,
             xPercent: -50,
             yPercent: -50,
-            duration: 0.4,
-            ease: 'back.out(1.5)',
+            duration: 0.35,
+            ease: 'back.out(1.4)',
             transformOrigin: 'center center'
           }
         );
@@ -239,8 +239,8 @@ export function PillNav({
           opacity: 0,
           scale: 0.9,
           xPercent: -50,
-          yPercent: -45,
-          duration: 0.25,
+          yPercent: -50,
+          duration: 0.2,
           ease: 'power2.in',
           transformOrigin: 'center center',
           onComplete: () => {
@@ -377,17 +377,18 @@ export function PillNav({
           position: 'fixed',
           top: '50%',
           left: '50%',
-          width: '90%',
-          maxWidth: '350px',
+          transform: 'translate(-50%, -50%)',
+          width: '90vw',
+          maxWidth: '340px',
           maxHeight: '85vh',
           overflowY: 'auto',
           background: '#ffffff',
           borderRadius: '28px',
           boxShadow: '0 25px 60px rgba(0, 0, 0, 0.4)',
-          border: '1px solid rgba(0, 0, 0, 0.05)',
+          border: '1px solid rgba(0, 0, 0, 0.08)',
           padding: '24px',
           boxSizing: 'border-box',
-          zIndex: 999,
+          zIndex: 9999,
           ...cssVars
         }}
       >

@@ -2,6 +2,12 @@ import { useEffect, useState } from 'react';
 import { applyPresetHashOnLoad } from './_shared/preset-site-routing';
 import { ZenithNavbar } from './components/ZenithNavbar';
 import { HomePage } from './pages/HomePage';
+import { PropertiesPage } from './pages/PropertiesPage';
+import { BlogPage } from './pages/BlogPage';
+import { ContactPage } from './pages/ContactPage';
+import { MortgagePage } from './pages/MortgagePage';
+import { CareersPage } from './pages/CareersPage';
+import { CompanyPage } from './pages/CompanyPage';
 import { LoginPage } from './pages/LoginPage';
 import { OtpVerification } from './components/OtpVerification';
 import { UserDashboard } from './components/UserDashboard';
@@ -15,11 +21,12 @@ export default function App() {
   const [pendingUser, setPendingUser] = useState<any>(null);
   const [showOtpVerification, setShowOtpVerification] = useState(false);
   const [mockOtp, setMockOtp] = useState<string>('');
+  const [currentRoute, setCurrentRoute] = useState<string>('');
 
   const syncUserFromStorage = () => {
     const storedUser = localStorage.getItem('currentUser');
     if (storedUser) {
-      try { setCurrentUser(JSON.parse(storedUser)); } catch {}
+      try { setCurrentUser(JSON.parse(storedUser)); } catch { }
     }
   };
 
@@ -40,12 +47,11 @@ export default function App() {
         if (!storedUser) {
           setPendingUser(safeUser);
           setShowOtpVerification(true);
-          setShowLogin(true); // Ensure login overlay is visible so they see OTP
+          setShowLogin(true);
         } else {
           setCurrentUser(JSON.parse(storedUser));
         }
-        
-        // Clear access token hash from URL if present
+
         if (window.location.hash.includes('access_token')) {
           window.location.hash = '';
         }
@@ -56,7 +62,13 @@ export default function App() {
 
   useEffect(() => {
     const handleHash = () => {
-      if (window.location.hash === '#login') setShowLogin(true);
+      const hash = window.location.hash.replace(/^#\/?/, '');
+      if (hash === 'login') {
+        setShowLogin(true);
+      } else {
+        setCurrentRoute(hash);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     };
     handleHash();
     window.addEventListener('hashchange', handleHash);
@@ -81,27 +93,55 @@ export default function App() {
         ...pendingUser,
         phone: verifiedPhone
       };
-      
+
       const saveAndComplete = async () => {
         if (finalUser.email) {
           try {
             const { apiUpdateProfile } = await import('./utils/api');
             await apiUpdateProfile({ email: finalUser.email, phone: verifiedPhone, name: finalUser.name });
-          } catch {}
+          } catch { }
         }
         localStorage.setItem('currentUser', JSON.stringify(finalUser));
         setCurrentUser(finalUser);
         setPendingUser(null);
         setShowOtpVerification(false);
         setShowLogin(false);
-        
-        // Force clean up URL redirect hash
+
         if (window.location.hash.includes('access_token')) {
           window.location.hash = '';
         }
       };
-      
+
       saveAndComplete();
+    }
+  };
+
+  const renderActivePage = () => {
+    switch (currentRoute) {
+      case 'buy':
+        return <PropertiesPage initialTab="buy" />;
+      case 'rent':
+        return <PropertiesPage initialTab="rent" />;
+      case 'pg-hostel':
+      case 'pg':
+        return <PropertiesPage initialTab="pg-hostel" />;
+      case 'properties':
+        return <PropertiesPage initialTab="all" />;
+      case 'blog':
+        return <BlogPage />;
+      case 'contact':
+        return <ContactPage />;
+      case 'home-loan':
+      case 'emi-calculator':
+        return <MortgagePage />;
+      case 'careers':
+      case 'career':
+        return <CareersPage />;
+      case 'company':
+      case 'about':
+        return <CompanyPage />;
+      default:
+        return <HomePage />;
     }
   };
 
@@ -124,7 +164,10 @@ export default function App() {
         currentUser={currentUser}
         onAvatarClick={() => setShowDashboard(true)}
       />
-      <HomePage />
+
+      <main className="pt-20">
+        {renderActivePage()}
+      </main>
 
       {showLogin && (
         <LoginPage

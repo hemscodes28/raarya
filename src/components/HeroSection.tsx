@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+ï»¿import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 import banner1 from "../../BANNER-1.jpg.jpeg";
@@ -61,9 +61,9 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative bg-[#F8F8F8] flex flex-col pt-[140px] md:pt-[120px] lg:pt-[150px] pb-6"
+      className="relative bg-[#F8F8F8] flex flex-col pt-[68px] sm:pt-[72px] md:pt-[76px] pb-6"
     >
-      {/* Quote — left-aligned, responsive font, wrapped correctly on all mobile screens */}
+      {/* Quote â€” left-aligned, responsive font, wrapped correctly on all mobile screens */}
       <motion.div
         initial={{ opacity: 0, y: -8 }}
         animate={{ opacity: 1, y: 0 }}
@@ -77,11 +77,11 @@ export function HeroSection() {
           "The best investment on Earth is Earth."
         </span>
         <span className="text-[9px] md:text-[11px] font-bold uppercase tracking-[0.22em] text-[#141414]/40 whitespace-nowrap">
-          — RAARYA GROUPS
+          â€” RAARYA GROUPS
         </span>
       </motion.div>
 
-      {/* Carousel — full-width minus a small bezel-like gap */}
+      {/* Carousel â€” full-width minus a small bezel-like gap */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
