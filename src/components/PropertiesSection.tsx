@@ -44,7 +44,7 @@ export function PropertiesSection() {
               Explore our premium properties
             </h2>
             <p
-              className="mt-4 text-[14px] leading-relaxed text-[#A5A5A5]"
+              className="mt-4 text-[14px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-base"
               data-editable
               data-preset-text="properties-subcopy"
             >

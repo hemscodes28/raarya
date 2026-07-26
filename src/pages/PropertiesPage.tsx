@@ -16,23 +16,152 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
   const [visibleCount, setVisibleCount] = useState(18);
   const [selectedProperty, setSelectedProperty] = useState<PropertyListing | null>(null);
 
+  const [stateFilter, setStateFilter] = useState('');
+  const [districtFilter, setDistrictFilter] = useState('');
+  const [cityFilter, setCityFilter] = useState('');
+  const [propertyTypeFilter, setPropertyTypeFilter] = useState('');
+  const [budgetFilter, setBudgetFilter] = useState('');
+
   useEffect(() => {
     setActiveTab(initialTab);
     setVisibleCount(18);
+
+    // Load filters from session storage
+    const stored = sessionStorage.getItem('raarya_search_filters');
+    if (stored) {
+      try {
+        const filters = JSON.parse(stored);
+        if (filters.tab === initialTab || initialTab === 'all') {
+          setStateFilter(filters.state || '');
+          setDistrictFilter(filters.district || '');
+          setCityFilter(filters.city || '');
+          setPropertyTypeFilter(filters.propertyType || '');
+          setBudgetFilter(filters.budget || '');
+        } else {
+          // Clear filters if user navigated to a different tab manually
+          setStateFilter('');
+          setDistrictFilter('');
+          setCityFilter('');
+          setPropertyTypeFilter('');
+          setBudgetFilter('');
+        }
+      } catch (e) {
+        console.error('Failed to parse search filters', e);
+      }
+    } else {
+      setStateFilter('');
+      setDistrictFilter('');
+      setCityFilter('');
+      setPropertyTypeFilter('');
+      setBudgetFilter('');
+    }
   }, [initialTab]);
 
   const filtered = useMemo(() => {
     return PROPERTIES.filter((p) => {
+      // 1. Tab Match
       const matchesTab = activeTab === 'all' || p.type === activeTab;
+      
+      // 2. Text Search Term Match
       const matchesSearch =
         searchTerm === '' ||
         p.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         p.location.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (p.subType && p.subType.toLowerCase().includes(searchTerm.toLowerCase()));
 
-      return matchesTab && matchesSearch;
+      if (!matchesTab || !matchesSearch) return false;
+
+      // 3. Location Parse
+      let parsed = { state: '', district: '', city: '' };
+      if (p.location) {
+        const parts = p.location.split(',').map(s => s.trim());
+        const st = parts.length > 0 ? parts[parts.length - 1] : '';
+        const dt = parts.length > 1 ? parts[parts.length - 2] : '';
+        let ct = parts.length > 2 ? parts.slice(0, parts.length - 2).join(', ').trim() : '';
+        if (ct.includes('-')) {
+          const dashParts = ct.split('-');
+          const potentialCity = dashParts[0].trim();
+          if (potentialCity) ct = potentialCity;
+        }
+        parsed = {
+          state: st.toLowerCase(),
+          district: dt.toLowerCase(),
+          city: ct.replace(/^,/, '').trim().toLowerCase()
+        };
+      }
+
+      // 4. State Match
+      if (stateFilter && stateFilter !== 'Select State' && parsed.state !== stateFilter.toLowerCase()) {
+        return false;
+      }
+
+      // 5. District Match
+      if (districtFilter && districtFilter !== 'Select District' && parsed.district !== districtFilter.toLowerCase()) {
+        return false;
+      }
+
+      // 6. City Match
+      if (cityFilter && cityFilter !== 'Select City' && cityFilter !== 'Select City / Town' && parsed.city !== cityFilter.toLowerCase()) {
+        return false;
+      }
+
+      // 7. Property Type Match
+      if (propertyTypeFilter && propertyTypeFilter !== 'Select Property Type') {
+        const propTypeLower = propertyTypeFilter.toLowerCase();
+        const subTypeLower = p.subType ? p.subType.toLowerCase() : '';
+        
+        if (propTypeLower === 'commercial') {
+          const isCommercial = ['commercial land', 'shop', 'office space', 'showroom', 'godown', 'warehouse', 'industrial land'].some(c => subTypeLower.includes(c));
+          if (!isCommercial) return false;
+        } else if (propTypeLower === 'house') {
+          const isHouse = ['house', 'independent house', 'villa', 'builder floor', 'farm house'].some(h => subTypeLower.includes(h));
+          if (!isHouse) return false;
+        } else {
+          if (subTypeLower !== propTypeLower && !subTypeLower.includes(propTypeLower)) {
+            return false;
+          }
+        }
+      }
+
+      // 8. Budget Match
+      if (budgetFilter && budgetFilter !== 'Select Budget') {
+        let priceNum = 0;
+        if (p.price) {
+          const normalizedPrice = p.price.replace(/,,/g, ',');
+          const clean = normalizedPrice.replace(/[^\d]/g, '');
+          priceNum = parseInt(clean, 10) || 0;
+        }
+
+        if (p.type === 'buy') {
+          if (budgetFilter.includes('Under')) {
+            if (priceNum >= 5000000) return false;
+          } else if (budgetFilter.includes('-')) {
+            if (priceNum < 5000000 || priceNum > 15000000) return false;
+          } else if (budgetFilter.includes('Over')) {
+            if (priceNum <= 15000000) return false;
+          }
+        } else if (p.type === 'rent') {
+          if (budgetFilter.includes('Under')) {
+            if (priceNum >= 15000) return false;
+          } else if (budgetFilter.includes('-')) {
+            if (priceNum < 15000 || priceNum > 30000) return false;
+          } else if (budgetFilter.includes('Over')) {
+            if (priceNum <= 30000) return false;
+          }
+        } else if (p.type === 'pg-hostel') {
+          if (budgetFilter.includes('Under')) {
+            if (priceNum >= 8000) return false;
+          } else if (budgetFilter.includes('-')) {
+            if (priceNum < 8000 || priceNum > 15000) return false;
+          } else if (budgetFilter.includes('Over')) {
+            if (priceNum <= 15000) return false;
+          }
+        }
+      }
+
+      return true;
     });
-  }, [activeTab, searchTerm]);
+  }, [activeTab, searchTerm, stateFilter, districtFilter, cityFilter, propertyTypeFilter, budgetFilter]);
 
   const buyCount = useMemo(() => PROPERTIES.filter((p) => p.type === 'buy').length, []);
   const rentCount = useMemo(() => PROPERTIES.filter((p) => p.type === 'rent').length, []);
@@ -112,6 +241,51 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
           ))}
         </div>
       </div>
+
+      {/* Active Filters Bar */}
+      {(stateFilter || districtFilter || (cityFilter && cityFilter !== 'Select City') || (propertyTypeFilter && propertyTypeFilter !== 'Select Property Type') || (budgetFilter && budgetFilter !== 'Select Budget')) && (
+        <div className="mb-6 flex flex-wrap items-center gap-2 bg-zinc-50 border border-zinc-200 p-4 rounded-2xl select-none shadow-sm">
+          <span className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400">Search Filters:</span>
+          {stateFilter && (
+            <span className="bg-white border border-zinc-200 text-[#141414] px-3.5 py-1.5 text-xs rounded-xl font-bold shadow-sm">
+              State: {stateFilter}
+            </span>
+          )}
+          {districtFilter && (
+            <span className="bg-white border border-zinc-200 text-[#141414] px-3.5 py-1.5 text-xs rounded-xl font-bold shadow-sm">
+              District: {districtFilter}
+            </span>
+          )}
+          {cityFilter && cityFilter !== 'Select City' && (
+            <span className="bg-white border border-zinc-200 text-[#141414] px-3.5 py-1.5 text-xs rounded-xl font-bold shadow-sm">
+              Area: {cityFilter}
+            </span>
+          )}
+          {propertyTypeFilter && propertyTypeFilter !== 'Select Property Type' && (
+            <span className="bg-white border border-zinc-200 text-[#141414] px-3.5 py-1.5 text-xs rounded-xl font-bold shadow-sm">
+              Type: {propertyTypeFilter}
+            </span>
+          )}
+          {budgetFilter && budgetFilter !== 'Select Budget' && (
+            <span className="bg-white border border-zinc-200 text-[#141414] px-3.5 py-1.5 text-xs rounded-xl font-bold shadow-sm">
+              Budget: {budgetFilter}
+            </span>
+          )}
+          <button
+            onClick={() => {
+              setStateFilter('');
+              setDistrictFilter('');
+              setCityFilter('');
+              setPropertyTypeFilter('');
+              setBudgetFilter('');
+              sessionStorage.removeItem('raarya_search_filters');
+            }}
+            className="ml-auto text-xs font-bold text-rose-500 hover:text-rose-700 underline cursor-pointer"
+          >
+            Clear Search Filters
+          </button>
+        </div>
+      )}
 
       {/* Properties Count Header */}
       <div className="mb-6 flex items-center justify-between border-b border-black/5 pb-4">

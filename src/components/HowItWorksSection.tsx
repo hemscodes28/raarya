@@ -23,7 +23,7 @@ export function HowItWorksSection() {
             Explore our service and the process
           </h2>
           <p
-            className="text-[14px] leading-relaxed text-[#A5A5A5] md:col-span-4 md:col-start-9"
+            className="text-[14px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:col-span-4 md:col-start-9 md:text-[15px]"
             data-editable
             data-preset-text="how-subcopy"
           >
@@ -37,7 +37,7 @@ export function HowItWorksSection() {
               <h3 className="text-xl font-medium tracking-tight text-[#141414]" data-editable>
                 Exclusive collection
               </h3>
-              <p className="mt-4 text-[14px] leading-relaxed text-[#A5A5A5]" data-editable>
+              <p className="mt-4 text-[14px] leading-relaxed text-zinc-600" data-editable>
                 Consultants curate custom lists of vetted homes. Featuring media, VR walk-ins, and
                 private physical tours.
               </p>
@@ -57,7 +57,7 @@ export function HowItWorksSection() {
                   className={`text-left text-[13px] font-medium transition-colors ${
                     active === item.id
                       ? 'text-[#141414]'
-                      : 'text-[#A5A5A5] hover:text-[#141414]'
+                      : 'text-zinc-500 hover:text-[#141414]'
                   }`}
                 >
                   {item.label}

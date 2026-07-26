@@ -8,7 +8,6 @@ import {
   Sparkles,
   Info
 } from 'lucide-react';
-import DotField from '../components/DotField';
 
 // Indian currency formatter
 const formatINR = (value: number) => {
@@ -111,29 +110,6 @@ export function MortgagePage() {
 
   return (
     <div className="relative min-h-[calc(100vh-5rem)] w-full bg-[#F8F8F8] text-[#141414] overflow-hidden py-12 md:py-20 px-4 sm:px-6 lg:px-8">
-      {/* Background DotField Component - Calibrated with Gold accent and smaller cursor point */}
-      <div className="absolute inset-0 z-0">
-        <DotField
-          dotRadius={2.3}
-          dotSpacing={14}
-          cursorRadius={140}
-          cursorForce={0.25}
-          bulgeOnly={true}
-          bulgeStrength={45}
-          glowRadius={130}
-          sparkle={false}
-          waveAmplitude={0}
-          gradientFrom="rgba(212, 175, 55, 0.55)"
-          gradientTo="rgba(180, 140, 50, 0.4)"
-          glowColor="rgba(212, 175, 55, 0.15)"
-        />
-      </div>
-
-      {/* Solid top mask to block dots from showing under navbar */}
-      <div className="absolute top-0 left-0 right-0 h-36 bg-gradient-to-b from-[#F8F8F8] via-[#F8F8F8] to-transparent pointer-events-none z-10" />
-
-      {/* Bottom overlay blend */}
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F8F8F8]/10 to-[#F8F8F8] pointer-events-none z-10" />
 
       <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col gap-10">
         
@@ -145,7 +121,7 @@ export function MortgagePage() {
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#141414]">
             Loan Assist & Calculator
           </h1>
-          <p className="text-sm text-black/50 max-w-xl mx-auto font-light">
+          <p className="text-sm text-zinc-700 max-w-xl mx-auto font-lora italic tracking-wide">
             Plan your property acquisitions intelligently with our synchronized, real-time calculators.
           </p>
 

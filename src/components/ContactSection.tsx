@@ -12,7 +12,7 @@ export function ContactSection() {
               Book a call
             </h2>
             <p
-              className="mt-4 text-[15px] leading-relaxed text-[#A5A5A5]"
+              className="mt-4 text-[15px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-[16px]"
               data-editable
               data-preset-text="contact-subtitle"
             >

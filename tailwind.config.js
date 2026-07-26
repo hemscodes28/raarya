@@ -5,6 +5,8 @@ export default {
     extend: {
       fontFamily: {
         lato: ['Lato', 'sans-serif'],
+        outfit: ['Outfit', 'sans-serif'],
+        lora: ['Lora', 'serif'],
       },
     },
   },

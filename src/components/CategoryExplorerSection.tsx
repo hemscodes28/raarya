@@ -51,7 +51,7 @@ export function CategoryExplorerSection() {
           <h2 className="text-3xl font-medium leading-[1.1] tracking-tight text-[#141414] md:text-5xl">
             Explore Property Modules
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-[#A5A5A5]">
+          <p className="mt-4 text-[14px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-[15px]">
             Click any category below to open a dedicated showcase page with complete search, filtering, and detailed glassmorphism property overviews.
           </p>
         </div>

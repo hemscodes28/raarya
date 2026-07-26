@@ -26,7 +26,7 @@ export function PageShell({
             {title}
           </h1>
           {subtitle ? (
-            <p className="mt-6 text-[15px] leading-relaxed text-[#A5A5A5] md:text-[18px]" data-editable>
+            <p className="mt-6 text-[15px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-[17px]" data-editable>
               {subtitle}
             </p>
           ) : null}

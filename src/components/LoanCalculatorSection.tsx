@@ -34,7 +34,7 @@ export function LoanCalculatorSection() {
             <h2 className="text-3xl font-medium leading-[1.1] tracking-tight text-[#141414] md:text-5xl" data-editable>
               Home Loan Calculator
             </h2>
-            <p className="mt-4 text-[14px] leading-relaxed text-[#A5A5A5]" data-editable>
+            <p className="mt-4 text-[14px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-[15px]" data-editable>
               Planning to build your dream home or buy a plot? Calculate your monthly EMI options with our interactive calculator instantly.
             </p>
             <div className="mt-8 space-y-6 bg-[#F8F8F8] p-6 border border-black/5">

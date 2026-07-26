@@ -31,7 +31,7 @@ export function InvestmentSection() {
           >
             Trusted frameworks for secure growth
           </h2>
-          <div className="space-y-4 text-[14px] leading-relaxed text-[#A5A5A5] md:col-span-5 md:col-start-8">
+          <div className="space-y-4 text-[14px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:col-span-5 md:col-start-8">
             <p data-editable>
               Our holdings go beyond floor plans; they represent a vehicle for your wealth to thrive
               consistently.

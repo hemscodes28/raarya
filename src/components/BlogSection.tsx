@@ -34,7 +34,7 @@ export function BlogSection() {
           <h2 className="text-3xl font-medium leading-[1.1] tracking-tight text-[#141414] md:text-5xl" data-editable>
             Insights & Trends
           </h2>
-          <p className="mt-4 text-[14px] leading-relaxed text-[#A5A5A5] max-w-xl" data-editable>
+          <p className="mt-4 text-[14px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-[15px] max-w-xl" data-editable>
             Stay updated with the latest real estate guidelines, market analysis, and construction insights in Coimbatore.
           </p>
         </div>
