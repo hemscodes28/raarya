@@ -21,6 +21,7 @@ import {
   Clock
 } from 'lucide-react';
 import type { PropertyListing } from '../constants';
+import { getImageUrl } from '../utils/imageHelper';
 
 interface PropertyDetailModalProps {
   property: PropertyListing | null;
@@ -129,7 +130,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
             <div className="relative aspect-[16/9] md:aspect-[21/9] w-full overflow-hidden">
               <motion.img
                 key={galleryImages[activeImageIndex]}
-                src={galleryImages[activeImageIndex]}
+                src={getImageUrl(galleryImages[activeImageIndex])}
                 alt={property.title}
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -186,7 +187,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                       activeImageIndex === idx ? 'border-amber-400 scale-105 shadow-md' : 'border-transparent opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={imgUrl} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
+                    <img src={getImageUrl(imgUrl)} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
                   </button>
                 ))}
               </div>

@@ -1,5 +1,6 @@
 import { Bath, Bed, Layers, Square, Eye, MapPin, Sparkles } from 'lucide-react';
 import type { PropertyListing } from '../constants';
+import { getImageUrl } from '../utils/imageHelper';
 
 interface PropertyCardProps {
   property: PropertyListing;
@@ -32,7 +33,7 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
         {/* IMAGE HERO CONTAINER WITH BLENDED CORNERS */}
         <div className="relative aspect-[4/3] md:aspect-square overflow-hidden bg-neutral-900">
           <img
-            src={property.image}
+            src={getImageUrl(property.image)}
             alt={property.title}
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />

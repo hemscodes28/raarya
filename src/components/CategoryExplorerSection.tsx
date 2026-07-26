@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Building2, Key, Home, ArrowRight } from 'lucide-react';
 import { PROPERTIES } from '../constants';
+import { getImageUrl } from '../utils/imageHelper';
 
 export function CategoryExplorerSection() {
   const buyCount = PROPERTIES.filter((p) => p.type === 'buy').length;
@@ -70,7 +71,7 @@ export function CategoryExplorerSection() {
                 <div>
                   <div className="relative aspect-[16/10] overflow-hidden bg-gray-100">
                     <img
-                      src={cat.image}
+                      src={getImageUrl(cat.image)}
                       alt={cat.title}
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
