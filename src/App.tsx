@@ -133,6 +133,7 @@ export default function App() {
         return <ContactPage />;
       case 'home-loan':
       case 'emi-calculator':
+      case 'eligibility-check':
         return <MortgagePage />;
       case 'careers':
       case 'career':

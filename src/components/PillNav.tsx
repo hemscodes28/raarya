@@ -36,6 +36,10 @@ const DROPDOWNS: Record<string, { label: string; route: string; desc: string }[]
     { label: 'Rentals', route: '#rent', desc: 'Modern apartments and independent rental homes' },
     { label: 'PG / Hostels', route: '#pg-hostel', desc: 'Serviced men/girls student & working PGs' },
   ],
+  'Home Loan': [
+    { label: 'EMI Calculator', route: '#emi-calculator', desc: 'Estimate your monthly home loan installments' },
+    { label: 'Eligibility Check', route: '#eligibility-check', desc: 'Calculate your home loan eligibility amount' }
+  ]
 };
 
 export function PillNav({

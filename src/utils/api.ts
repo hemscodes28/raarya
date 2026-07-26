@@ -252,4 +252,32 @@ export async function apiVerifyOtp(phone: string, otp: string) {
   }
 }
 
+export async function apiSendContactMessage(messageData: { name: string; email: string; phone: string; message: string }) {
+  try {
+    const response = await fetch(`${BASE_URL}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(messageData),
+    });
+    return await response.json();
+  } catch (err) {
+    const db = getLocalDB();
+    if (!db.enquiries) db.enquiries = [];
+    const newEnquiry = {
+      id: 'enq_contact_' + Date.now(),
+      ownerEmail: 'raaryagroupsinfo@gmail.com',
+      propertyName: 'General Contact Inquiry',
+      name: messageData.name,
+      mobile: messageData.phone,
+      email: messageData.email,
+      message: messageData.message,
+      type: 'general_contact',
+      createdAt: new Date().toISOString()
+    };
+    db.enquiries.push(newEnquiry);
+    saveLocalDB(db);
+    return { success: true, message: 'Message saved successfully in local database.' };
+  }
+}
+
 

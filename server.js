@@ -333,6 +333,46 @@ app.post('/api/verify-otp', (req, res) => {
   }
 });
 
+// ─── GENERAL CONTACT INQUIRY ──────────────────────────────────────────────────
+app.post('/api/contact', (req, res) => {
+  const { name, email, phone, message } = req.body;
+  if (!name || !email || !phone || !message) {
+    return res.status(400).json({ success: false, message: 'Name, Email, Phone, and Message are all required.' });
+  }
+
+  const db = readDatabase();
+  if (!db.enquiries) db.enquiries = [];
+  
+  const newEnquiry = {
+    id: 'enq_contact_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+    ownerEmail: 'raaryagroupsinfo@gmail.com',
+    propertyName: 'General Contact Inquiry',
+    name,
+    mobile: phone,
+    email,
+    message,
+    type: 'general_contact',
+    createdAt: new Date().toISOString()
+  };
+
+  db.enquiries.push(newEnquiry);
+  
+  if (!db.history) db.history = [];
+  db.history.unshift({
+    id: 'log_' + Date.now(),
+    name,
+    email,
+    action: 'contact_inquiry',
+    status: 'success',
+    timestamp: new Date().toISOString(),
+    userAgent: req.headers['user-agent'] || 'Unknown',
+    ipAddress: req.ip || '127.0.0.1'
+  });
+
+  writeDatabase(db);
+  res.status(201).json({ success: true, message: 'Contact message received successfully!', enquiry: newEnquiry });
+});
+
 app.listen(PORT, () => {
   console.log(`Zenith Realty Backend Server running on http://localhost:${PORT}`);
 });
