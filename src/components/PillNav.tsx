@@ -1,7 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { ChevronDown, Home, X } from 'lucide-react';
-import { motion } from 'motion/react';
+import { 
+  ChevronDown, 
+  Home, 
+  X, 
+  Calculator, 
+  UserCheck, 
+  ChevronRight, 
+  Building, 
+  Key, 
+  Users,
+  PlusCircle,
+  BookOpen,
+  Percent,
+  PhoneCall
+} from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { ZenithLogo } from './ZenithLogo';
 import { routeHref } from '../_shared/preset-site-routing';
 import './PillNav.css';
@@ -42,6 +56,24 @@ const DROPDOWNS: Record<string, { label: string; route: string; desc: string }[]
   ]
 };
 
+const DROPDOWN_ICONS: Record<string, React.ComponentType<any>> = {
+  'EMI Calculator': Calculator,
+  'Eligibility Check': UserCheck,
+  'Buy (Villas & Plots)': Building,
+  'Rentals': Key,
+  'PG / Hostels': Users
+};
+
+const NAV_ICONS: Record<string, React.ComponentType<any>> = {
+  'Buy': Home,
+  'Rent': Key,
+  'PG / Hostel': Users,
+  'Post Property': PlusCircle,
+  'Blog': BookOpen,
+  'Home Loan': Percent,
+  'Contact Us': PhoneCall
+};
+
 export function PillNav({
   logo,
   logoAlt = 'Logo',
@@ -62,6 +94,9 @@ export function PillNav({
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const [hoveredSubItem, setHoveredSubItem] = useState<string | null>(null);
+  const [clickedIndex, setClickedIndex] = useState<number | null>(null);
   
   const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const tlRefs = useRef<(gsap.core.Timeline | null)[]>([]);
@@ -169,7 +204,20 @@ export function PillNav({
     return () => window.removeEventListener('resize', onResize);
   }, [items, ease, initialLoadAnimation]);
 
+  // Reset active pill hover timeline when active tab changes
+  useEffect(() => {
+    items.forEach((item, i) => {
+      const isActive = activeHref === item.href;
+      if (isActive) {
+        tlRefs.current[i]?.seek(0);
+      }
+    });
+  }, [activeHref, items]);
+
   const handleEnter = (i: number) => {
+    const item = items[i];
+    if (activeHref === item.href) return; // Do not animate active pill on hover
+    
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -181,6 +229,9 @@ export function PillNav({
   };
 
   const handleLeave = (i: number) => {
+    const item = items[i];
+    if (activeHref === item.href) return; // Do not animate active pill on hover
+    
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -288,67 +339,215 @@ export function PillNav({
 
         <div className="pill-nav-items desktop-only" ref={navItemsRef} style={{ overflow: 'visible' }}>
           <ul className="pill-list" role="menubar" style={{ overflow: 'visible' }}>
-            {items.map((item, i) => (
-              <li key={item.href || `item-${i}`} role="none" style={{ overflow: 'visible', position: 'relative' }}>
-                {/* Wrapper div triggers group-hover for dropdown */}
-                <div className="relative group flex h-full" style={{ overflow: 'visible' }}>
-                  <a
-                    role="menuitem"
-                    href={item.href}
-                    className={`pill${activeHref === item.href ? ' is-active' : ''}`}
-                    aria-label={item.ariaLabel || item.label}
-                    onClick={(e) => {
-                      if (onItemClick) onItemClick(e, item.href);
+            {items.map((item, i) => {
+              const isActive = activeHref === item.href;
+              return (
+                <li key={item.href || `item-${i}`} role="none" style={{ overflow: 'visible', position: 'relative' }}>
+                  {/* Wrapper div manages React state for dropdown hover */}
+                  <div 
+                    className="relative flex h-full" 
+                    style={{ overflow: 'visible' }}
+                    onMouseEnter={() => {
+                      if (DROPDOWNS[item.label]) {
+                        setActiveDropdown(item.label);
+                      }
                     }}
-                    onMouseEnter={() => handleEnter(i)}
-                    onMouseLeave={() => handleLeave(i)}
-                    style={{ overflow: 'hidden' }}
+                    onMouseLeave={() => {
+                      setActiveDropdown(null);
+                      setHoveredSubItem(null);
+                    }}
                   >
-                    <span
-                      className="hover-circle"
-                      aria-hidden="true"
-                      ref={(el) => {
-                        circleRefs.current[i] = el;
-                      }}
-                    />
-                    <span className="label-stack">
-                      <span className="pill-label">{item.label}</span>
-                      <span className="pill-label-hover" aria-hidden="true">
-                        {item.label}
-                      </span>
-                    </span>
-                  </a>
+                    {/* Floating Icon: half-outside, half-inside top edge when active. Rendered outside <a> to prevent overflow:hidden clipping */}
+                    {(() => {
+                      const Icon = NAV_ICONS[item.label];
+                      if (!Icon || !isActive) return null;
+                      return (
+                        <>
+                          <motion.div
+                            style={{ position: 'absolute' }}
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{
+                              left: '50%',
+                              top: '0px',
+                              x: '-50%',
+                              y: '-50%',
+                              scale: 1.45,
+                              opacity: 1,
+                              color: '#B89047'
+                            }}
+                            transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+                            className="z-20 pointer-events-none flex items-center justify-center"
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                          </motion.div>
 
-                  {/* Dropdown popup for Properties (Desktop) - sibling of pill, NOT nested inside it */}
-                  {DROPDOWNS[item.label] && (
-                    <div
-                      style={{ top: '100%', left: '50%', transform: 'translateX(-50%)', zIndex: 9999, minWidth: '320px', position: 'absolute', paddingTop: '8px' }}
-                      className="flex flex-col opacity-0 pointer-events-none group-hover:opacity-100 group-hover:pointer-events-auto transition-all duration-300 translate-y-2 group-hover:translate-y-0"
+                          {/* Top border mask and full stop termination dots for selected state */}
+                          {/* Mask covers the top border line underneath the icon */}
+                          <div 
+                            className="absolute bg-white z-10 pointer-events-none"
+                            style={{
+                              width: '24px',
+                              height: '3px',
+                              top: '-1.5px',
+                              left: '50%',
+                              transform: 'translateX(-50%)'
+                            }}
+                          />
+                          {/* Left terminal dot */}
+                          <div 
+                            className="absolute rounded-full bg-[#B89047] z-20 pointer-events-none"
+                            style={{
+                              width: '5px',
+                              height: '5px',
+                              top: '0px',
+                              left: 'calc(50% - 12px)',
+                              transform: 'translate(-50%, -50%)'
+                            }}
+                          />
+                          {/* Right terminal dot */}
+                          <div 
+                            className="absolute rounded-full bg-[#B89047] z-20 pointer-events-none"
+                            style={{
+                              width: '5px',
+                              height: '5px',
+                              top: '0px',
+                              left: 'calc(50% + 12px)',
+                              transform: 'translate(-50%, -50%)'
+                            }}
+                          />
+                        </>
+                      );
+                    })()}
+
+                    <a
+                      role="menuitem"
+                      href={item.href}
+                      className={`pill${isActive ? ' is-active' : ''} group/pill flex items-center justify-center relative`}
+                      aria-label={item.ariaLabel || item.label}
+                      onClick={(e) => {
+                        setClickedIndex(i);
+                        if (onItemClick) onItemClick(e, item.href);
+                      }}
+                      onMouseEnter={() => handleEnter(i)}
+                      onMouseLeave={() => handleLeave(i)}
+                      style={{ overflow: 'hidden', gap: '6px' }}
                     >
-                      <div className="bg-white border border-black/5 p-4 rounded-2xl shadow-xl flex flex-col gap-2">
-                      {DROPDOWNS[item.label].map((subItem) => (
-                        <a
-                          key={subItem.label}
-                          href={subItem.route}
-                          onClick={(e) => {
-                            if (onItemClick) onItemClick(e, subItem.route);
-                          }}
-                          className="group/sub flex flex-col p-2.5 rounded-xl hover:bg-black/[0.02] transition-all duration-300"
-                        >
-                          <span className="text-[13px] font-semibold text-[#141414] group-hover/sub:text-black transition-colors">
-                            {subItem.label}
-                          </span>
-                          <span className="text-[11px] text-[#A5A5A5] leading-relaxed mt-0.5">
-                            {subItem.desc}
-                          </span>
-                        </a>
-                      ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </li>
-            ))}
+                      <span
+                        className="hover-circle"
+                        aria-hidden="true"
+                        ref={(el) => {
+                          circleRefs.current[i] = el;
+                        }}
+                      />
+                      {/* Tactile expanding ripple click feedback */}
+                      <AnimatePresence>
+                        {clickedIndex === i && (
+                          <motion.span
+                            initial={{ scale: 0.8, opacity: 0.5 }}
+                            animate={{ scale: 1.6, opacity: 0 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.4, ease: 'easeOut' }}
+                            onAnimationComplete={() => setClickedIndex(null)}
+                            className="absolute inset-0 bg-amber-500/20 rounded-full pointer-events-none z-10"
+                          />
+                        )}
+                      </AnimatePresence>
+
+                      {/* Normal inline icon when not active */}
+                      {(() => {
+                        const Icon = NAV_ICONS[item.label];
+                        if (!Icon || isActive) return null;
+                        return (
+                          <Icon className="w-3.5 h-3.5 relative z-[2] text-current transition-all duration-300 group-hover/pill:scale-125 group-hover/pill:rotate-12 group-hover/pill:text-amber-500 shrink-0" />
+                        );
+                      })()}
+
+                      <span className="label-stack relative z-[2]">
+                        <span className="pill-label">{item.label}</span>
+                        <span className="pill-label-hover" aria-hidden="true">
+                          {item.label}
+                        </span>
+                      </span>
+                    </a>
+
+                  {/* Dropdown popup (Desktop) using Framer Motion for premium animations */}
+                  <AnimatePresence>
+                    {activeDropdown === item.label && DROPDOWNS[item.label] && (
+                      <motion.div
+                        style={{
+                          top: '100%',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          zIndex: 9999,
+                          minWidth: '340px',
+                          position: 'absolute',
+                          paddingTop: '8px'
+                        }}
+                        initial={{ opacity: 0, scale: 0.95, y: 10, x: '-50%' }}
+                        animate={{ opacity: 1, scale: 1, y: 0, x: '-50%' }}
+                        exit={{ opacity: 0, scale: 0.95, y: 10, x: '-50%' }}
+                        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                        className="flex flex-col"
+                      >
+                        <div className="bg-white/95 border border-amber-500/10 p-3 rounded-2xl shadow-[0_20px_50px_rgba(184,144,71,0.12)] backdrop-blur-md flex flex-col gap-1 relative overflow-hidden">
+                          {/* Subtle top amber gradient highlight */}
+                          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-500 to-amber-600" />
+                          
+                          {DROPDOWNS[item.label].map((subItem, idx) => {
+                            const Icon = DROPDOWN_ICONS[subItem.label] || Home;
+                            return (
+                              <motion.a
+                                key={subItem.label}
+                                href={subItem.route}
+                                onClick={(e) => {
+                                  if (onItemClick) onItemClick(e, subItem.route);
+                                  setActiveDropdown(null);
+                                }}
+                                onMouseEnter={() => setHoveredSubItem(subItem.label)}
+                                className="relative flex items-center gap-3 p-3 rounded-xl transition-all duration-300 select-none group/sub text-left cursor-pointer"
+                                initial={{ opacity: 0, y: 8 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: idx * 0.05, duration: 0.3 }}
+                              >
+                                {/* layoutId hover highlight background */}
+                                {hoveredSubItem === subItem.label && (
+                                  <motion.div
+                                    layoutId={`${item.label}-highlight`}
+                                    className="absolute inset-0 bg-amber-500/[0.05] rounded-xl -z-10 border border-amber-500/10"
+                                    transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+                                  />
+                                )}
+
+                                {/* Icon badge */}
+                                <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 group-hover/sub:bg-amber-500 group-hover/sub:text-white transition-all duration-300 group-hover/sub:scale-[1.08] group-hover/sub:rotate-3 shadow-sm">
+                                  <Icon className="w-4 h-4" />
+                                </div>
+
+                                {/* Text wrapper */}
+                                <div className="flex-grow min-w-0 pr-4">
+                                  <div className="text-[13px] font-bold text-[#141414] group-hover/sub:text-amber-600 transition-colors duration-200">
+                                    {subItem.label}
+                                  </div>
+                                  <div className="text-[10px] text-[#A5A5A5] leading-relaxed mt-0.5 truncate">
+                                    {subItem.desc}
+                                  </div>
+                                </div>
+
+                                {/* ChevronRight slide animation */}
+                                <div className="opacity-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-1 transition-all duration-300 text-amber-500 shrink-0 transform -translate-x-1 pr-1">
+                                  <ChevronRight className="w-3.5 h-3.5" />
+                                </div>
+                              </motion.a>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                  </div>
+                </li>
+              );
+            })}
           </ul>
         </div>
 
@@ -422,7 +621,7 @@ export function PillNav({
               <div className="flex items-center justify-between w-full">
                 <motion.a
                   href={item.href}
-                  className={`mobile-menu-link flex-grow ${activeHref === item.href ? ' is-active' : ''}`}
+                  className={`mobile-menu-link flex-grow flex items-center gap-2.5 ${activeHref === item.href ? ' is-active' : ''}`}
                   onClick={(e) => {
                     setIsMobileMenuOpen(false);
                     toggleMobileMenu();
@@ -431,6 +630,10 @@ export function PillNav({
                   whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
                   transition={{ type: "spring", stiffness: 400, damping: 15 }}
                 >
+                  {(() => {
+                    const Icon = NAV_ICONS[item.label];
+                    return Icon ? <Icon className="w-4 h-4 text-amber-600 shrink-0" /> : null;
+                  })()}
                   {item.label}
                 </motion.a>
                 {DROPDOWNS[item.label] && (

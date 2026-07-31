@@ -91,7 +91,8 @@
   cursor: pointer;
   position: relative;
   overflow: hidden;
-  transition: border-color 0.3s ease;
+  border: 1.5px solid transparent;
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 
 .pill .hover-circle {
@@ -131,17 +132,19 @@
   will-change: transform, opacity;
 }
 
+.pill.is-active {
+  border: 1.5px solid #B89047 !important;
+  box-shadow: 0 0 15px rgba(184, 144, 71, 0.35);
+  background: #ffffff !important;
+  color: #141414 !important;
+}
+
+.pill.is-active .pill-label {
+  color: #141414 !important;
+}
+
 .pill.is-active::after {
-  content: '';
-  position: absolute;
-  bottom: 4px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 4px;
-  height: 4px;
-  background: var(--hover-text, #141414);
-  border-radius: 50%;
-  z-index: 4;
+  display: none !important;
 }
 
 .desktop-only {
