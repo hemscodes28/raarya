@@ -7,6 +7,9 @@ export function LuxuryLoader() {
   const [showReveal, setShowReveal] = useState<boolean>(false);
 
   useEffect(() => {
+    // Lock scroll to prevent background scroll buffer/lag during intro
+    document.body.style.overflow = 'hidden';
+
     const lines = [
       'ACCESSING PREMIUM PLOT DATABASE...',
       'VERIFYING DTCP & RERA APPROVED LISTINGS...',
@@ -19,21 +22,23 @@ export function LuxuryLoader() {
       timers.push(
         setTimeout(() => {
           setTechLines((prev) => [...prev, line]);
-        }, idx * 550)
+        }, idx * 650)
       );
     });
 
     // Step-by-step progress tracking for BUY -> RENT -> PG/HOSTEL
-    const t1 = setTimeout(() => setActiveStep('buy'), 500);
-    const t2 = setTimeout(() => setActiveStep('rent'), 1300);
-    const t3 = setTimeout(() => setActiveStep('pg'), 2100);
+    const t1 = setTimeout(() => setActiveStep('buy'), 600);
+    const t2 = setTimeout(() => setActiveStep('rent'), 1600);
+    const t3 = setTimeout(() => setActiveStep('pg'), 2500);
 
-    // Transition to centered logo reveal at 2.4 seconds
+    // Transition to centered logo reveal at 3.0 seconds (fully complete drawing)
     const tReveal = setTimeout(() => {
       setShowReveal(true);
-    }, 2400);
+    }, 3000);
 
     return () => {
+      // Restore scroll when unmounted
+      document.body.style.overflow = '';
       timers.forEach(clearTimeout);
       clearTimeout(t1);
       clearTimeout(t2);
@@ -84,13 +89,13 @@ export function LuxuryLoader() {
       </div>
 
       <div className="relative w-full h-full flex flex-col items-center justify-center">
-        {/* Draw Stage (Fades out at 2.4s) */}
+        {/* Draw Stage (Fades out at 3.0s) */}
         <motion.div
           animate={{ 
             opacity: showReveal ? 0 : 1,
             scale: showReveal ? 0.95 : 1
           }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
           className="relative flex flex-col items-center max-w-sm px-4"
         >
           {/* Decorative Golden Aura behind the 3D drawing */}
@@ -125,7 +130,7 @@ export function LuxuryLoader() {
                 initial={{ strokeDashoffset: circumference }}
                 animate={{ strokeDashoffset: 0 }}
                 transition={{
-                  duration: 2.2,
+                  duration: 2.8,
                   ease: "easeInOut"
                 }}
               />
@@ -399,7 +404,7 @@ export function LuxuryLoader() {
                   opacity: [0.8, 0]
                 }}
                 transition={{
-                  delay: 2.2,
+                  delay: 2.4,
                   duration: 1.2,
                   repeat: Infinity,
                   ease: "easeOut"
@@ -412,7 +417,7 @@ export function LuxuryLoader() {
                 initial={{ y: -60, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{
-                  delay: 2.1,
+                  delay: 2.3,
                   type: "spring",
                   stiffness: 180,
                   damping: 9
@@ -424,7 +429,7 @@ export function LuxuryLoader() {
                 fill="#FAF7F2"
                 initial={{ scale: 0, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 2.4, duration: 0.3 }}
+                transition={{ delay: 2.6, duration: 0.3 }}
               />
             </g>
 
@@ -441,7 +446,7 @@ export function LuxuryLoader() {
                 strokeWidth="0.75"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 2.4, duration: 0.4, ease: "easeOut" }}
+                transition={{ delay: 2.5, duration: 0.4, ease: "easeOut" }}
               />
               <motion.text
                 x="180"
@@ -451,7 +456,7 @@ export function LuxuryLoader() {
                 className="font-mono text-[7px] tracking-wider select-none font-bold"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 2.5, duration: 0.3 }}
+                transition={{ delay: 2.6, duration: 0.3 }}
               >
                 VERIFIED PLOT
               </motion.text>
@@ -465,7 +470,7 @@ export function LuxuryLoader() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3, duration: 0.8 }}
-              className="text-[#1A1815] tracking-[0.22em] font-extrabold text-[15px] uppercase select-none"
+              className="text-[#1A1815] tracking-[0.22em] font-extrabold text-[12px] sm:text-[14px] md:text-[15px] uppercase select-none whitespace-nowrap"
             >
               PREMIUM PLOTS BUYING & SELLING
             </motion.div>
@@ -498,7 +503,7 @@ export function LuxuryLoader() {
           </div>
         </motion.div>
 
-        {/* Centered Logo Reveal Stage (Triggers at 2.4s) */}
+        {/* Centered Logo Reveal Stage (Triggers at 3.0s) */}
         {showReveal && (
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
