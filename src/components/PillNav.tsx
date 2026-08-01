@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
 import { 
   ChevronDown, 
@@ -97,6 +98,11 @@ export function PillNav({
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [hoveredSubItem, setHoveredSubItem] = useState<string | null>(null);
   const [clickedIndex, setClickedIndex] = useState<number | null>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const tlRefs = useRef<(gsap.core.Timeline | null)[]>([]);
@@ -563,170 +569,174 @@ export function PillNav({
       </nav>
 
       {/* Glassmorphic Mobile Menu Backdrop Overlay */}
-      {isMobileMenuOpen && (
+      {isMobileMenuOpen && isMounted && typeof document !== 'undefined' && createPortal(
         <div 
           className="fixed inset-0 bg-black/65 backdrop-blur-[6px] z-[998] transition-all duration-300 mobile-only"
           onClick={() => {
             setIsMobileMenuOpen(false);
             toggleMobileMenu();
           }}
-        />
+        />,
+        document.body
       )}
 
-      <div 
-        className="mobile-menu-popover mobile-only" 
-        ref={mobileMenuRef} 
-        style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          width: '90vw',
-          maxWidth: '340px',
-          maxHeight: '85vh',
-          overflowY: 'auto',
-          background: '#ffffff',
-          borderRadius: '28px',
-          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.4)',
-          border: '1px solid rgba(0, 0, 0, 0.08)',
-          padding: '24px',
-          boxSizing: 'border-box',
-          zIndex: 9999,
-          ...cssVars
-        }}
-      >
-        {/* Mobile Header: Gold Logo + Close button */}
-        <div className="flex justify-between items-center mb-6 pb-4 border-b border-black/5 relative z-10 select-none">
-          <img 
-            src={`${import.meta.env.BASE_URL}logo.png`} 
-            alt="Raarya Logo" 
-            className="h-12 object-contain"
-          />
-          <button
-            type="button"
-            onClick={() => {
-              setIsMobileMenuOpen(false);
-              toggleMobileMenu();
-            }}
-            className="w-10 h-10 rounded-full bg-[#141414] hover:bg-black text-white flex items-center justify-center active:scale-90 transition-all z-20 cursor-pointer shadow-md"
-            aria-label="Close menu"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
-
-        <ul className="mobile-menu-list">
-          {items.map((item, i) => (
-            <li key={item.href || `mobile-item-${i}`} className="flex flex-col">
-              <div className="flex items-center justify-between w-full">
-                <motion.a
-                  href={item.href}
-                  className={`mobile-menu-link flex-grow flex items-center gap-2.5 ${activeHref === item.href ? ' is-active' : ''}`}
-                  onClick={(e) => {
-                    setIsMobileMenuOpen(false);
-                    toggleMobileMenu();
-                    if (onItemClick) onItemClick(e, item.href);
-                  }}
-                  whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
-                  transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                >
-                  {(() => {
-                    const Icon = NAV_ICONS[item.label];
-                    return Icon ? <Icon className="w-4 h-4 text-amber-600 shrink-0" /> : null;
-                  })()}
-                  {item.label}
-                </motion.a>
-                {DROPDOWNS[item.label] && (
-                  <button
-                    type="button"
-                    onClick={() => setMobileExpanded(mobileExpanded === item.label ? null : item.label)}
-                    className="p-3 text-[#141414]"
-                    aria-label={`Toggle ${item.label} sub-items`}
-                  >
-                    <ChevronDown className={`size-4 transition-transform duration-300 ${
-                      mobileExpanded === item.label ? 'rotate-180' : ''
-                    }`} />
-                  </button>
-                )}
-              </div>
-              
-              {/* Mobile Accordion */}
-              {DROPDOWNS[item.label] && mobileExpanded === item.label && (
-                <div className="flex flex-col gap-1 pl-4 border-l border-black/10 mt-1 mb-2">
-                  {DROPDOWNS[item.label].map((subItem) => (
-                    <motion.a
-                      key={subItem.label}
-                      href={subItem.route}
-                      onClick={(e) => {
-                        setIsMobileMenuOpen(false);
-                        toggleMobileMenu();
-                        if (onItemClick) onItemClick(e, subItem.route);
-                      }}
-                      className="flex flex-col py-2.5 px-4 rounded-xl hover:bg-black/[0.02] text-left"
-                      whileTap={{ scale: 0.97, backgroundColor: 'rgba(197, 168, 128, 0.1)' }}
-                    >
-                      <span className="text-[13px] font-semibold text-[#141414]">{subItem.label}</span>
-                      <span className="text-[10px] text-[#A5A5A5] mt-0.5">{subItem.desc}</span>
-                    </motion.a>
-                  ))}
-                </div>
-              )}
-            </li>
-          ))}
-
-          {/* Mobile Login and CTA */}
-          <li className="mt-4 pt-4 border-t border-black/5 flex flex-col gap-2">
-            {currentUser ? (
-              <motion.button
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  toggleMobileMenu();
-                  if (onAvatarClick) onAvatarClick();
-                }}
-                className="flex items-center gap-3 border border-black/10 bg-white px-4 py-2 rounded-full text-left cursor-pointer"
-                whileTap={{ scale: 0.96 }}
-              >
-                <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white uppercase text-xs shrink-0 overflow-hidden">
-                  {currentUser.avatar ? (
-                    <img src={currentUser.avatar} alt="Avatar" className="w-full h-full object-cover" />
-                  ) : (
-                    currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)
-                  )}
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <span className="text-[12px] font-bold text-[#141414] leading-tight truncate">{currentUser.name || 'User'}</span>
-                  <span className="text-[9px] text-slate-500 leading-none truncate">{currentUser.email}</span>
-                </div>
-              </motion.button>
-            ) : (
-              <motion.a
-                href="#login"
-                className="flex items-center justify-center border border-black/10 bg-white px-6 py-2.5 text-[13px] font-semibold text-[#141414] rounded-full cursor-pointer"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  toggleMobileMenu();
-                }}
-                whileTap={{ scale: 0.96, backgroundColor: '#141414', color: '#ffffff' }}
-              >
-                Login
-              </motion.a>
-            )}
-            <motion.a
-              href="#contact"
-              className="flex items-center justify-center gap-2 bg-[#141414] px-6 py-2.5 text-[13px] font-semibold text-white rounded-full cursor-pointer"
-              onClick={(e) => {
+      {isMounted && typeof document !== 'undefined' && createPortal(
+        <div 
+          className="mobile-menu-popover mobile-only" 
+          ref={mobileMenuRef} 
+          style={{
+            position: 'fixed',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            width: '90vw',
+            maxWidth: '340px',
+            maxHeight: '85vh',
+            overflowY: 'auto',
+            background: '#ffffff',
+            borderRadius: '28px',
+            boxShadow: '0 25px 60px rgba(0, 0, 0, 0.4)',
+            border: '1px solid rgba(0, 0, 0, 0.08)',
+            padding: '24px',
+            boxSizing: 'border-box',
+            zIndex: 9999,
+            ...cssVars
+          }}
+        >
+          {/* Mobile Header: Gold Logo + Close button */}
+          <div className="flex justify-between items-center mb-6 pb-4 border-b border-black/5 relative z-10 select-none">
+            <img 
+              src={`${import.meta.env.BASE_URL}logo.png`} 
+              alt="Raarya Logo" 
+              className="h-12 object-contain"
+            />
+            <button
+              type="button"
+              onClick={() => {
                 setIsMobileMenuOpen(false);
                 toggleMobileMenu();
-                if (onItemClick) onItemClick(e, '#contact');
               }}
-              whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
+              className="w-10 h-10 rounded-full bg-[#141414] hover:bg-black text-white flex items-center justify-center active:scale-90 transition-all z-20 cursor-pointer shadow-md"
+              aria-label="Close menu"
             >
-              <Home className="size-4" />
-              Book Consultation
-            </motion.a>
-          </li>
-        </ul>
-      </div>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+
+          <ul className="mobile-menu-list">
+            {items.map((item, i) => (
+              <li key={item.href || `mobile-item-${i}`} className="flex flex-col">
+                <div className="flex items-center justify-between w-full">
+                  <motion.a
+                    href={item.href}
+                    className={`mobile-menu-link flex-grow flex items-center gap-2.5 ${activeHref === item.href ? ' is-active' : ''}`}
+                    onClick={(e) => {
+                      setIsMobileMenuOpen(false);
+                      toggleMobileMenu();
+                      if (onItemClick) onItemClick(e, item.href);
+                    }}
+                    whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
+                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
+                  >
+                    {(() => {
+                      const Icon = NAV_ICONS[item.label];
+                      return Icon ? <Icon className="w-4 h-4 text-amber-600 shrink-0" /> : null;
+                    })()}
+                    {item.label}
+                  </motion.a>
+                  {DROPDOWNS[item.label] && (
+                    <button
+                      type="button"
+                      onClick={() => setMobileExpanded(mobileExpanded === item.label ? null : item.label)}
+                      className="p-3 text-[#141414]"
+                      aria-label={`Toggle ${item.label} sub-items`}
+                    >
+                      <ChevronDown className={`size-4 transition-transform duration-300 ${
+                        mobileExpanded === item.label ? 'rotate-180' : ''
+                      }`} />
+                    </button>
+                  )}
+                </div>
+                
+                {/* Mobile Accordion */}
+                {DROPDOWNS[item.label] && mobileExpanded === item.label && (
+                  <div className="flex flex-col gap-1 pl-4 border-l border-black/10 mt-1 mb-2">
+                    {DROPDOWNS[item.label].map((subItem) => (
+                      <motion.a
+                        key={subItem.label}
+                        href={subItem.route}
+                        onClick={(e) => {
+                          setIsMobileMenuOpen(false);
+                          toggleMobileMenu();
+                          if (onItemClick) onItemClick(e, subItem.route);
+                        }}
+                        className="flex flex-col py-2.5 px-4 rounded-xl hover:bg-black/[0.02] text-left"
+                        whileTap={{ scale: 0.97, backgroundColor: 'rgba(197, 168, 128, 0.1)' }}
+                      >
+                        <span className="text-[13px] font-semibold text-[#141414]">{subItem.label}</span>
+                        <span className="text-[10px] text-[#A5A5A5] mt-0.5">{subItem.desc}</span>
+                      </motion.a>
+                    ))}
+                  </div>
+                )}
+              </li>
+            ))}
+
+            {/* Mobile Login and CTA */}
+            <li className="mt-4 pt-4 border-t border-black/5 flex flex-col gap-2">
+              {currentUser ? (
+                <motion.button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    toggleMobileMenu();
+                    if (onAvatarClick) onAvatarClick();
+                  }}
+                  className="flex items-center gap-3 border border-black/10 bg-white px-4 py-2 rounded-full text-left cursor-pointer"
+                  whileTap={{ scale: 0.96 }}
+                >
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-600 to-cyan-500 flex items-center justify-center font-bold text-white uppercase text-xs shrink-0 overflow-hidden">
+                    {currentUser.avatar ? (
+                      <img src={currentUser.avatar} alt="Avatar" className="w-full h-full object-cover" />
+                    ) : (
+                      currentUser.name ? currentUser.name.charAt(0) : currentUser.email.charAt(0)
+                    )}
+                  </div>
+                  <div className="flex flex-col min-w-0">
+                    <span className="text-[12px] font-bold text-[#141414] leading-tight truncate">{currentUser.name || 'User'}</span>
+                    <span className="text-[9px] text-slate-500 leading-none truncate">{currentUser.email}</span>
+                  </div>
+                </motion.button>
+              ) : (
+                <motion.a
+                  href="#login"
+                  className="flex items-center justify-center border border-black/10 bg-white px-6 py-2.5 text-[13px] font-semibold text-[#141414] rounded-full cursor-pointer"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    toggleMobileMenu();
+                  }}
+                  whileTap={{ scale: 0.96, backgroundColor: '#141414', color: '#ffffff' }}
+                >
+                  Login
+                </motion.a>
+              )}
+              <motion.a
+                href="#contact"
+                className="flex items-center justify-center gap-2 bg-[#141414] px-6 py-2.5 text-[13px] font-semibold text-white rounded-full cursor-pointer"
+                onClick={(e) => {
+                  setIsMobileMenuOpen(false);
+                  toggleMobileMenu();
+                  if (onItemClick) onItemClick(e, '#contact');
+                }}
+                whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
+              >
+                <Home className="size-4" />
+                Book Consultation
+              </motion.a>
+            </li>
+          </ul>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }
