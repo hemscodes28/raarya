@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { AnimatePresence } from 'motion/react';
+import { LuxuryLoader } from './components/LuxuryLoader';
 import { applyPresetHashOnLoad } from './_shared/preset-site-routing';
 import { ZenithNavbar } from './components/ZenithNavbar';
 import { HomePage } from './pages/HomePage';
@@ -21,7 +23,10 @@ export default function App() {
   const [pendingUser, setPendingUser] = useState<any>(null);
   const [showOtpVerification, setShowOtpVerification] = useState(false);
   const [mockOtp, setMockOtp] = useState<string>('');
-  const [currentRoute, setCurrentRoute] = useState<string>('');
+  const [currentRoute, setCurrentRoute] = useState<string>(() => {
+    return window.location.hash.replace(/^#\/?/, '');
+  });
+  const [isTransitioning, setIsTransitioning] = useState(true);
 
   const syncUserFromStorage = () => {
     const storedUser = localStorage.getItem('currentUser');
@@ -29,6 +34,14 @@ export default function App() {
       try { setCurrentUser(JSON.parse(storedUser)); } catch { }
     }
   };
+
+  // Initial mount load/reload transition
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsTransitioning(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     applyPresetHashOnLoad();
@@ -148,6 +161,9 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#F8F8F8] font-lato text-[#141414]">
+      <AnimatePresence mode="wait">
+        {isTransitioning && <LuxuryLoader key="loader" />}
+      </AnimatePresence>
       {showOtpVerification && pendingUser && (
         <OtpVerification
           phone={pendingUser.phone}
