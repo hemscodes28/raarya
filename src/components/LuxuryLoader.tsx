@@ -31,10 +31,10 @@ export function LuxuryLoader() {
     const t2 = setTimeout(() => setActiveStep('rent'), 1600);
     const t3 = setTimeout(() => setActiveStep('pg'), 2500);
 
-    // Transition to centered logo reveal at 3.0 seconds (fully complete drawing)
+    // Transition to centered logo reveal at 3.7 seconds (3.0s drawing + 0.7s completion gap)
     const tReveal = setTimeout(() => {
       setShowReveal(true);
-    }, 3000);
+    }, 3700);
 
     return () => {
       // Restore scroll when unmounted
@@ -433,34 +433,7 @@ export function LuxuryLoader() {
               />
             </g>
 
-            {/* Verified Plot Status Badge hovering above the location pin */}
-            <g>
-              <motion.rect
-                x="145"
-                y="132"
-                width="70"
-                height="15"
-                rx="3"
-                fill="rgba(184, 144, 71, 0.06)"
-                stroke="#B89047"
-                strokeWidth="0.75"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ delay: 2.5, duration: 0.4, ease: "easeOut" }}
-              />
-              <motion.text
-                x="180"
-                y="142"
-                textAnchor="middle"
-                fill="#B89047"
-                className="font-mono text-[7px] tracking-wider select-none font-bold"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 2.6, duration: 0.3 }}
-              >
-                VERIFIED PLOT
-              </motion.text>
-            </g>
+            {/* Verified Plot Status Badge removed to avoid conflict with the 3D villa drawing */}
           </svg>
 
           {/* Text Area */}
