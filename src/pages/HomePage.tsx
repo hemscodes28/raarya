@@ -1,6 +1,6 @@
 import { HeroSection } from '../components/HeroSection';
 import { QuoteSection } from '../components/QuoteSection';
-import { CategoryExplorerSection } from '../components/CategoryExplorerSection';
+import { ShowcaseSection } from '../components/ShowcaseSection';
 import { HowItWorksSection } from '../components/HowItWorksSection';
 import { InvestmentSection } from '../components/InvestmentSection';
 import { BlogSection } from '../components/BlogSection';
@@ -12,7 +12,7 @@ export function HomePage() {
     <>
       <HeroSection />
       <QuoteSection />
-      <CategoryExplorerSection />
+      <ShowcaseSection />
       <HowItWorksSection />
       <InvestmentSection />
       <BlogSection />

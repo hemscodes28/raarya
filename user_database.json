@@ -247,7 +247,194 @@
       "ipAddress": "::1"
     }
   ],
-  "properties": [],
+  "properties": [
+    {
+      "id": "prop-buy-old-8",
+      "title": "Residential land in Kurumbapalayam - Avanta",
+      "price": "₹ 14,50,000",
+      "location": "Saravanampatti - 641035, Coimbatore, Tamil Nadu",
+      "area": 436,
+      "floors": 0,
+      "beds": 0,
+      "baths": 0,
+      "image": "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg",
+      "type": "buy",
+      "subType": "Plot",
+      "link": "https://www.raarya.com/properties-views/residential-land-in-kurumbapalayam---avanta-/8/",
+      "description": "Avanta Residential Plots in Kurumbapalayam, Saravanampatti. Features wide access roads, clear DTCP approval, and excellent connectivity to the IT Corridor.",
+      "isRecommended": true,
+      "isDemanded": false,
+      "isNew": false,
+      "agentName": "Rajkumar",
+      "agentPhone": "7845806061",
+      "overviewDetails": {
+        "Listed For": "Sell",
+        "Property Type": "Plot",
+        "Area": "436 sqft",
+        "Status": "Ready to Construct",
+        "Furnishing": "Unfurnished"
+      },
+      "amenities": [
+        "DTCP Approved",
+        "Water Access",
+        "Clear Title",
+        "Tar Road"
+      ],
+      "images": [
+        "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg"
+      ]
+    },
+    {
+      "id": "prop-buy-old-113",
+      "title": "Residential DTCP Approved Plots in Annur | Brahma Park",
+      "price": "₹ 3,90,000",
+      "location": "Sirumugai - 641302, Coimbatore, Tamil Nadu",
+      "area": 1200,
+      "floors": 0,
+      "beds": 0,
+      "baths": 0,
+      "image": "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
+      "type": "buy",
+      "subType": "Plot",
+      "link": "https://www.raarya.com/properties-views/residential-dtcp-approved-plots-in-annur---brahma-park-/113/",
+      "description": "Premium Residential DTCP Approved Plots in Annur at Brahma Park. Superb location with rapid growth potential and wonderful amenities.",
+      "isRecommended": true,
+      "isDemanded": true,
+      "isNew": true,
+      "agentName": "Rajkumar",
+      "agentPhone": "7845806061",
+      "overviewDetails": {
+        "Listed For": "Sell",
+        "Property Type": "Plot",
+        "Area": "1200 sqft",
+        "Status": "Ready to Construct",
+        "Furnishing": "Unfurnished"
+      },
+      "amenities": [
+        "DTCP Approved",
+        "Secured Gated",
+        "Water Connection",
+        "Good Connectivity"
+      ],
+      "images": [
+        "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
+        "/uploads/project_image/11-07-2026_01-24-37_Brahma_park_4.jpg",
+        "/uploads/project_image/11-07-2026_01-22-57_Brahma_Park_2.jpg"
+      ]
+    },
+    {
+      "id": "prop-buy-old-711",
+      "title": "Residential Plots in Kinathukadavu – Golden Vista",
+      "price": "₹ 5,90,000 Per Cent",
+      "location": "Kinathukadavu - 642109, Coimbatore, Tamil Nadu",
+      "area": 871,
+      "floors": 0,
+      "beds": 0,
+      "baths": 0,
+      "image": "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png",
+      "type": "buy",
+      "subType": "Plot",
+      "link": "https://www.raarya.com/properties-views/residential-plots-in-kinathukadavu-–-golden-vista/711/",
+      "description": "Beautiful residential plots in Kinathukadavu at Golden Vista. Excellent environmental surroundings and clear title approvals.",
+      "isRecommended": true,
+      "isDemanded": true,
+      "isNew": false,
+      "areaDisplay": "2 Cents",
+      "areaUnit": "cent",
+      "agentName": "Rajkumar",
+      "agentPhone": "7845806061",
+      "overviewDetails": {
+        "Listed For": "Sell",
+        "Property Type": "Plot",
+        "Area": "2 Cents",
+        "Status": "Ready to Construct",
+        "Furnishing": "Unfurnished"
+      },
+      "amenities": [
+        "Scenic View",
+        "Good Groundwater",
+        "Blacktop Road",
+        "Clear Title"
+      ],
+      "images": [
+        "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png"
+      ]
+    },
+    {
+      "id": "prop-buy-old-21",
+      "title": "SK Garden - Avinashi Road, Near Kaniyur Toll Gate",
+      "price": "₹ 9,00,000",
+      "location": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
+      "area": 435.6,
+      "floors": 0,
+      "beds": 0,
+      "baths": 0,
+      "image": "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg",
+      "type": "buy",
+      "subType": "Plot",
+      "link": "https://www.raarya.com/properties-views/sk-garden---avinashi-road,-near-kaniyur-toll-gate/21/",
+      "description": "SK Garden plots located on Avinashi Road near the Kaniyur Toll Gate. Perfect for commercial or residential builds with high appreciation rates.",
+      "isRecommended": false,
+      "isDemanded": true,
+      "isNew": true,
+      "areaDisplay": "1 Cent",
+      "areaUnit": "cent",
+      "agentName": "Rajkumar",
+      "agentPhone": "7845806061",
+      "overviewDetails": {
+        "Listed For": "Sell",
+        "Property Type": "Plot",
+        "Area": "1 Cent",
+        "Status": "Ready to Construct",
+        "Furnishing": "Unfurnished"
+      },
+      "amenities": [
+        "National Highway Proximity",
+        "Commercial Value",
+        "Water Supply",
+        "Tar Road Access"
+      ],
+      "images": [
+        "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg"
+      ]
+    },
+    {
+      "id": "prop-buy-old-112",
+      "title": "Thangam | Thekkalur, Avinashi Road",
+      "price": "₹ 5,50,000 Per Cent",
+      "location": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
+      "area": 1200,
+      "floors": 0,
+      "beds": 0,
+      "baths": 0,
+      "image": "/uploads/project_image/09-04-2026_12-21-54_Thangam.jpeg",
+      "type": "buy",
+      "subType": "Plot",
+      "link": "https://www.raarya.com/properties-views/-thangam---thekkalur,-avinashi-road-/112/",
+      "description": "Thangam Residential Layout in Thekkalur, Avinashi Road. Features highly developed neighborhood, direct road access, and clear paperwork.",
+      "isRecommended": false,
+      "isDemanded": false,
+      "isNew": true,
+      "agentName": "Ranjini",
+      "agentPhone": "7845806061",
+      "overviewDetails": {
+        "Listed For": "Sell",
+        "Property Type": "Plot",
+        "Area": "1200 sqft",
+        "Status": "Ready to Construct",
+        "Furnishing": "Unfurnished"
+      },
+      "amenities": [
+        "Direct Road Access",
+        "Street Lights",
+        "Good Groundwater",
+        "Close to Schools"
+      ],
+      "images": [
+        "/uploads/project_image/09-04-2026_12-21-54_Thangam.jpeg"
+      ]
+    }
+  ],
   "enquiries": [
     {
       "id": "enq_contact_1785050806689_vnhsc4hat",
