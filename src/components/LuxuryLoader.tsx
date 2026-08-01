@@ -510,18 +510,21 @@ export function LuxuryLoader() {
               duration: 1.1, 
               ease: [0.16, 1, 0.3, 1] // super smooth cubic easeOut
             }}
-            className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none"
+            className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none px-4"
           >
             {/* Glowing aura */}
             <div className="absolute w-[200px] h-[200px] rounded-full bg-amber-500/10 blur-[50px] pointer-events-none animate-pulse" />
             
             {/* Centered Brand Title */}
-            <div className="text-[#B89047] tracking-[0.55em] font-extrabold text-3xl uppercase ml-[0.55em]" style={{ textShadow: '0 0 20px rgba(184, 144, 71, 0.25)' }}>
+            <div 
+              className="text-[#B89047] tracking-[0.35em] sm:tracking-[0.45em] md:tracking-[0.55em] font-extrabold text-lg sm:text-2xl md:text-3xl uppercase ml-[0.35em] sm:ml-[0.45em] md:ml-[0.55em] whitespace-nowrap text-center" 
+              style={{ textShadow: '0 0 20px rgba(184, 144, 71, 0.25)' }}
+            >
               RAARYA GROUPS
             </div>
             
             {/* Centered Subtitle */}
-            <div className="text-[#1A1815] text-[10px] tracking-[0.25em] font-bold uppercase mt-3 opacity-60">
+            <div className="text-[#1A1815] text-[8px] sm:text-[9.5px] md:text-[10px] tracking-[0.16em] sm:tracking-[0.20em] md:tracking-[0.25em] font-bold uppercase mt-3 opacity-60 whitespace-nowrap text-center">
               PREMIUM PLOTS BUYING & SELLING
             </div>
           </motion.div>

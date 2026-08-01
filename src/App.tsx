@@ -39,7 +39,7 @@ export default function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsTransitioning(false);
-    }, 3600);
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
