@@ -104,7 +104,7 @@ export function MortgagePage() {
   const elInterestStrokeOffset = circ * (1 - elInterestRatio);
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] w-full bg-[#F8F8F8] text-[#141414] overflow-hidden py-12 md:py-20 px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-5rem)] w-full bg-transparent text-[#141414] overflow-hidden py-12 md:py-20 px-4 sm:px-6 lg:px-8">
 
       <div className="relative z-20 w-full max-w-7xl mx-auto flex flex-col gap-10">
         

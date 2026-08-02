@@ -14,7 +14,7 @@ export function ShowcaseSection() {
   const newListings = PROPERTIES.filter((p) => (p as any).isNew);
 
   return (
-    <section className="relative py-24 md:py-32 bg-gradient-to-b from-[#F8F8F6] via-white to-[#F5F5F3] border-t border-black/5 overflow-hidden">
+    <section className="relative py-24 md:py-32 bg-transparent border-t border-black/5 overflow-hidden">
       {/* Background elegant accents */}
       <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amber-500/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-amber-600/5 rounded-full blur-[140px] pointer-events-none" />

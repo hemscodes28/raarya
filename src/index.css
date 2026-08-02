@@ -21,6 +21,16 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Signature Loading Screen Blueprint Background */
+.bg-blueprint-pattern {
+  background-color: #FAF7F2;
+  background-image: 
+    linear-gradient(rgba(184, 144, 71, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(184, 144, 71, 0.05) 1px, transparent 1px);
+  background-size: 24px 24px;
+  background-position: center center;
+}
+
 /* Blur Fade Up Keyframes and Utility Class */
 @keyframes blurFadeUp {
   from {

@@ -159,8 +159,10 @@ export default function App() {
     }
   };
 
+  const isBlueprintPage = currentRoute !== 'contact';
+
   return (
-    <div className="min-h-screen bg-[#F8F8F8] font-lato text-[#141414]">
+    <div className={`min-h-screen font-lato text-[#141414] ${isBlueprintPage ? 'bg-blueprint-pattern' : 'bg-[#F8F8F8]'}`}>
       <AnimatePresence mode="wait">
         {isTransitioning && <LuxuryLoader key="loader" />}
       </AnimatePresence>

@@ -392,9 +392,9 @@ export function PillNav({
                           <div 
                             className="absolute bg-white z-10 pointer-events-none"
                             style={{
-                              width: '24px',
-                              height: '3px',
-                              top: '-1.5px',
+                              width: '36px',
+                              height: '3.5px',
+                              top: '-1.75px',
                               left: '50%',
                               transform: 'translateX(-50%)'
                             }}
@@ -406,7 +406,7 @@ export function PillNav({
                               width: '5px',
                               height: '5px',
                               top: '0px',
-                              left: 'calc(50% - 12px)',
+                              left: 'calc(50% - 18px)',
                               transform: 'translate(-50%, -50%)'
                             }}
                           />
@@ -417,7 +417,7 @@ export function PillNav({
                               width: '5px',
                               height: '5px',
                               top: '0px',
-                              left: 'calc(50% + 12px)',
+                              left: 'calc(50% + 18px)',
                               transform: 'translate(-50%, -50%)'
                             }}
                           />
