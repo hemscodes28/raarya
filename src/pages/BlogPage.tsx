@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { Search, Calendar, Clock, ArrowRight } from 'lucide-react';
 import { PageShell } from '../components/PageShell';
-import { BlogDetailModal, type BlogPost } from '../components/BlogDetailModal';
+import { type BlogPost } from '../components/BlogDetailModal';
 import blogDataRaw from '../data/blogs_data.json';
 import { getImageUrl } from '../utils/imageHelper';
 

@@ -4,7 +4,7 @@ export function CompanyPage() {
   return (
     <PageShell
       title="Company"
-      subtitle="Zenith Realty connects discerning buyers with residences that balance craft, comfort, and investment discipline."
+      subtitle="Raarya Properties connects discerning buyers with residences that balance craft, comfort, and investment discipline."
     >
       <div className="grid gap-10 md:grid-cols-2">
         <div className="bg-white p-8 md:p-12">

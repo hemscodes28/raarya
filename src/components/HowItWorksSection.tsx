@@ -66,7 +66,7 @@ export function HowItWorksSection() {
             </nav>
           </div>
           <div className="aspect-video overflow-hidden md:col-span-8 md:aspect-square">
-            <img src={HOW_IT_WORKS_IMAGE} alt="Zenith Realty service" className="h-full w-full object-cover" />
+            <img src={HOW_IT_WORKS_IMAGE} alt="Raarya Properties service" className="h-full w-full object-cover" />
           </div>
         </div>
       </div>

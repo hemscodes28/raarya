@@ -1,7 +1,6 @@
-import { useState } from 'react';
 import { motion } from 'motion/react';
 import { Calendar, ArrowRight } from 'lucide-react';
-import { BlogDetailModal, type BlogPost } from './BlogDetailModal';
+import type { BlogPost } from './BlogDetailModal';
 import blogDataRaw from '../data/blogs_data.json';
 import { getImageUrl } from '../utils/imageHelper';
 
