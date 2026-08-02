@@ -127,7 +127,7 @@ export function BlogDetailPage({ slug }: BlogDetailPageProps) {
         </div>
         <div>
           <a
-            href={`https://api.whatsapp.com/send?phone=+919787255522&text=${whatsappMessage}`}
+            href={`https://api.whatsapp.com/send?phone=+919087240400&text=${whatsappMessage}`}
             target="_blank"
             rel="noreferrer"
             className="inline-flex items-center gap-2 px-5 py-3 bg-[#141414] hover:bg-black text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg transition-colors cursor-pointer"
