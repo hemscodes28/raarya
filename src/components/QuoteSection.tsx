@@ -160,11 +160,7 @@ export function QuoteSection() {
 
   const handlePostProperty = (e: React.MouseEvent) => {
     e.preventDefault();
-    window.location.hash = "contact";
-    const targetElement = document.getElementById("contact");
-    if (targetElement) {
-      targetElement.scrollIntoView({ behavior: "smooth" });
-    }
+    window.location.hash = "post-property";
   };
 
   return (

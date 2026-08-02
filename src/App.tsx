@@ -24,6 +24,8 @@ export default function App() {
   const [pendingUser, setPendingUser] = useState<any>(null);
   const [showOtpVerification, setShowOtpVerification] = useState(false);
   const [mockOtp, setMockOtp] = useState<string>('');
+  const [dashboardTab, setDashboardTab] = useState<string>('Dashboard');
+  const [postPropertyPending, setPostPropertyPending] = useState<boolean>(false);
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     return window.location.hash.replace(/^#\/?/, '');
   });
@@ -35,6 +37,15 @@ export default function App() {
       try { setCurrentUser(JSON.parse(storedUser)); } catch { }
     }
   };
+
+  // Auto redirect to Add Property dashboard after login if post property was requested
+  useEffect(() => {
+    if (currentUser && postPropertyPending) {
+      setDashboardTab('Add Property');
+      setShowDashboard(true);
+      setPostPropertyPending(false);
+    }
+  }, [currentUser, postPropertyPending]);
 
   // Initial mount load/reload transition
   useEffect(() => {
@@ -77,7 +88,16 @@ export default function App() {
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash.replace(/^#\/?/, '');
-      if (hash === 'login') {
+      if (hash === 'post-property' || hash === 'post') {
+        const storedUser = localStorage.getItem('currentUser');
+        if (storedUser) {
+          setDashboardTab('Add Property');
+          setShowDashboard(true);
+        } else {
+          setPostPropertyPending(true);
+          setShowLogin(true);
+        }
+      } else if (hash === 'login') {
         setShowLogin(true);
       } else {
         setCurrentRoute(hash);
@@ -212,7 +232,11 @@ export default function App() {
       {showDashboard && currentUser && (
         <UserDashboard
           user={currentUser}
-          onClose={() => setShowDashboard(false)}
+          initialTab={dashboardTab}
+          onClose={() => {
+            setShowDashboard(false);
+            setDashboardTab('Dashboard');
+          }}
           onLogout={handleLogout}
           onUserUpdate={handleUserUpdate}
         />

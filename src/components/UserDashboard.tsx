@@ -16,6 +16,7 @@ interface UserDashboardProps {
   onClose: () => void;
   onLogout: () => void;
   onUserUpdate: (u: any) => void;
+  initialTab?: string;
 }
 
 const MENU = [
@@ -218,8 +219,14 @@ function DashboardHome({ user }: { user: any }) {
 }
 
 // ─── MAIN SHELL ────────────────────────────────────────────────────────────────
-export function UserDashboard({ user, onClose, onLogout, onUserUpdate }: UserDashboardProps) {
-  const [activeMenu, setActiveMenu] = useState('Dashboard');
+export function UserDashboard({ user, onClose, onLogout, onUserUpdate, initialTab }: UserDashboardProps) {
+  const [activeMenu, setActiveMenu] = useState(initialTab || 'Dashboard');
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveMenu(initialTab);
+    }
+  }, [initialTab]);
   const initials = user.name
     ? user.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2).toUpperCase()
     : user.email.charAt(0).toUpperCase();
