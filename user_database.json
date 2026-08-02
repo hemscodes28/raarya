@@ -26,9 +26,51 @@
       "whatsapp": "",
       "avatarColor": "#141414",
       "createdAt": "2026-07-15T10:58:58.900Z"
+    },
+    {
+      "id": "user_1785670841108_zcil20qek",
+      "name": "Hemkumar R",
+      "email": "hemkumarrr2803@gmail.com",
+      "password": "kumaran_28R",
+      "phone": "9566781800",
+      "whatsapp": "",
+      "avatarColor": "#141414",
+      "createdAt": "2026-08-02T11:40:41.108Z"
     }
   ],
   "history": [
+    {
+      "id": "log_1785670841108",
+      "name": "Hemkumar R",
+      "email": "hemkumarrr2803@gmail.com",
+      "action": "signup",
+      "status": "success",
+      "timestamp": "2026-08-02T11:40:41.108Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ipAddress": "::1"
+    },
+    {
+      "id": "log_1785670833942",
+      "name": "Hemkumar R",
+      "email": "hemkumarr2803@gmail.com",
+      "action": "signup",
+      "status": "failure",
+      "message": "Email already registered",
+      "timestamp": "2026-08-02T11:40:33.942Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ipAddress": "::1"
+    },
+    {
+      "id": "log_1785670824828",
+      "name": "Hemkumar R",
+      "email": "hemkumarr2803@gmail.com",
+      "action": "signup",
+      "status": "failure",
+      "message": "Phone number already registered",
+      "timestamp": "2026-08-02T11:40:24.828Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36",
+      "ipAddress": "::1"
+    },
     {
       "id": "log_1785050806689",
       "name": "Hemkumar R",

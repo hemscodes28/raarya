@@ -207,7 +207,10 @@ export default function App() {
       )}
       <ZenithNavbar
         currentUser={currentUser}
-        onAvatarClick={() => setShowDashboard(true)}
+        onAvatarClick={() => {
+          setDashboardTab('Dashboard');
+          setShowDashboard(true);
+        }}
       />
 
       <main className="pt-20">

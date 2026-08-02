@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import {
   LayoutGrid, User as UserIcon, MessageSquare, PlusCircle,
   LogOut, X, Building2, Clock, CheckCircle2, ChevronRight,
@@ -221,6 +221,7 @@ function DashboardHome({ user }: { user: any }) {
 // ─── MAIN SHELL ────────────────────────────────────────────────────────────────
 export function UserDashboard({ user, onClose, onLogout, onUserUpdate, initialTab }: UserDashboardProps) {
   const [activeMenu, setActiveMenu] = useState(initialTab || 'Dashboard');
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
     if (initialTab) {
@@ -301,8 +302,8 @@ export function UserDashboard({ user, onClose, onLogout, onUserUpdate, initialTa
         {/* Logout Button */}
         <div className="px-4 py-6 border-t border-slate-50">
           <button
-            onClick={onLogout}
-            className="group/out flex items-center gap-3.5 px-4 py-3.5 rounded-2xl w-full text-[13px] font-bold text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:-translate-y-0.5 transition-all duration-300"
+            onClick={() => setShowLogoutConfirm(true)}
+            className="group/out flex items-center gap-3.5 px-4 py-3.5 rounded-2xl w-full text-[13px] font-bold text-slate-400 hover:text-rose-600 hover:bg-rose-50 hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
           >
             <LogOut className="w-4.5 h-4.5 group-hover/out:translate-x-0.5 transition-transform duration-300" />
             Logout Account
@@ -328,7 +329,7 @@ export function UserDashboard({ user, onClose, onLogout, onUserUpdate, initialTa
           </div>
           <button
             onClick={onClose}
-            className="group/close flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#141414] hover:bg-black text-white text-xs font-bold tracking-wide hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/10 transition-all duration-300"
+            className="group/close flex items-center gap-2 px-5 py-2.5 rounded-2xl bg-[#141414] hover:bg-black text-white text-xs font-bold tracking-wide hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-black/10 transition-all duration-300 cursor-pointer"
           >
             <X className="w-4 h-4 group-hover/close:rotate-90 transition-transform duration-300" />
             Back to Home
@@ -381,7 +382,68 @@ export function UserDashboard({ user, onClose, onLogout, onUserUpdate, initialTa
           <MessageCircle className="w-5 h-5 shrink-0 group-hover/wa:scale-105 transition-transform" />
         </a>
       </div>
+
+      {/* ─── GLASSMORPHISM LOGOUT CONFIRMATION MODAL ─── */}
+      <AnimatePresence>
+        {showLogoutConfirm && (
+          <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+            {/* Backdrop with blur */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowLogoutConfirm(false)}
+              className="absolute inset-0 bg-black/60 backdrop-blur-md"
+            />
+
+            {/* Glassmorphism Card */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 15 }}
+              transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+              className="relative z-10 w-full max-w-sm rounded-3xl bg-white/80 border border-white/60 shadow-[0_25px_60px_rgba(0,0,0,0.3)] backdrop-blur-xl p-6 text-center flex flex-col items-center gap-4 overflow-hidden"
+            >
+              {/* Top Accent Light Bar */}
+              <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-amber-500 via-rose-500 to-amber-500" />
+
+              {/* Warning Icon Badge */}
+              <div className="w-14 h-14 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 flex items-center justify-center shadow-inner">
+                <LogOut className="w-7 h-7" />
+              </div>
+
+              {/* Header Text */}
+              <div className="space-y-1">
+                <h3 className="text-xl font-black text-[#141414] tracking-tight">Confirm Logout</h3>
+                <p className="text-xs text-slate-500 leading-relaxed font-medium">
+                  Are you sure you want to log out of your account? You will need to sign in again to access your dashboard.
+                </p>
+              </div>
+
+              {/* Action Buttons: Cancel (No) vs Confirm (Yes) */}
+              <div className="grid grid-cols-2 gap-3 w-full mt-2">
+                <button
+                  type="button"
+                  onClick={() => setShowLogoutConfirm(false)}
+                  className="w-full py-3 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-extrabold uppercase tracking-wider transition-all duration-200 cursor-pointer active:scale-95"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowLogoutConfirm(false);
+                    onLogout();
+                  }}
+                  className="w-full py-3 rounded-2xl bg-gradient-to-r from-rose-600 to-rose-700 hover:from-rose-700 hover:to-rose-800 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-rose-600/25 transition-all duration-200 cursor-pointer active:scale-95"
+                >
+                  Yes, Logout
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
-
