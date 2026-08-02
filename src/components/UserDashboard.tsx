@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import {
   LayoutGrid, User as UserIcon, MessageSquare, PlusCircle,
   LogOut, X, Building2, Clock, CheckCircle2, ChevronRight,
-  Search, MapPin, Phone, MessageCircle, Home, ArrowUpRight,
+  Search, MapPin, Home, ArrowUpRight,
   ShieldCheck
 } from 'lucide-react';
 import { ProfileTab } from './ProfileTab';
@@ -352,35 +352,6 @@ export function UserDashboard({ user, onClose, onLogout, onUserUpdate, initialTa
             </motion.div>
           </div>
         </div>
-      </div>
-
-      {/* ─── LUXURY FLOATING ACTION PILLS ─── */}
-      <div className="fixed bottom-6 right-6 flex flex-col gap-3 z-50">
-        {/* Telephone Pill */}
-        <a 
-          href="tel:+911234567890" 
-          className="group/phone flex items-center justify-end bg-white border border-slate-100 shadow-xl rounded-full h-12 pr-4 pl-4 hover:pl-6 transition-all duration-300 relative overflow-hidden text-slate-700 hover:text-white hover:bg-[#141414] hover:scale-105 active:scale-95 ring-4 ring-slate-100/50 cursor-pointer"
-          title="Call Support"
-        >
-          <span className="max-w-0 overflow-hidden group-hover/phone:max-w-xs transition-all duration-300 font-bold text-xs whitespace-nowrap uppercase tracking-wider pr-0 group-hover/phone:pr-3">
-            Call Support
-          </span>
-          <Phone className="w-4.5 h-4.5 shrink-0 group-hover/phone:rotate-12 transition-transform" />
-        </a>
-
-        {/* WhatsApp Pill */}
-        <a 
-          href="https://wa.me/911234567890" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="group/wa flex items-center justify-end bg-[#25D366] text-white shadow-xl shadow-[#25D366]/20 rounded-full h-12 pr-4 pl-4 hover:pl-6 transition-all duration-300 relative overflow-hidden hover:bg-[#20ba59] hover:scale-105 active:scale-95 ring-4 ring-[#25D366]/10 cursor-pointer"
-          title="WhatsApp Support"
-        >
-          <span className="max-w-0 overflow-hidden group-hover/wa:max-w-xs transition-all duration-300 font-bold text-xs whitespace-nowrap uppercase tracking-wider pr-0 group-hover/wa:pr-3">
-            WhatsApp
-          </span>
-          <MessageCircle className="w-5 h-5 shrink-0 group-hover/wa:scale-105 transition-transform" />
-        </a>
       </div>
 
       {/* ─── GLASSMORPHISM LOGOUT CONFIRMATION MODAL ─── */}
