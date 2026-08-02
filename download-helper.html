@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Raarya Property Image Downloader</title>
+<style>
+  body { font-family: Arial, sans-serif; background: #0f0f0f; color: #fff; padding: 40px; max-width: 700px; margin: 0 auto; }
+  h1 { color: #f59e0b; margin-bottom: 8px; }
+  p { color: #aaa; margin-bottom: 30px; }
+  .card { background: #1a1a1a; border: 1px solid #333; border-radius: 12px; padding: 20px; margin-bottom: 16px; display: flex; align-items: center; gap: 16px; }
+  .status { width: 18px; height: 18px; border-radius: 50%; background: #333; flex-shrink: 0; }
+  .status.ok { background: #22c55e; }
+  .status.fail { background: #ef4444; }
+  .status.loading { background: #f59e0b; animation: pulse 1s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .name { font-weight: bold; flex: 1; }
+  .msg { font-size: 12px; color: #777; }
+  .btn { background: #f59e0b; color: #000; border: none; border-radius: 8px; padding: 14px 32px; font-size: 16px; font-weight: bold; cursor: pointer; display: block; width: 100%; margin-bottom: 20px; }
+  .btn:hover { background: #d97706; }
+  .instructions { background: #1a1a1a; border: 1px solid #f59e0b44; border-radius: 12px; padding: 20px; margin-top: 20px; font-size: 14px; }
+  .instructions h3 { color: #f59e0b; margin-top: 0; }
+  .path { background: #000; border-radius: 6px; padding: 8px 12px; font-family: monospace; font-size: 12px; color: #22c55e; margin: 8px 0; word-break: break-all; }
+</style>
+</head>
+<body>
+<h1>🏡 Raarya Property Image Downloader</h1>
+<p>Click the button below — all 5 property images will download automatically to your Downloads folder. Then move them to the project folder as shown below.</p>
+
+<button class="btn" onclick="downloadAll()">⬇ Download All 5 Property Images</button>
+
+<div id="cards"></div>
+
+<div class="instructions">
+  <h3>📁 After downloading, move images to this folder:</h3>
+  <div class="path">c:\Users\Hemkumar Ramesh\Desktop\raarya_web\raarya\public\uploads\project_image\</div>
+  <p style="color:#aaa; font-size:13px; margin-top:12px;">The files are already named correctly — just move them and the website will show the real photos immediately!</p>
+</div>
+
+<script>
+const images = [
+  {
+    url: "https://www.raarya.com/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg",
+    filename: "avanta.jpg",
+    label: "Avanta — Kurumbapalayam"
+  },
+  {
+    url: "https://www.raarya.com/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
+    filename: "brahma_park.jpg",
+    label: "Brahma Park — Annur"
+  },
+  {
+    url: "https://www.raarya.com/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png",
+    filename: "golden_vista.jpg",
+    label: "Golden Vista — Kinathukadavu"
+  },
+  {
+    url: "https://www.raarya.com/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg",
+    filename: "sk_garden.jpg",
+    label: "SK Garden — Kaniyur"
+  },
+  {
+    url: "https://www.raarya.com/uploads/project_image/09-04-2026_12-21-54_Thangam.jpeg",
+    filename: "thangam.jpg",
+    label: "Thangam — Thekkalur"
+  }
+];
+
+// Render cards
+const cardsDiv = document.getElementById('cards');
+images.forEach((img, i) => {
+  cardsDiv.innerHTML += `
+    <div class="card" id="card-${i}">
+      <div class="status" id="status-${i}"></div>
+      <div>
+        <div class="name">${img.label}</div>
+        <div class="msg" id="msg-${i}">Waiting...</div>
+      </div>
+    </div>`;
+});
+
+async function downloadAll() {
+  document.querySelector('.btn').disabled = true;
+  document.querySelector('.btn').textContent = 'Downloading...';
+
+  for (let i = 0; i < images.length; i++) {
+    const img = images[i];
+    const statusEl = document.getElementById(`status-${i}`);
+    const msgEl = document.getElementById(`msg-${i}`);
+    statusEl.className = 'status loading';
+    msgEl.textContent = 'Fetching...';
+
+    try {
+      const res = await fetch(img.url, { mode: 'no-cors' });
+      // no-cors won't let us read, so use anchor trick instead
+    } catch(e) {}
+
+    // Use anchor download
+    try {
+      const a = document.createElement('a');
+      a.href = img.url;
+      a.download = img.filename;
+      a.target = '_blank';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+
+      statusEl.className = 'status ok';
+      msgEl.textContent = `✓ Download triggered → save as: ${img.filename}`;
+    } catch(e) {
+      statusEl.className = 'status fail';
+      msgEl.textContent = 'Failed: ' + e.message;
+    }
+
+    await new Promise(r => setTimeout(r, 800)); // small gap between downloads
+  }
+
+  document.querySelector('.btn').textContent = '✅ All Downloads Triggered!';
+}
+</script>
+</body>
+</html>
