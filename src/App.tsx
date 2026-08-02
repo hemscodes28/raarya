@@ -15,6 +15,7 @@ import { OtpVerification } from './components/OtpVerification';
 import { UserDashboard } from './components/UserDashboard';
 import { onAuthStateChangedWrapper, signOutUser } from './utils/firebaseClient';
 import FloatingContactWidget from './components/FloatingContactWidget';
+import { BlogDetailPage } from './pages/BlogDetailPage';
 
 export default function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -130,6 +131,11 @@ export default function App() {
   };
 
   const renderActivePage = () => {
+    if (currentRoute.startsWith('blog-view/')) {
+      const slug = currentRoute.replace('blog-view/', '');
+      return <BlogDetailPage slug={slug} />;
+    }
+
     switch (currentRoute) {
       case 'buy':
         return <PropertiesPage initialTab="buy" />;
