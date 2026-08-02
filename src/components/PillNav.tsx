@@ -495,7 +495,7 @@ export function PillNav({
                         transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                         className="flex flex-col"
                       >
-                        <div className="bg-white/95 border border-amber-500/10 p-3 rounded-2xl shadow-[0_20px_50px_rgba(184,144,71,0.12)] backdrop-blur-md flex flex-col gap-1 relative overflow-hidden">
+                        <div className="bg-white border border-amber-500/15 p-3 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] flex flex-col gap-1 relative overflow-hidden">
                           {/* Subtle top amber gradient highlight */}
                           <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-500 to-amber-600" />
                           
