@@ -39,12 +39,12 @@ export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${scrolled
-          ? 'py-2 bg-white/80 backdrop-blur-md shadow-sm border-b border-black/5 px-5 md:px-10'
-          : 'py-3 bg-transparent px-5 md:px-10'
+      className={`fixed inset-x-0 top-0 z-50 py-2.5 transition-colors duration-300 ${scrolled
+          ? 'bg-white/90 backdrop-blur-md shadow-sm border-b border-black/5'
+          : 'bg-white/40 backdrop-blur-sm'
         }`}
     >
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
         <PillNav
           logo={`${import.meta.env.BASE_URL}logo.png`}
           logoAlt="RAARYA"
@@ -56,7 +56,7 @@ export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
           hoveredPillTextColor="#141414" // Text color inside pill on hover
           pillTextColor="#ffffff" // Text color inside pill initially
           onItemClick={navClick}
-          initialLoadAnimation={true}
+          initialLoadAnimation={false}
           currentUser={currentUser}
           onAvatarClick={onAvatarClick}
         />

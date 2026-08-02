@@ -1,4 +1,4 @@
-import { Bath, Bed, Layers, Square, Eye, MapPin, Sparkles } from 'lucide-react';
+import { Bath, Bed, Layers, Square, Eye, MapPin } from 'lucide-react';
 import type { PropertyListing } from '../constants';
 import { getImageUrl } from '../utils/imageHelper';
 
@@ -43,12 +43,11 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
           {/* RE-FRAMED LUXURY TOP BADGES */}
           <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10 gap-2">
             <div className="flex flex-wrap gap-1.5">
-              <span className="px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-widest bg-black/85 text-amber-400 backdrop-blur-md rounded-full border border-amber-500/30 shadow-md flex items-center gap-1">
-                <Sparkles className="size-2.5 text-amber-400" />
+              <span className="px-3.5 py-1 text-[10.5px] font-sans font-bold uppercase tracking-wider bg-[#18181B] text-[#D9A74A] rounded-full border border-[#332B1A] shadow-sm">
                 {property.type === 'buy' ? 'For Sale' : property.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
               </span>
 
-              <span className="px-3 py-1 text-[10px] font-mono font-bold uppercase tracking-wider bg-white/95 text-neutral-900 backdrop-blur-md rounded-full border border-black/10 shadow-md">
+              <span className="px-3.5 py-1 text-[10.5px] font-sans font-bold uppercase tracking-wider bg-white text-[#18181B] rounded-full border border-neutral-200/90 shadow-sm">
                 {propType}
               </span>
             </div>

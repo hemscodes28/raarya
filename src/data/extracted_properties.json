@@ -1,160 +1,10 @@
 [
   {
-    "id": "prop-buy-old-8",
-    "title": "Residential land in Kurumbapalayam - Avanta",
-    "price": "₹ 14,50,000",
-    "location": "Saravanampatti - 641035, Coimbatore, Tamil Nadu",
-    "area": 436,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/residential-land-in-kurumbapalayam---avanta-/8/",
-    "description": "Avanta Residential Plots in Kurumbapalayam, Saravanampatti. Features wide access roads, clear DTCP approval, and excellent connectivity to the IT Corridor.",
-    "isRecommended": true,
-    "isDemanded": false,
-    "isNew": false,
-    "agentName": "Rajkumar",
-    "agentPhone": "7845806061",
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "436 sqft",
-      "Status": "Ready to Construct",
-      "Furnishing": "Unfurnished"
-    },
-    "amenities": [
-      "DTCP Approved",
-      "Water Access",
-      "Clear Title",
-      "Tar Road"
-    ],
-    "images": [
-      "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg"
-    ]
-  },
-  {
-    "id": "prop-buy-old-113",
-    "title": "Residential DTCP Approved Plots in Annur | Brahma Park",
-    "price": "₹ 3,90,000",
-    "location": "Sirumugai - 641302, Coimbatore, Tamil Nadu",
-    "area": 1200,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/residential-dtcp-approved-plots-in-annur---brahma-park-/113/",
-    "description": "Premium Residential DTCP Approved Plots in Annur at Brahma Park. Superb location with rapid growth potential and wonderful amenities.",
-    "isRecommended": true,
-    "isDemanded": true,
-    "isNew": true,
-    "agentName": "Rajkumar",
-    "agentPhone": "7845806061",
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "1200 sqft",
-      "Status": "Ready to Construct",
-      "Furnishing": "Unfurnished"
-    },
-    "amenities": [
-      "DTCP Approved",
-      "Secured Gated",
-      "Water Connection",
-      "Good Connectivity"
-    ],
-    "images": [
-      "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
-      "/uploads/project_image/11-07-2026_01-24-37_Brahma_park_4.jpg",
-      "/uploads/project_image/11-07-2026_01-22-57_Brahma_Park_2.jpg"
-    ]
-  },
-  {
-    "id": "prop-buy-old-711",
-    "title": "Residential Plots in Kinathukadavu – Golden Vista",
-    "price": "₹ 5,90,000 Per Cent",
-    "location": "Kinathukadavu - 642109, Coimbatore, Tamil Nadu",
-    "area": 871,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/residential-plots-in-kinathukadavu-–-golden-vista/711/",
-    "description": "Beautiful residential plots in Kinathukadavu at Golden Vista. Excellent environmental surroundings and clear title approvals.",
-    "isRecommended": true,
-    "isDemanded": true,
-    "isNew": false,
-    "areaDisplay": "2 Cents",
-    "areaUnit": "cent",
-    "agentName": "Rajkumar",
-    "agentPhone": "7845806061",
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "2 Cents",
-      "Status": "Ready to Construct",
-      "Furnishing": "Unfurnished"
-    },
-    "amenities": [
-      "Scenic View",
-      "Good Groundwater",
-      "Blacktop Road",
-      "Clear Title"
-    ],
-    "images": [
-      "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png"
-    ]
-  },
-  {
-    "id": "prop-buy-old-21",
-    "title": "SK Garden - Avinashi Road, Near Kaniyur Toll Gate",
-    "price": "₹ 9,00,000",
-    "location": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
-    "area": 435.6,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/sk-garden---avinashi-road,-near-kaniyur-toll-gate/21/",
-    "description": "SK Garden plots located on Avinashi Road near the Kaniyur Toll Gate. Perfect for commercial or residential builds with high appreciation rates.",
-    "isRecommended": false,
-    "isDemanded": true,
-    "isNew": true,
-    "areaDisplay": "1 Cent",
-    "areaUnit": "cent",
-    "agentName": "Rajkumar",
-    "agentPhone": "7845806061",
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "1 Cent",
-      "Status": "Ready to Construct",
-      "Furnishing": "Unfurnished"
-    },
-    "amenities": [
-      "National Highway Proximity",
-      "Commercial Value",
-      "Water Supply",
-      "Tar Road Access"
-    ],
-    "images": [
-      "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg"
-    ]
-  },
-  {
-    "id": "prop-buy-old-112",
+    "id": "prop-buy-141",
     "title": "Thangam | Thekkalur, Avinashi Road",
     "price": "₹ 5,50,000 Per Cent",
     "location": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
-    "area": 1200,
+    "area": 1500,
     "floors": 0,
     "beds": 0,
     "baths": 0,
@@ -162,28 +12,298 @@
     "type": "buy",
     "subType": "Plot",
     "link": "https://www.raarya.com/properties-views/-thangam---thekkalur,-avinashi-road-/112/",
-    "description": "Thangam Residential Layout in Thekkalur, Avinashi Road. Features highly developed neighborhood, direct road access, and clear paperwork.",
-    "isRecommended": false,
-    "isDemanded": false,
-    "isNew": true,
+    "description": "Premium Residential Plots & Villas at Competitive Pricing Thangam is a strategically developed residential layout offering DTCP approved plots in Thekkalur , located along the high-growth Avinashi Road corridor. Designed with essential infrastructure and clear legal approval, this project is suitable for both immediate construction and long-term investment. With a total development of 2.5 acres, the layout ensures organized planning, accessibility, and value appreciation. Pricing & Options Plots: Starting from Rs.5,50,000 2 BHK Villa: Rs.36 Lakhs 3 BHK Villa: Rs.43 Lakhs A well-balanced pricing structure makes this project ideal for first-time buyers and investors. Core Features DTCP Approved Residential Layout 30 & 33 Feet Wide Internal Roads Fully Compounded Project EB Connection Provision Water Facility with Storage Tank Street Lighting Infrastructure Red Soil – Suitable for Strong Construction Location Advantage – Thekkalur, Avinashi Road The project is positioned in a rapidly developing residential zone with seamless connectivity to key regions. Close to Avinashi and Tirupur industrial belt Easy access to Coimbatore city limits Increasing demand for plotted developments Suitable for residential and rental growth Why This Property Stands Out Legally approved layout ensuring safe investment Infrastructure-ready plots for immediate use High potential for appreciation in a growing corridor Availability of both plot and villa options Competitive entry price in a prime location Investment Perspective Properties along Avinashi Road, especially in Thekkalur, are witnessing steady growth due to infrastructure expansion and industrial connectivity. Investing in DTCP approved plots in Thekkalur offers a secure and future-ready asset.",
+    "amenities": [
+      "DTCP & RERA Approved",
+      "Tar Road Access",
+      "24/7 Water Supply",
+      "Clear Title Deed",
+      "Close to IT Corridor"
+    ],
+    "images": [
+      "/uploads/project_image/09-04-2026_12-21-54_Thangam.jpeg",
+      "/uploads/project_slider_images/Thangam 1.jpeg",
+      "/uploads/project_slider_images/Thangam 2.jpeg",
+      "/uploads/project_slider_images/Thangam 3.jpeg",
+      "/uploads/project_slider_images/Thangam 5.jpeg"
+    ],
+    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3941.8487390841533!2d76.98378327504528!3d11.012220389151258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDAwJzQ0LjAiTiA3NsKwNTknMTAuOSJF!5e1!3m2!1sen!2sin!4v1780392990150!5m2!1sen!2sin",
+    "mapQuery": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Karumathampatti%20-%20641659%2C%20Coimbatore%2C%20Tamil%20Nadu",
     "agentName": "Ranjini",
-    "agentPhone": "7845806061",
+    "agentPhones": [
+      "9190872404"
+    ],
+    "agentPhone": "9190872404",
+    "areaDisplay": "1200 sqft",
+    "areaUnit": "sq.ft",
+    "descriptionPoints": [
+      "Description Premium Residential Plots & Villas at Competitive Pricing Thangam is a strategically developed residential layout offering DTCP approved plots in Thekkalur , located along the high-growth Avinashi Road corridor.",
+      "Designed with essential infrastructure and clear legal approval, this project is suitable for both immediate construction and long-term investment.",
+      "With a total development of 2.5 acres, the layout ensures organized planning, accessibility, and value appreciation.",
+      "Pricing & Options Plots:",
+      "Starting from Rs.5,50,000 2 BHK Villa:",
+      "Rs.36 Lakhs 3 BHK Villa:",
+      "Rs.43 Lakhs A well-balanced pricing structure makes this project ideal for first-time buyers and investors.",
+      "Core Features DTCP Approved Residential Layout 30 & 33 Feet Wide Internal Roads Fully Compounded Project EB Connection Provision Water Facility with Storage Tank Street Lighting Infrastructure Red Soil – Suitable for Strong Construction Location Advantage – Thekkalur, Avinashi Road The project is positioned in a rapidly developing residential zone with seamless connectivity to key regions.",
+      "Close to Avinashi and Tirupur industrial belt Easy access to Coimbatore city limits Increasing demand for plotted developments Suitable for residential and rental growth Why This Property Stands Out Legally approved layout ensuring safe investment Infrastructure-ready plots for immediate use High potential for appreciation in a growing corridor Availability of both plot and villa options Competitive entry price in a prime location Investment Perspective Properties along Avinashi Road, especially in Thekkalur, are witnessing steady growth due to infrastructure expansion and industrial connectivity.",
+      "Investing in DTCP approved plots in Thekkalur offers a secure and future-ready asset."
+    ],
     "overviewDetails": {
       "Listed For": "Sell",
       "Property Type": "Plot",
       "Area": "1200 sqft",
-      "Status": "Ready to Construct",
-      "Furnishing": "Unfurnished"
+      "Status": "New Launch",
+      "Furnishing": "Fully Furnished"
     },
+    "isRecommended": false,
+    "isDemanded": false,
+    "isNew": true
+  },
+  {
+    "id": "prop-buy-169",
+    "title": "SK Garden - Avinashi Road, Near Kaniyur Toll Gate",
+    "price": "₹ 9,00,000 Total Price",
+    "location": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
+    "area": 1500,
+    "floors": 0,
+    "beds": 0,
+    "baths": 0,
+    "image": "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg",
+    "type": "buy",
+    "subType": "Plot",
+    "link": "https://www.raarya.com/properties-views/sk-garden---avinashi-road,-near-kaniyur-toll-gate/21/",
+    "description": "Discover a smart investment opportunity at SK Garden, a premium residential layout located on Covai–Avinashi Road, near Kaniyur Toll Gate. This DTCP and RERA approved project ensures complete legal security and transparent documentation, making it a safe and reliable choice for buyers. Spread across a well-developed layout, SK Garden offers just 18 exclusive residential plots, creating a limited and high-value investment opportunity. The plots feature rich red soil land, ideal for strong construction and long-term durability. Designed with both North and South facing options, the project caters to vastu preferences while ensuring excellent layout planning. Strategically located in a fast-growing corridor, the property enjoys close proximity to major institutions and essentials such as LMW, Bharathi Vidyalaya, Park College, KPR College, and Government Hospital, ensuring everyday convenience. Whether you're planning to build your dream home or invest in a rapidly appreciating location, SK Garden offers the perfect blend of connectivity, exclusivity, and future growth potential.",
     "amenities": [
-      "Direct Road Access",
-      "Street Lights",
-      "Good Groundwater",
-      "Close to Schools"
+      "DTCP & RERA Approved",
+      "Tar Road Access",
+      "24/7 Water Supply",
+      "Clear Title Deed",
+      "Close to IT Corridor"
     ],
     "images": [
-      "/uploads/project_image/09-04-2026_12-21-54_Thangam.jpeg"
-    ]
+      "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg",
+      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.30 PM.jpeg",
+      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.31 PM (1).jpeg",
+      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.31 PM (2).jpeg",
+      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.31 PM.jpeg",
+      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.32 PM.jpeg"
+    ],
+    "mapEmbedUrl": "https://www.google.com/maps?q=11.077578432345902, 77.16112013796528&z=17&output=embed",
+    "mapQuery": "11.077578432345902, 77.16112013796528",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=11.077578432345902%2C%2077.16112013796528",
+    "agentName": "Rajkumar",
+    "agentPhones": [
+      "0775784323"
+    ],
+    "agentPhone": "0775784323",
+    "areaDisplay": "1 cent",
+    "areaUnit": "cent",
+    "descriptionPoints": [
+      "Description Discover a smart investment opportunity at SK Garden, a premium residential layout located on Covai–Avinashi Road, near Kaniyur Toll Gate.",
+      "This DTCP and RERA approved project ensures complete legal security and transparent documentation, making it a safe and reliable choice for buyers.",
+      "Spread across a well-developed layout, SK Garden offers just 18 exclusive residential plots, creating a limited and high-value investment opportunity.",
+      "The plots feature rich red soil land, ideal for strong construction and long-term durability.",
+      "Designed with both North and South facing options, the project caters to vastu preferences while ensuring excellent layout planning.",
+      "Strategically located in a fast-growing corridor, the property enjoys close proximity to major institutions and essentials such as LMW, Bharathi Vidyalaya, Park College, KPR College, and Government Hospital, ensuring everyday convenience.",
+      "Whether you're planning to build your dream home or invest in a rapidly appreciating location, SK Garden offers the perfect blend of connectivity, exclusivity, and future growth potential."
+    ],
+    "overviewDetails": {
+      "Listed For": "Sell",
+      "Property Type": "Plot",
+      "Area": "1 cent",
+      "Status": "New Launch",
+      "Furnishing": "Fully Furnished"
+    },
+    "isRecommended": false,
+    "isDemanded": true,
+    "isNew": true
+  },
+  {
+    "id": "prop-buy-159",
+    "title": "Residential Plots in Kinathukadavu – Golden Vista",
+    "price": "₹ 5,90,000 Per Cent",
+    "location": "Kinathukadavu - 642109, Coimbatore, Tamil Nadu",
+    "area": 1500,
+    "floors": 0,
+    "beds": 0,
+    "baths": 0,
+    "image": "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png",
+    "type": "buy",
+    "subType": "Plot",
+    "link": "https://www.raarya.com/properties-views/residential-plots-in-kinathukadavu-–-golden-vista/711/",
+    "description": "Golden Vista – Premium Residential Plots in Kinathukadavu & Gated Community Villas Welcome to Golden Vista Golden Vista is a premium gated community located in Kinathukadavu, Coimbatore , offering Residential Plots and beautifully designed 2BHK & 3BHK Villas . It is the perfect choice for families, professionals, and investors looking for a peaceful lifestyle and a valuable real estate investment. Whether you want to build your dream home or buy a ready-to-move villa, Golden Vista offers modern infrastructure, premium amenities, and a secure community. The project is DTCP & RERA approved , giving you complete confidence in your investment. With wide roads, landscaped gardens, underground drainage, solar street lights, and excellent connectivity, Golden Vista is one of the best residential communities in Kinathukadavu. Premium Residential Plots in Kinathukadavu Golden Vista offers Residential Plots in Kinathukadavu within a well-planned gated community. The project provides everything you need for a comfortable and modern lifestyle. Residents can enjoy premium amenities such as: Swimming Pool Children's Park Walking Track Football & Cricket Turf Yoga Hall Modern Gym CCTV Security Compound Wall Wide 30 & 43 Feet Tar Roads Underground Drainage Solar Street Lights It is an ideal place to build your dream home in a peaceful and secure environment. Prime Location Golden Vista is located just 1.5 KM from Kovai Main Road , offering excellent connectivity to Coimbatore and Pollachi. Nearby Landmarks ELGi Foundry – 100 M KPIT Technologies – 300 M Bus Stand – 5 Minutes Schools & Colleges – Nearby Pollachi – 20 Minutes Easy Access to Coimbatore City Its excellent location makes daily travel easy and increases future property value. Price Details Residential Plots Starting from ₹5.90 Lakhs per Cent Villas 2BHK Villas – Starting from ₹27 Lakhs 3BHK Villas – Starting from ₹34 Lakhs Bank Loan Up to 85% Bank Loan Available Easy Loan Assistance Flexible Payment Options Smart Investment Opportunity Kinathukadavu is one of the fastest-growing areas near Coimbatore. With new industries, better roads, and increasing demand for homes, property values are expected to grow in the coming years. Golden Vista offers an excellent opportunity for both homebuyers and investors. Whether you are planning to build your own home or invest for the future, this project provides great value, legal approvals, and strong appreciation potential. Choose Golden Vista and enjoy a secure, peaceful, and modern lifestyle in one of Coimbatore's most promising locations.",
+    "amenities": [
+      "DTCP & RERA Approved",
+      "Tar Road Access",
+      "24/7 Water Supply",
+      "Clear Title Deed",
+      "Close to IT Corridor"
+    ],
+    "images": [
+      "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png",
+      "/uploads/project_slider_images/1.png",
+      "/uploads/project_slider_images/2.jpg.jpeg",
+      "/uploads/project_slider_images/3.png"
+    ],
+    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3941.8487390841533!2d76.98378327504528!3d11.012220389151258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDAwJzQ0LjAiTiA3NsKwNTknMTAuOSJF!5e1!3m2!1sen!2sin!4v1780392990150!5m2!1sen!2sin",
+    "mapQuery": "Kinathukadavu - 642109, Coimbatore, Tamil Nadu",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Kinathukadavu%20-%20642109%2C%20Coimbatore%2C%20Tamil%20Nadu",
+    "agentName": "RAJKUMAR",
+    "agentPhones": [
+      "9787255522"
+    ],
+    "agentPhone": "9787255522",
+    "areaDisplay": "2 cent",
+    "areaUnit": "cent",
+    "descriptionPoints": [
+      "Description Golden Vista – Premium Residential Plots in Kinathukadavu & Gated Community Villas Welcome to Golden Vista Golden Vista is a premium gated community located in Kinathukadavu, Coimbatore , offering Residential Plots and beautifully designed 2BHK & 3BHK Villas .",
+      "It is the perfect choice for families, professionals, and investors looking for a peaceful lifestyle and a valuable real estate investment.",
+      "Whether you want to build your dream home or buy a ready-to-move villa, Golden Vista offers modern infrastructure, premium amenities, and a secure community.",
+      "The project is DTCP & RERA approved , giving you complete confidence in your investment.",
+      "With wide roads, landscaped gardens, underground drainage, solar street lights, and excellent connectivity, Golden Vista is one of the best residential communities in Kinathukadavu.",
+      "Premium Residential Plots in Kinathukadavu Golden Vista offers Residential Plots in Kinathukadavu within a well-planned gated community.",
+      "The project provides everything you need for a comfortable and modern lifestyle.",
+      "Residents can enjoy premium amenities such as:",
+      "Swimming Pool Children's Park Walking Track Football & Cricket Turf Yoga Hall Modern Gym CCTV Security Compound Wall Wide 30 & 43 Feet Tar Roads Underground Drainage Solar Street Lights It is an ideal place to build your dream home in a peaceful and secure environment.",
+      "Prime Location Golden Vista is located just 1.5 KM from Kovai Main Road , offering excellent connectivity to Coimbatore and Pollachi.",
+      "Nearby Landmarks ELGi Foundry – 100 M KPIT Technologies – 300 M Bus Stand – 5 Minutes Schools & Colleges – Nearby Pollachi – 20 Minutes Easy Access to Coimbatore City Its excellent location makes daily travel easy and increases future property value.",
+      "Price Details Residential Plots Starting from ₹5.90 Lakhs per Cent Villas 2BHK Villas – Starting from ₹27 Lakhs 3BHK Villas – Starting from ₹34 Lakhs Bank Loan Up to 85% Bank Loan Available Easy Loan Assistance Flexible Payment Options Smart Investment Opportunity Kinathukadavu is one of the fastest-growing areas near Coimbatore.",
+      "With new industries, better roads, and increasing demand for homes, property values are expected to grow in the coming years.",
+      "Golden Vista offers an excellent opportunity for both homebuyers and investors.",
+      "Whether you are planning to build your own home or invest for the future, this project provides great value, legal approvals, and strong appreciation potential.",
+      "Choose Golden Vista and enjoy a secure, peaceful, and modern lifestyle in one of Coimbatore's most promising locations."
+    ],
+    "overviewDetails": {
+      "Listed For": "Sell",
+      "Property Type": "Plot",
+      "Area": "2 cent",
+      "Status": "New Launch",
+      "Furnishing": "Fully Furnished"
+    },
+    "isRecommended": true,
+    "isDemanded": true,
+    "isNew": false
+  },
+  {
+    "id": "prop-buy-218",
+    "title": "Residential DTCP Approved Plots in Annur | Brahma Park",
+    "price": "₹ 3,90,000 Total Price",
+    "location": "Sirumugai - 641302, Coimbatore, Tamil Nadu",
+    "area": 1500,
+    "floors": 0,
+    "beds": 0,
+    "baths": 0,
+    "image": "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
+    "type": "buy",
+    "subType": "Plot",
+    "link": "https://www.raarya.com/properties-views/residential-dtcp-approved-plots-in-annur---brahma-park-/113/",
+    "description": "Gated Community Plots on Annur–Sirumugai Road Brahma Park presents well-developed DTCP approved plots in Annur , located on the rapidly growing Annur–Sirumugai Road. This project is designed for buyers looking for secure residential land with essential infrastructure and good future value. With a total area of 3 acres, the layout offers properly planned plots suitable for both home construction and long-term investment. Price & Options Plots: 3,90,000 per cent Plot Sizes: 2 to 5.5 cents 1 BHK Villa: Rs.18,00,000 onwards 2 BHK Villa: Rs.24,00,000 onwards Bank Loan: Up to 85% available This pricing makes it a practical choice for budget buyers and investors. Project Features Brahma Park is developed as a fully secured gated community with a well-defined compound wall and a grand entrance that enhances the overall appeal of the layout. The internal roads are designed with 33-feet width, ensuring smooth access and easy movement within the project. The layout is equipped with essential infrastructure such as street lighting, continuous water supply supported by an overhead tank, and CCTV surveillance for added security. Dedicated spaces for children and landscaped open areas create a comfortable and family-friendly living environment. Each plot is clearly demarcated, allowing buyers to plan and construct homes with ease in an organized residential setting. Location Advantage Situated on Annur–Sirumugai Road Easy access to Annur town Connectivity to nearby industrial areas Developing residential zone with good demand Why Choose Brahma Park DTCP approved plots ensure legal clarity Gated community for better security Suitable for immediate construction Good potential for future price growth Affordable entry point with loan support Book Your Plot Today Secure your plot in Brahma Park, offering DTCP approved plots in Annur with essential infrastructure and a growing location advantage.",
+    "amenities": [
+      "DTCP & RERA Approved",
+      "Tar Road Access",
+      "24/7 Water Supply",
+      "Clear Title Deed",
+      "Close to IT Corridor"
+    ],
+    "images": [
+      "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
+      "/uploads/project_slider_images/Braham park.jpeg",
+      "/uploads/project_slider_images/Brahma park2.jpeg",
+      "/uploads/project_slider_images/Brahma park4-Picsart-AiImageEnhancer.jpeg"
+    ],
+    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3941.8487390841533!2d76.98378327504528!3d11.012220389151258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDAwJzQ0LjAiTiA3NsKwNTknMTAuOSJF!5e1!3m2!1sen!2sin!4v1780392990150!5m2!1sen!2sin",
+    "mapQuery": "Sirumugai - 641302, Coimbatore, Tamil Nadu",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Sirumugai%20-%20641302%2C%20Coimbatore%2C%20Tamil%20Nadu",
+    "agentName": "Rajkumar",
+    "agentPhones": [
+      "9787255522"
+    ],
+    "agentPhone": "9787255522",
+    "areaDisplay": "1200 sqft",
+    "areaUnit": "sq.ft",
+    "descriptionPoints": [
+      "Description Gated Community Plots on Annur–Sirumugai Road Brahma Park presents well-developed DTCP approved plots in Annur , located on the rapidly growing Annur–Sirumugai Road.",
+      "This project is designed for buyers looking for secure residential land with essential infrastructure and good future value.",
+      "With a total area of 3 acres, the layout offers properly planned plots suitable for both home construction and long-term investment.",
+      "Price & Options Plots:",
+      "3,90,000 per cent Plot Sizes:",
+      "2 to 5.5 cents 1 BHK Villa:",
+      "Rs.18,00,000 onwards 2 BHK Villa:",
+      "Rs.24,00,000 onwards Bank Loan:",
+      "Up to 85% available This pricing makes it a practical choice for budget buyers and investors.",
+      "Project Features Brahma Park is developed as a fully secured gated community with a well-defined compound wall and a grand entrance that enhances the overall appeal of the layout.",
+      "The internal roads are designed with 33-feet width, ensuring smooth access and easy movement within the project.",
+      "The layout is equipped with essential infrastructure such as street lighting, continuous water supply supported by an overhead tank, and CCTV surveillance for added security.",
+      "Dedicated spaces for children and landscaped open areas create a comfortable and family-friendly living environment.",
+      "Each plot is clearly demarcated, allowing buyers to plan and construct homes with ease in an organized residential setting.",
+      "Location Advantage Situated on Annur–Sirumugai Road Easy access to Annur town Connectivity to nearby industrial areas Developing residential zone with good demand Why Choose Brahma Park DTCP approved plots ensure legal clarity Gated community for better security Suitable for immediate construction Good potential for future price growth Affordable entry point with loan support Book Your Plot Today Secure your plot in Brahma Park, offering DTCP approved plots in Annur with essential infrastructure and a growing location advantage."
+    ],
+    "overviewDetails": {
+      "Listed For": "Sell",
+      "Property Type": "Plot",
+      "Area": "1200 sqft",
+      "Status": "New Launch",
+      "Furnishing": "Fully Furnished"
+    },
+    "isRecommended": true,
+    "isDemanded": true,
+    "isNew": false
+  },
+  {
+    "id": "prop-buy-244",
+    "title": "Residential land in Kurumbapalayam - Avanta",
+    "price": "₹ 14,50,000 Total Price",
+    "location": "Saravanampatti - 641035, Coimbatore, Tamil Nadu",
+    "area": 1500,
+    "floors": 0,
+    "beds": 0,
+    "baths": 0,
+    "image": "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg",
+    "type": "buy",
+    "subType": "Plot",
+    "link": "https://www.raarya.com/properties-views/residential-land-in-kurumbapalayam---avanta-/8/",
+    "description": "Sell · Plot Residential land in Kurumbapalayam - Avanta Saravanampatti - 641035, Coimbatore, Tamil Nadu Listed Price ₹ 14,50,000 / Total Price Enquire Now Watch Tour All Photos Description Avanta Property in Kurumbapalayam is a benchmark for quality community living. Every aspect of the project—from its layout design to the facilities offered—has been thoughtfully planned to meet the needs of both homebuyers and investors. Whether you are looking to build your forever home or secure a property with long-term appreciation potential, Avanta Property in Kurumbapalayam provides the ideal foundation for a secure and prosperous future.",
+    "amenities": [
+      "DTCP & RERA Approved",
+      "Tar Road Access",
+      "24/7 Water Supply",
+      "Clear Title Deed",
+      "Close to IT Corridor"
+    ],
+    "images": [
+      "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg",
+      "/uploads/project_slider_images/1.jpg",
+      "/uploads/project_slider_images/2.jpg",
+      "/uploads/project_slider_images/5.jpg",
+      "/uploads/project_slider_images/3.jpg",
+      "/uploads/project_slider_images/4.jpg"
+    ],
+    "mapEmbedUrl": "https://www.google.com/maps?q=11.131322173578472, 77.02828010913038&z=17&output=embed",
+    "mapQuery": "11.131322173578472, 77.02828010913038",
+    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=11.131322173578472%2C%2077.02828010913038",
+    "agentName": "Rajkumar",
+    "agentPhones": [
+      "1313221735"
+    ],
+    "agentPhone": "1313221735",
+    "areaDisplay": "436 sqft",
+    "areaUnit": "sq.ft",
+    "descriptionPoints": [
+      "Sell · Plot Residential land in Kurumbapalayam - Avanta Saravanampatti - 641035, Coimbatore, Tamil Nadu Listed Price ₹ 14,50,000 / Total Price Enquire Now Watch Tour All Photos Description Avanta Property in Kurumbapalayam is a benchmark for quality community living.",
+      "Every aspect of the project—from its layout design to the facilities offered—has been thoughtfully planned to meet the needs of both homebuyers and investors.",
+      "Whether you are looking to build your forever home or secure a property with long-term appreciation potential, Avanta Property in Kurumbapalayam provides the ideal foundation for a secure and prosperous future."
+    ],
+    "overviewDetails": {
+      "Listed For": "Sell",
+      "Property Type": "Plot",
+      "Area": "436 sqft",
+      "Status": "New Launch",
+      "Furnishing": "Fully Furnished"
+    },
+    "isRecommended": true,
+    "isDemanded": false,
+    "isNew": false
   },
   {
     "id": "prop-buy-1",
@@ -6604,7 +6724,10 @@
       "Area": "1208 sqft",
       "Status": "New Launch",
       "Furnishing": "Fully Furnished"
-    }
+    },
+    "isRecommended": false,
+    "isDemanded": false,
+    "isNew": true
   },
   {
     "id": "prop-buy-128",
@@ -7280,64 +7403,6 @@
       "This property is a great choice for both end-use and long-term investment."
     ],
     "overviewDetails": {}
-  },
-  {
-    "id": "prop-buy-141",
-    "title": "Thangam | Thekkalur, Avinashi Road",
-    "price": "₹ 5,50,000 Per Cent",
-    "location": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
-    "area": 1500,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/09-04-2026_12-21-54_Thangam.jpeg",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/-thangam---thekkalur,-avinashi-road-/112/",
-    "description": "Premium Residential Plots & Villas at Competitive Pricing Thangam is a strategically developed residential layout offering DTCP approved plots in Thekkalur , located along the high-growth Avinashi Road corridor. Designed with essential infrastructure and clear legal approval, this project is suitable for both immediate construction and long-term investment. With a total development of 2.5 acres, the layout ensures organized planning, accessibility, and value appreciation. Pricing & Options Plots: Starting from Rs.5,50,000 2 BHK Villa: Rs.36 Lakhs 3 BHK Villa: Rs.43 Lakhs A well-balanced pricing structure makes this project ideal for first-time buyers and investors. Core Features DTCP Approved Residential Layout 30 & 33 Feet Wide Internal Roads Fully Compounded Project EB Connection Provision Water Facility with Storage Tank Street Lighting Infrastructure Red Soil &ndash; Suitable for Strong Construction Location Advantage &ndash; Thekkalur, Avinashi Road The project is positioned in a rapidly developing residential zone with seamless connectivity to key regions. Close to Avinashi and Tirupur industrial belt Easy access to Coimbatore city limits Increasing demand for plotted developments Suitable for residential and rental growth Why This Property Stands Out Legally approved layout ensuring safe investment Infrastructure-ready plots for immediate use High potential for appreciation in a growing corridor Availability of both plot and villa options Competitive entry price in a prime location Investment Perspective Properties along Avinashi Road, especially in Thekkalur, are witnessing steady growth due to infrastructure expansion and industrial connectivity. Investing in DTCP approved plots in Thekkalur offers a secure and future-ready asset.",
-    "amenities": [
-      "DTCP & RERA Approved",
-      "Tar Road Access",
-      "24/7 Water Supply",
-      "Clear Title Deed",
-      "Close to IT Corridor"
-    ],
-    "images": [
-      "/uploads/project_image/09-04-2026_12-21-54_Thangam.jpeg",
-      "/uploads/project_slider_images/Thangam 1.jpeg",
-      "/uploads/project_slider_images/Thangam 2.jpeg",
-      "/uploads/project_slider_images/Thangam 3.jpeg",
-      "/uploads/project_slider_images/Thangam 5.jpeg"
-    ],
-    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3941.8487390841533!2d76.98378327504528!3d11.012220389151258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDAwJzQ0LjAiTiA3NsKwNTknMTAuOSJF!5e1!3m2!1sen!2sin!4v1780392990150!5m2!1sen!2sin",
-    "mapQuery": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Karumathampatti%20-%20641659%2C%20Coimbatore%2C%20Tamil%20Nadu",
-    "agentName": "Ranjini",
-    "agentPhones": [
-      "9190872404"
-    ],
-    "agentPhone": "9190872404",
-    "areaDisplay": "1200 sqft",
-    "areaUnit": "sq.ft",
-    "descriptionPoints": [
-      "Description Premium Residential Plots & Villas at Competitive Pricing Thangam is a strategically developed residential layout offering DTCP approved plots in Thekkalur , located along the high-growth Avinashi Road corridor.",
-      "Designed with essential infrastructure and clear legal approval, this project is suitable for both immediate construction and long-term investment.",
-      "With a total development of 2.5 acres, the layout ensures organized planning, accessibility, and value appreciation.",
-      "Pricing & Options Plots:",
-      "Starting from Rs.5,50,000 2 BHK Villa:",
-      "Rs.36 Lakhs 3 BHK Villa:",
-      "Rs.43 Lakhs A well-balanced pricing structure makes this project ideal for first-time buyers and investors.",
-      "Core Features DTCP Approved Residential Layout 30 & 33 Feet Wide Internal Roads Fully Compounded Project EB Connection Provision Water Facility with Storage Tank Street Lighting Infrastructure Red Soil &ndash; Suitable for Strong Construction Location Advantage &ndash; Thekkalur, Avinashi Road The project is positioned in a rapidly developing residential zone with seamless connectivity to key regions.",
-      "Close to Avinashi and Tirupur industrial belt Easy access to Coimbatore city limits Increasing demand for plotted developments Suitable for residential and rental growth Why This Property Stands Out Legally approved layout ensuring safe investment Infrastructure-ready plots for immediate use High potential for appreciation in a growing corridor Availability of both plot and villa options Competitive entry price in a prime location Investment Perspective Properties along Avinashi Road, especially in Thekkalur, are witnessing steady growth due to infrastructure expansion and industrial connectivity.",
-      "Investing in DTCP approved plots in Thekkalur offers a secure and future-ready asset."
-    ],
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "1200 sqft",
-      "Status": "New Launch",
-      "Furnishing": "Fully Furnished"
-    }
   },
   {
     "id": "prop-buy-142",
@@ -8160,69 +8225,6 @@
     }
   },
   {
-    "id": "prop-buy-159",
-    "title": "Residential Plots in Kinathukadavu – Golden Vista",
-    "price": "₹ 5,90,000 Per Cent",
-    "location": "Kinathukadavu - 642109, Coimbatore, Tamil Nadu",
-    "area": 1500,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/residential-plots-in-kinathukadavu-–-golden-vista/711/",
-    "description": "Golden Vista &ndash; Premium Residential Plots in Kinathukadavu & Gated Community Villas Welcome to Golden Vista Golden Vista is a premium gated community located in Kinathukadavu, Coimbatore , offering Residential Plots and beautifully designed 2BHK & 3BHK Villas . It is the perfect choice for families, professionals, and investors looking for a peaceful lifestyle and a valuable real estate investment. Whether you want to build your dream home or buy a ready-to-move villa, Golden Vista offers modern infrastructure, premium amenities, and a secure community. The project is DTCP & RERA approved , giving you complete confidence in your investment. With wide roads, landscaped gardens, underground drainage, solar street lights, and excellent connectivity, Golden Vista is one of the best residential communities in Kinathukadavu. Premium Residential Plots in Kinathukadavu Golden Vista offers Residential Plots in Kinathukadavu within a well-planned gated community. The project provides everything you need for a comfortable and modern lifestyle. Residents can enjoy premium amenities such as: Swimming Pool Children&#39;s Park Walking Track Football & Cricket Turf Yoga Hall Modern Gym CCTV Security Compound Wall Wide 30 & 43 Feet Tar Roads Underground Drainage Solar Street Lights It is an ideal place to build your dream home in a peaceful and secure environment. Prime Location Golden Vista is located just 1.5 KM from Kovai Main Road , offering excellent connectivity to Coimbatore and Pollachi. Nearby Landmarks ELGi Foundry &ndash; 100 M KPIT Technologies &ndash; 300 M Bus Stand &ndash; 5 Minutes Schools & Colleges &ndash; Nearby Pollachi &ndash; 20 Minutes Easy Access to Coimbatore City Its excellent location makes daily travel easy and increases future property value. Price Details Residential Plots Starting from ₹5.90 Lakhs per Cent Villas 2BHK Villas &ndash; Starting from ₹27 Lakhs 3BHK Villas &ndash; Starting from ₹34 Lakhs Bank Loan Up to 85% Bank Loan Available Easy Loan Assistance Flexible Payment Options Smart Investment Opportunity Kinathukadavu is one of the fastest-growing areas near Coimbatore. With new industries, better roads, and increasing demand for homes, property values are expected to grow in the coming years. Golden Vista offers an excellent opportunity for both homebuyers and investors. Whether you are planning to build your own home or invest for the future, this project provides great value, legal approvals, and strong appreciation potential. Choose Golden Vista and enjoy a secure, peaceful, and modern lifestyle in one of Coimbatore&#39;s most promising locations.",
-    "amenities": [
-      "DTCP & RERA Approved",
-      "Tar Road Access",
-      "24/7 Water Supply",
-      "Clear Title Deed",
-      "Close to IT Corridor"
-    ],
-    "images": [
-      "/uploads/project_image/18-07-2026_02-35-13_ChatGPT_Image_Jul_17,_2026,_05_03_26_PM-Picsart-AiImageEnhancer.png",
-      "/uploads/project_slider_images/1.png",
-      "/uploads/project_slider_images/2.jpg.jpeg",
-      "/uploads/project_slider_images/3.png"
-    ],
-    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3941.8487390841533!2d76.98378327504528!3d11.012220389151258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDAwJzQ0LjAiTiA3NsKwNTknMTAuOSJF!5e1!3m2!1sen!2sin!4v1780392990150!5m2!1sen!2sin",
-    "mapQuery": "Kinathukadavu - 642109, Coimbatore, Tamil Nadu",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Kinathukadavu%20-%20642109%2C%20Coimbatore%2C%20Tamil%20Nadu",
-    "agentName": "RAJKUMAR",
-    "agentPhones": [
-      "9787255522"
-    ],
-    "agentPhone": "9787255522",
-    "areaDisplay": "2 cent",
-    "areaUnit": "cent",
-    "descriptionPoints": [
-      "Description Golden Vista &ndash; Premium Residential Plots in Kinathukadavu & Gated Community Villas Welcome to Golden Vista Golden Vista is a premium gated community located in Kinathukadavu, Coimbatore , offering Residential Plots and beautifully designed 2BHK & 3BHK Villas .",
-      "It is the perfect choice for families, professionals, and investors looking for a peaceful lifestyle and a valuable real estate investment.",
-      "Whether you want to build your dream home or buy a ready-to-move villa, Golden Vista offers modern infrastructure, premium amenities, and a secure community.",
-      "The project is DTCP & RERA approved , giving you complete confidence in your investment.",
-      "With wide roads, landscaped gardens, underground drainage, solar street lights, and excellent connectivity, Golden Vista is one of the best residential communities in Kinathukadavu.",
-      "Premium Residential Plots in Kinathukadavu Golden Vista offers Residential Plots in Kinathukadavu within a well-planned gated community.",
-      "The project provides everything you need for a comfortable and modern lifestyle.",
-      "Residents can enjoy premium amenities such as:",
-      "Swimming Pool Children&#39;s Park Walking Track Football & Cricket Turf Yoga Hall Modern Gym CCTV Security Compound Wall Wide 30 & 43 Feet Tar Roads Underground Drainage Solar Street Lights It is an ideal place to build your dream home in a peaceful and secure environment.",
-      "Prime Location Golden Vista is located just 1.5 KM from Kovai Main Road , offering excellent connectivity to Coimbatore and Pollachi.",
-      "Nearby Landmarks ELGi Foundry &ndash; 100 M KPIT Technologies &ndash; 300 M Bus Stand &ndash; 5 Minutes Schools & Colleges &ndash; Nearby Pollachi &ndash; 20 Minutes Easy Access to Coimbatore City Its excellent location makes daily travel easy and increases future property value.",
-      "Price Details Residential Plots Starting from ₹5.90 Lakhs per Cent Villas 2BHK Villas &ndash; Starting from ₹27 Lakhs 3BHK Villas &ndash; Starting from ₹34 Lakhs Bank Loan Up to 85% Bank Loan Available Easy Loan Assistance Flexible Payment Options Smart Investment Opportunity Kinathukadavu is one of the fastest-growing areas near Coimbatore.",
-      "With new industries, better roads, and increasing demand for homes, property values are expected to grow in the coming years.",
-      "Golden Vista offers an excellent opportunity for both homebuyers and investors.",
-      "Whether you are planning to build your own home or invest for the future, this project provides great value, legal approvals, and strong appreciation potential.",
-      "Choose Golden Vista and enjoy a secure, peaceful, and modern lifestyle in one of Coimbatore&#39;s most promising locations."
-    ],
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "2 cent",
-      "Status": "New Launch",
-      "Furnishing": "Fully Furnished"
-    }
-  },
-  {
     "id": "prop-buy-160",
     "title": "Hot Selling Villa Plots Coimbatore",
     "price": "₹ 6,15,000 Per Cent",
@@ -8614,62 +8616,6 @@
       "Property Type": "Plot",
       "Area": "1 cent",
       "Status": "Under Construction",
-      "Furnishing": "Fully Furnished"
-    }
-  },
-  {
-    "id": "prop-buy-169",
-    "title": "SK Garden - Avinashi Road, Near Kaniyur Toll Gate",
-    "price": "₹ 9,00,000 Total Price",
-    "location": "Karumathampatti - 641659, Coimbatore, Tamil Nadu",
-    "area": 1500,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/sk-garden---avinashi-road,-near-kaniyur-toll-gate/21/",
-    "description": "Discover a smart investment opportunity at SK Garden, a premium residential layout located on Covai&ndash;Avinashi Road, near Kaniyur Toll Gate. This DTCP and RERA approved project ensures complete legal security and transparent documentation, making it a safe and reliable choice for buyers. Spread across a well-developed layout, SK Garden offers just 18 exclusive residential plots, creating a limited and high-value investment opportunity. The plots feature rich red soil land, ideal for strong construction and long-term durability. Designed with both North and South facing options, the project caters to vastu preferences while ensuring excellent layout planning. Strategically located in a fast-growing corridor, the property enjoys close proximity to major institutions and essentials such as LMW, Bharathi Vidyalaya, Park College, KPR College, and Government Hospital, ensuring everyday convenience. Whether you&#39;re planning to build your dream home or invest in a rapidly appreciating location, SK Garden offers the perfect blend of connectivity, exclusivity, and future growth potential.",
-    "amenities": [
-      "DTCP & RERA Approved",
-      "Tar Road Access",
-      "24/7 Water Supply",
-      "Clear Title Deed",
-      "Close to IT Corridor"
-    ],
-    "images": [
-      "/uploads/project_image/13-02-2026_11-30-48_sk_garden.jpg_(1).jpeg",
-      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.30 PM.jpeg",
-      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.31 PM (1).jpeg",
-      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.31 PM (2).jpeg",
-      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.31 PM.jpeg",
-      "/uploads/project_slider_images/WhatsApp Image 2026-02-12 at 2.20.32 PM.jpeg"
-    ],
-    "mapEmbedUrl": "https://www.google.com/maps?q=11.077578432345902, 77.16112013796528&z=17&output=embed",
-    "mapQuery": "11.077578432345902, 77.16112013796528",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=11.077578432345902%2C%2077.16112013796528",
-    "agentName": "Rajkumar",
-    "agentPhones": [
-      "0775784323"
-    ],
-    "agentPhone": "0775784323",
-    "areaDisplay": "1 cent",
-    "areaUnit": "cent",
-    "descriptionPoints": [
-      "Description Discover a smart investment opportunity at SK Garden, a premium residential layout located on Covai&ndash;Avinashi Road, near Kaniyur Toll Gate.",
-      "This DTCP and RERA approved project ensures complete legal security and transparent documentation, making it a safe and reliable choice for buyers.",
-      "Spread across a well-developed layout, SK Garden offers just 18 exclusive residential plots, creating a limited and high-value investment opportunity.",
-      "The plots feature rich red soil land, ideal for strong construction and long-term durability.",
-      "Designed with both North and South facing options, the project caters to vastu preferences while ensuring excellent layout planning.",
-      "Strategically located in a fast-growing corridor, the property enjoys close proximity to major institutions and essentials such as LMW, Bharathi Vidyalaya, Park College, KPR College, and Government Hospital, ensuring everyday convenience.",
-      "Whether you&#39;re planning to build your dream home or invest in a rapidly appreciating location, SK Garden offers the perfect blend of connectivity, exclusivity, and future growth potential."
-    ],
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "1 cent",
-      "Status": "New Launch",
       "Furnishing": "Fully Furnished"
     }
   },
@@ -11023,68 +10969,6 @@
     }
   },
   {
-    "id": "prop-buy-218",
-    "title": "Residential DTCP Approved Plots in Annur | Brahma Park",
-    "price": "₹ 3,90,000 Total Price",
-    "location": "Sirumugai - 641302, Coimbatore, Tamil Nadu",
-    "area": 1500,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/residential-dtcp-approved-plots-in-annur---brahma-park-/113/",
-    "description": "Gated Community Plots on Annur&ndash;Sirumugai Road Brahma Park presents well-developed DTCP approved plots in Annur , located on the rapidly growing Annur&ndash;Sirumugai Road. This project is designed for buyers looking for secure residential land with essential infrastructure and good future value. With a total area of 3 acres, the layout offers properly planned plots suitable for both home construction and long-term investment. Price & Options Plots: 3,90,000 per cent Plot Sizes: 2 to 5.5 cents 1 BHK Villa: Rs.18,00,000 onwards 2 BHK Villa: Rs.24,00,000 onwards Bank Loan: Up to 85% available This pricing makes it a practical choice for budget buyers and investors. Project Features Brahma Park is developed as a fully secured gated community with a well-defined compound wall and a grand entrance that enhances the overall appeal of the layout. The internal roads are designed with 33-feet width, ensuring smooth access and easy movement within the project. The layout is equipped with essential infrastructure such as street lighting, continuous water supply supported by an overhead tank, and CCTV surveillance for added security. Dedicated spaces for children and landscaped open areas create a comfortable and family-friendly living environment. Each plot is clearly demarcated, allowing buyers to plan and construct homes with ease in an organized residential setting. Location Advantage Situated on Annur&ndash;Sirumugai Road Easy access to Annur town Connectivity to nearby industrial areas Developing residential zone with good demand Why Choose Brahma Park DTCP approved plots ensure legal clarity Gated community for better security Suitable for immediate construction Good potential for future price growth Affordable entry point with loan support Book Your Plot Today Secure your plot in Brahma Park, offering DTCP approved plots in Annur with essential infrastructure and a growing location advantage.",
-    "amenities": [
-      "DTCP & RERA Approved",
-      "Tar Road Access",
-      "24/7 Water Supply",
-      "Clear Title Deed",
-      "Close to IT Corridor"
-    ],
-    "images": [
-      "/uploads/project_image/11-07-2026_01-23-29_Brahma_park_3_(1).jpg",
-      "/uploads/project_slider_images/Braham park.jpeg",
-      "/uploads/project_slider_images/Brahma park2.jpeg",
-      "/uploads/project_slider_images/Brahma park4-Picsart-AiImageEnhancer.jpeg"
-    ],
-    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3941.8487390841533!2d76.98378327504528!3d11.012220389151258!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMTHCsDAwJzQ0LjAiTiA3NsKwNTknMTAuOSJF!5e1!3m2!1sen!2sin!4v1780392990150!5m2!1sen!2sin",
-    "mapQuery": "Sirumugai - 641302, Coimbatore, Tamil Nadu",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=Sirumugai%20-%20641302%2C%20Coimbatore%2C%20Tamil%20Nadu",
-    "agentName": "Rajkumar",
-    "agentPhones": [
-      "9787255522"
-    ],
-    "agentPhone": "9787255522",
-    "areaDisplay": "1200 sqft",
-    "areaUnit": "sq.ft",
-    "descriptionPoints": [
-      "Description Gated Community Plots on Annur&ndash;Sirumugai Road Brahma Park presents well-developed DTCP approved plots in Annur , located on the rapidly growing Annur&ndash;Sirumugai Road.",
-      "This project is designed for buyers looking for secure residential land with essential infrastructure and good future value.",
-      "With a total area of 3 acres, the layout offers properly planned plots suitable for both home construction and long-term investment.",
-      "Price & Options Plots:",
-      "3,90,000 per cent Plot Sizes:",
-      "2 to 5.5 cents 1 BHK Villa:",
-      "Rs.18,00,000 onwards 2 BHK Villa:",
-      "Rs.24,00,000 onwards Bank Loan:",
-      "Up to 85% available This pricing makes it a practical choice for budget buyers and investors.",
-      "Project Features Brahma Park is developed as a fully secured gated community with a well-defined compound wall and a grand entrance that enhances the overall appeal of the layout.",
-      "The internal roads are designed with 33-feet width, ensuring smooth access and easy movement within the project.",
-      "The layout is equipped with essential infrastructure such as street lighting, continuous water supply supported by an overhead tank, and CCTV surveillance for added security.",
-      "Dedicated spaces for children and landscaped open areas create a comfortable and family-friendly living environment.",
-      "Each plot is clearly demarcated, allowing buyers to plan and construct homes with ease in an organized residential setting.",
-      "Location Advantage Situated on Annur&ndash;Sirumugai Road Easy access to Annur town Connectivity to nearby industrial areas Developing residential zone with good demand Why Choose Brahma Park DTCP approved plots ensure legal clarity Gated community for better security Suitable for immediate construction Good potential for future price growth Affordable entry point with loan support Book Your Plot Today Secure your plot in Brahma Park, offering DTCP approved plots in Annur with essential infrastructure and a growing location advantage."
-    ],
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "1200 sqft",
-      "Status": "New Launch",
-      "Furnishing": "Fully Furnished"
-    }
-  },
-  {
     "id": "prop-buy-219",
     "title": "Budget Plots in Karamadai",
     "price": "₹ 3.9 La,khs Monthly Rent",
@@ -12261,58 +12145,6 @@
       "Listed For": "Sell",
       "Property Type": "Plot",
       "Area": "3 bhk",
-      "Status": "New Launch",
-      "Furnishing": "Fully Furnished"
-    }
-  },
-  {
-    "id": "prop-buy-244",
-    "title": "Residential land in Kurumbapalayam - Avanta",
-    "price": "₹ 14,50,000 Total Price",
-    "location": "Saravanampatti - 641035, Coimbatore, Tamil Nadu",
-    "area": 1500,
-    "floors": 0,
-    "beds": 0,
-    "baths": 0,
-    "image": "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg",
-    "type": "buy",
-    "subType": "Plot",
-    "link": "https://www.raarya.com/properties-views/residential-land-in-kurumbapalayam---avanta-/8/",
-    "description": "Sell · Plot Residential land in Kurumbapalayam - Avanta Saravanampatti - 641035, Coimbatore, Tamil Nadu Listed Price ₹ 14,50,000 / Total Price Enquire Now Watch Tour All Photos Description Avanta Property in Kurumbapalayam is a benchmark for quality community living. Every aspect of the project&mdash;from its layout design to the facilities offered&mdash;has been thoughtfully planned to meet the needs of both homebuyers and investors. Whether you are looking to build your forever home or secure a property with long-term appreciation potential, Avanta Property in Kurumbapalayam provides the ideal foundation for a secure and prosperous future.",
-    "amenities": [
-      "DTCP & RERA Approved",
-      "Tar Road Access",
-      "24/7 Water Supply",
-      "Clear Title Deed",
-      "Close to IT Corridor"
-    ],
-    "images": [
-      "/uploads/project_image/10-02-2026_01-28-39_avanta_new.jpg.jpeg",
-      "/uploads/project_slider_images/1.jpg",
-      "/uploads/project_slider_images/2.jpg",
-      "/uploads/project_slider_images/5.jpg",
-      "/uploads/project_slider_images/3.jpg",
-      "/uploads/project_slider_images/4.jpg"
-    ],
-    "mapEmbedUrl": "https://www.google.com/maps?q=11.131322173578472, 77.02828010913038&z=17&output=embed",
-    "mapQuery": "11.131322173578472, 77.02828010913038",
-    "googleMapsUrl": "https://www.google.com/maps/search/?api=1&query=11.131322173578472%2C%2077.02828010913038",
-    "agentName": "Rajkumar",
-    "agentPhones": [
-      "1313221735"
-    ],
-    "agentPhone": "1313221735",
-    "areaDisplay": "436 sqft",
-    "areaUnit": "sq.ft",
-    "descriptionPoints": [
-      "Sell · Plot Residential land in Kurumbapalayam - Avanta Saravanampatti - 641035, Coimbatore, Tamil Nadu Listed Price ₹ 14,50,000 / Total Price Enquire Now Watch Tour All Photos Description Avanta Property in Kurumbapalayam is a benchmark for quality community living.",
-      "Every aspect of the project&mdash;from its layout design to the facilities offered&mdash;has been thoughtfully planned to meet the needs of both homebuyers and investors.",
-      "Whether you are looking to build your forever home or secure a property with long-term appreciation potential, Avanta Property in Kurumbapalayam provides the ideal foundation for a secure and prosperous future."
-    ],
-    "overviewDetails": {
-      "Listed For": "Sell",
-      "Property Type": "Plot",
-      "Area": "436 sqft",
       "Status": "New Launch",
       "Furnishing": "Fully Furnished"
     }

@@ -4,7 +4,7 @@ import {
   LayoutGrid, User as UserIcon, MessageSquare, PlusCircle,
   LogOut, X, Building2, Clock, CheckCircle2, ChevronRight,
   Search, MapPin, Phone, MessageCircle, Home, ArrowUpRight,
-  Sparkles, ShieldCheck
+  ShieldCheck
 } from 'lucide-react';
 import { ProfileTab } from './ProfileTab';
 import { EnquiryTab } from './EnquiryTab';
@@ -86,7 +86,7 @@ function DashboardHome({ user }: { user: any }) {
         <div className="absolute inset-0 bg-gradient-to-br from-[#141414] via-[#141414]/95 to-[#141414]/70" />
         <div className="relative z-10">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/50 text-[10px] font-bold tracking-[0.2em] uppercase mb-3">
-            <Sparkles className="w-3 h-3 text-amber-400" /> Premium Account
+            <ShieldCheck className="w-3 h-3 text-amber-400" /> Premium Account
           </div>
           <h2 className="text-3xl md:text-4xl font-medium text-white tracking-tight" style={{ fontFamily: "'PP Editorial New', 'Playfair Display', Georgia, serif" }}>
             Welcome, {firstName}.

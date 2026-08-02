@@ -5,7 +5,7 @@ import {
   UserCheck, 
   Coins, 
   AlertCircle,
-  Sparkles
+  CheckCircle
 } from 'lucide-react';
 
 // Indian currency formatter
@@ -677,7 +677,7 @@ export function MortgagePage() {
                 {/* Advisory Tip Box */}
                 {monthlyIncome > 0 ? (
                   <div className="bg-amber-50/50 border border-amber-100/50 rounded-2xl p-4 flex gap-3 items-start mt-6 text-left">
-                    <Sparkles className="w-4 h-4 text-amber-600 shrink-0 mt-0.5 animate-pulse" />
+                    <CheckCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
                     <p className="text-xs text-amber-800/80 leading-relaxed font-light">
                       <strong>Advisor tip:</strong> Adding a co-applicant with an independent income source will immediately boost your maximum loan eligibility.
                     </p>

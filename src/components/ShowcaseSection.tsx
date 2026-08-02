@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { Sparkles, TrendingUp, Clock, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { PROPERTIES, type PropertyListing } from '../constants';
 import { PropertyCard } from './PropertyCard';
 import { PropertyDetailModal } from './PropertyDetailModal';
@@ -36,25 +36,24 @@ export function ShowcaseSection() {
           <div className="mb-24">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
               <div className="max-w-xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="p-1.5 bg-amber-500/10 rounded-lg">
-                    <Sparkles className="size-4 text-amber-600" />
+                <div className="mb-3">
+                  <span className="inline-block px-3.5 py-1 text-[10.5px] font-mono font-bold uppercase tracking-[0.18em] bg-[#FDF6EA] text-[#B87A28] border border-amber-200/60 rounded-full shadow-xs">
+                    HANDPICKED PREMIUM LISTINGS
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-700">Handpicked Premium Listings</span>
                 </div>
-                <h2 className="text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl leading-tight">
+                <h2 className="font-heading-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight leading-snug">
                   Recommended for You
                 </h2>
-                <p className="mt-3 text-[13.5px] leading-relaxed text-neutral-500 font-serif italic tracking-wide">
+                <p className="mt-2.5 text-[14px] text-neutral-500 font-sans font-normal leading-relaxed">
                   Top-tier investment layout plots with verified titles and premium infrastructure.
                 </p>
               </div>
               <div>
                 <a
                   href="#buy"
-                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-neutral-900 border border-neutral-200 hover:border-neutral-900 text-neutral-800 hover:text-white text-[12px] font-extrabold uppercase tracking-wider rounded-xl shadow-sm hover:shadow transition-all duration-300 ease-out cursor-pointer"
+                  className="group inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-neutral-900 border border-neutral-200 hover:border-neutral-900 text-neutral-900 hover:text-white text-[11px] font-extrabold uppercase tracking-wider rounded-full shadow-sm hover:shadow transition-all duration-300 ease-out cursor-pointer"
                 >
-                  <span>Explore Buy Catalog</span>
+                  <span>EXPLORE BUY CATALOG</span>
                   <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
@@ -84,25 +83,24 @@ export function ShowcaseSection() {
           <div className="mb-24">
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
               <div className="max-w-xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="p-1.5 bg-amber-500/10 rounded-lg">
-                    <TrendingUp className="size-4 text-amber-600" />
+                <div className="mb-3">
+                  <span className="inline-block px-3.5 py-1 text-[10.5px] font-mono font-bold uppercase tracking-[0.18em] bg-[#FDF6EA] text-[#B87A28] border border-amber-200/60 rounded-full shadow-xs">
+                    HIGH GROWTH POTENTIALS
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-700">High growth potentials</span>
                 </div>
-                <h2 className="text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl leading-tight">
+                <h2 className="font-heading-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight leading-snug">
                   Demanded Projects
                 </h2>
-                <p className="mt-3 text-[13.5px] leading-relaxed text-neutral-500 font-serif italic tracking-wide">
+                <p className="mt-2.5 text-[14px] text-neutral-500 font-sans font-normal leading-relaxed">
                   Highly sought-after layout plots located within prime developmental corridors.
                 </p>
               </div>
               <div>
                 <a
                   href="#buy"
-                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-neutral-900 border border-neutral-200 hover:border-neutral-900 text-neutral-800 hover:text-white text-[12px] font-extrabold uppercase tracking-wider rounded-xl shadow-sm hover:shadow transition-all duration-300 ease-out cursor-pointer"
+                  className="group inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-neutral-900 border border-neutral-200 hover:border-neutral-900 text-neutral-900 hover:text-white text-[11px] font-extrabold uppercase tracking-wider rounded-full shadow-sm hover:shadow transition-all duration-300 ease-out cursor-pointer"
                 >
-                  <span>Explore demanded layouts</span>
+                  <span>EXPLORE DEMANDED LAYOUTS</span>
                   <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
@@ -132,25 +130,24 @@ export function ShowcaseSection() {
           <div>
             <div className="flex flex-col md:flex-row md:items-end justify-between mb-10 gap-4">
               <div className="max-w-xl">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="p-1.5 bg-amber-500/10 rounded-lg">
-                    <Clock className="size-4 text-amber-600" />
+                <div className="mb-3">
+                  <span className="inline-block px-3.5 py-1 text-[10.5px] font-mono font-bold uppercase tracking-[0.18em] bg-[#FDF6EA] text-[#B87A28] border border-amber-200/60 rounded-full shadow-xs">
+                    LATEST ADDITIONS
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-amber-700">Latest additions</span>
                 </div>
-                <h2 className="text-3xl font-bold tracking-tight text-neutral-900 md:text-4xl leading-tight">
+                <h2 className="font-heading-display text-2xl sm:text-3xl md:text-4xl font-extrabold text-neutral-900 tracking-tight leading-snug">
                   New Properties
                 </h2>
-                <p className="mt-3 text-[13.5px] leading-relaxed text-neutral-500 font-serif italic tracking-wide">
+                <p className="mt-2.5 text-[14px] text-neutral-500 font-sans font-normal leading-relaxed">
                   Freshly listed plots uploaded directly by owners and verified agents.
                 </p>
               </div>
               <div>
                 <a
                   href="#buy"
-                  className="group inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-neutral-900 border border-neutral-200 hover:border-neutral-900 text-neutral-800 hover:text-white text-[12px] font-extrabold uppercase tracking-wider rounded-xl shadow-sm hover:shadow transition-all duration-300 ease-out cursor-pointer"
+                  className="group inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-neutral-900 border border-neutral-200 hover:border-neutral-900 text-neutral-900 hover:text-white text-[11px] font-extrabold uppercase tracking-wider rounded-full shadow-sm hover:shadow transition-all duration-300 ease-out cursor-pointer"
                 >
-                  <span>Explore new arrivals</span>
+                  <span>EXPLORE NEW ARRIVALS</span>
                   <ArrowRight className="size-3.5 group-hover:translate-x-1 transition-transform" />
                 </a>
               </div>
