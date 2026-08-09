@@ -16,6 +16,7 @@ import { UserDashboard } from './components/UserDashboard';
 import { onAuthStateChangedWrapper, signOutUser } from './utils/firebaseClient';
 import FloatingContactWidget from './components/FloatingContactWidget';
 import { BlogDetailPage } from './pages/BlogDetailPage';
+import { RaaryaChatbot } from './components/RaaryaChatbot';
 
 export default function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -26,6 +27,7 @@ export default function App() {
   const [mockOtp, setMockOtp] = useState<string>('');
   const [dashboardTab, setDashboardTab] = useState<string>('Dashboard');
   const [postPropertyPending, setPostPropertyPending] = useState<boolean>(false);
+  const [showChatbot, setShowChatbot] = useState(false);
   const [currentRoute, setCurrentRoute] = useState<string>(() => {
     return window.location.hash.replace(/^#\/?/, '');
   });
@@ -244,7 +246,12 @@ export default function App() {
           onUserUpdate={handleUserUpdate}
         />
       )}
-      {!showLogin && !showOtpVerification && <FloatingContactWidget />}
+      {!showLogin && !showOtpVerification && (
+        <>
+          <FloatingContactWidget onOpenChatbot={() => setShowChatbot(true)} />
+          <RaaryaChatbot isOpen={showChatbot} onClose={() => setShowChatbot(false)} />
+        </>
+      )}
     </div>
   );
 }

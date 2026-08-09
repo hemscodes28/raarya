@@ -1,7 +1,11 @@
 import { motion } from "motion/react";
-import { PhoneCall } from "lucide-react";
+import { PhoneCall, Sparkles } from "lucide-react";
 
-export default function FloatingContactWidget() {
+interface FloatingContactWidgetProps {
+  onOpenChatbot: () => void;
+}
+
+export default function FloatingContactWidget({ onOpenChatbot }: FloatingContactWidgetProps) {
   const phoneNumber = "9087240400";
   const whatsappUrl = `https://wa.me/91${phoneNumber}`;
   const phoneUrl = `tel:${phoneNumber}`;
@@ -72,6 +76,25 @@ export default function FloatingContactWidget() {
               WhatsApp Chat
             </span>
           </motion.a>
+
+          {/* 3. AI CHATBOT NODE (Expanding Capsule) */}
+          <motion.button
+            onClick={onOpenChatbot}
+            className="flex items-center h-10 sm:h-11 pl-[10px] sm:pl-[11px] rounded-full bg-gradient-to-r from-[#141414] to-[#2b2721] text-amber-200 border border-amber-500/30 shadow-md overflow-hidden cursor-pointer outline-none shrink-0"
+            initial={{ width: 40 }}
+            whileHover={{ width: 150 }}
+            transition={{ type: "spring", stiffness: 220, damping: 22 }}
+          >
+            {/* Perfectly centered AI Bot icon */}
+            <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+              <Sparkles className="w-4.5 h-4.5 text-amber-400 animate-pulse" />
+            </div>
+            
+            {/* Sliding text label */}
+            <span className="text-[9.5px] font-black uppercase tracking-widest text-amber-200 ml-3 whitespace-nowrap overflow-hidden">
+              AI Assistant
+            </span>
+          </motion.button>
 
         </div>
       </div>

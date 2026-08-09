@@ -280,4 +280,20 @@ export async function apiSendContactMessage(messageData: { name: string; email: 
   }
 }
 
+export async function apiChat(messages: { role: 'user' | 'model'; content: string }[]) {
+  try {
+    const response = await fetch(`${BASE_URL}/chat`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ messages }),
+    });
+    return await response.json();
+  } catch (err) {
+    return {
+      success: false,
+      message: 'The chat service is temporarily unavailable. Please make sure the backend server is running.'
+    };
+  }
+}
+
 
