@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import type { PropertyListing } from '../constants';
 import { getImageUrl } from '../utils/imageHelper';
+import { EnquiryModal } from './EnquiryModal';
 
 interface PropertyDetailModalProps {
   property: PropertyListing | null;
@@ -32,6 +33,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [showEnquiryForm, setShowEnquiryForm] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
+  const [showFullEnquiryModal, setShowFullEnquiryModal] = useState(false);
 
   useEffect(() => {
     setActiveImageIndex(0);
@@ -457,11 +459,11 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
 
                     <button
                       type="button"
-                      onClick={() => setShowEnquiryForm(!showEnquiryForm)}
-                      className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-white/10 hover:bg-white/20 text-white text-[13px] font-semibold rounded-2xl border border-white/10 transition-all cursor-pointer"
+                      onClick={() => setShowFullEnquiryModal(true)}
+                      className="w-full flex items-center justify-center gap-2.5 px-5 py-4 bg-gradient-to-r from-amber-500 via-amber-400 to-yellow-500 hover:from-amber-400 hover:to-yellow-400 text-slate-950 text-[14px] font-extrabold rounded-2xl border border-amber-300 shadow-xl shadow-amber-500/25 active:scale-[0.98] transition-all cursor-pointer tracking-wide"
                     >
-                      <CalendarCheck className="size-4 text-amber-400" />
-                      Schedule Site Visit
+                      <CalendarCheck className="size-4 text-slate-950 stroke-[2.5]" />
+                      <span>Send Full Enquiry</span>
                     </button>
                   </div>
                 </div>
@@ -514,6 +516,14 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
           </div>
         </motion.div>
       </div>
+
+      <EnquiryModal
+        isOpen={showFullEnquiryModal}
+        onClose={() => setShowFullEnquiryModal(false)}
+        propertyName={property.title}
+        propertyPrice={property.price}
+        propertyLocation={property.location}
+      />
     </AnimatePresence>
   );
 }

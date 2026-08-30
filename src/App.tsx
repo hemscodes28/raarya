@@ -11,7 +11,6 @@ import { MortgagePage } from './pages/MortgagePage';
 import { CareersPage } from './pages/CareersPage';
 import { CompanyPage } from './pages/CompanyPage';
 import { LoginPage } from './pages/LoginPage';
-import { OtpVerification } from './components/OtpVerification';
 import { UserDashboard } from './components/UserDashboard';
 import { onAuthStateChangedWrapper, signOutUser } from './utils/firebaseClient';
 import FloatingContactWidget from './components/FloatingContactWidget';
@@ -22,9 +21,6 @@ export default function App() {
   const [showLogin, setShowLogin] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [showDashboard, setShowDashboard] = useState(false);
-  const [pendingUser, setPendingUser] = useState<any>(null);
-  const [showOtpVerification, setShowOtpVerification] = useState(false);
-  const [mockOtp, setMockOtp] = useState<string>('');
   const [dashboardTab, setDashboardTab] = useState<string>('Dashboard');
   const [postPropertyPending, setPostPropertyPending] = useState<boolean>(false);
   const [showChatbot, setShowChatbot] = useState(false);
@@ -72,9 +68,9 @@ export default function App() {
         };
         const storedUser = localStorage.getItem('currentUser');
         if (!storedUser) {
-          setPendingUser(safeUser);
-          setShowOtpVerification(true);
-          setShowLogin(true);
+          setCurrentUser(safeUser);
+          localStorage.setItem('currentUser', JSON.stringify(safeUser));
+          setShowLogin(false);
         } else {
           setCurrentUser(JSON.parse(storedUser));
         }
@@ -123,35 +119,6 @@ export default function App() {
     setCurrentUser(updatedUser);
   };
 
-  const handleOtpVerifySuccess = (verifiedPhone: string) => {
-    if (pendingUser) {
-      const finalUser = {
-        ...pendingUser,
-        phone: verifiedPhone
-      };
-
-      const saveAndComplete = async () => {
-        if (finalUser.email) {
-          try {
-            const { apiUpdateProfile } = await import('./utils/api');
-            await apiUpdateProfile({ email: finalUser.email, phone: verifiedPhone, name: finalUser.name });
-          } catch { }
-        }
-        localStorage.setItem('currentUser', JSON.stringify(finalUser));
-        setCurrentUser(finalUser);
-        setPendingUser(null);
-        setShowOtpVerification(false);
-        setShowLogin(false);
-
-        if (window.location.hash.includes('access_token')) {
-          window.location.hash = '';
-        }
-      };
-
-      saveAndComplete();
-    }
-  };
-
   const renderActivePage = () => {
     if (currentRoute.startsWith('blog-view/')) {
       const slug = currentRoute.replace('blog-view/', '');
@@ -194,19 +161,6 @@ export default function App() {
       <AnimatePresence mode="wait">
         {isTransitioning && <LuxuryLoader key="loader" />}
       </AnimatePresence>
-      {showOtpVerification && pendingUser && (
-        <OtpVerification
-          phone={pendingUser.phone}
-          mockOtp={mockOtp}
-          onVerify={handleOtpVerifySuccess}
-          onCancel={() => {
-            setShowOtpVerification(false);
-            setPendingUser(null);
-            setMockOtp('');
-            signOutUser();
-          }}
-        />
-      )}
       <ZenithNavbar
         currentUser={currentUser}
         onAvatarClick={() => {
@@ -226,10 +180,10 @@ export default function App() {
             syncUserFromStorage();
             history.pushState('', '', window.location.pathname);
           }}
-          onSuccess={(user: any, mockOtp?: string) => {
-            setPendingUser(user);
-            setMockOtp(mockOtp || '');
-            setShowOtpVerification(true);
+          onSuccess={(user: any) => {
+            setCurrentUser(user);
+            localStorage.setItem('currentUser', JSON.stringify(user));
+            setShowLogin(false);
           }}
         />
       )}
@@ -246,7 +200,7 @@ export default function App() {
           onUserUpdate={handleUserUpdate}
         />
       )}
-      {!showLogin && !showOtpVerification && (
+      {!showLogin && (
         <>
           <FloatingContactWidget onOpenChatbot={() => setShowChatbot(true)} />
           <RaaryaChatbot isOpen={showChatbot} onClose={() => setShowChatbot(false)} />

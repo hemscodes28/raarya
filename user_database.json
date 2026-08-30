@@ -41,6 +41,16 @@
   ],
   "history": [
     {
+      "id": "log_1788087640485",
+      "name": "Hemkumar R",
+      "email": "hemkumarr2803@gmail.com",
+      "action": "contact_inquiry",
+      "status": "success",
+      "timestamp": "2026-08-30T11:00:40.485Z",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/151.0.0.0 Safari/537.36",
+      "ipAddress": "::1"
+    },
+    {
       "id": "log_1785670841108",
       "name": "Hemkumar R",
       "email": "hemkumarrr2803@gmail.com",
@@ -489,6 +499,17 @@
       "message": "hlooooooooo",
       "type": "general_contact",
       "createdAt": "2026-07-26T07:26:46.689Z"
+    },
+    {
+      "id": "enq_contact_1788087640485_lzb9tmgxc",
+      "ownerEmail": "raaryagroupsinfo@gmail.com",
+      "propertyName": "General Contact Inquiry",
+      "name": "Hemkumar R",
+      "mobile": "9566781809",
+      "email": "hemkumarr2803@gmail.com",
+      "message": "helooooo",
+      "type": "general_contact",
+      "createdAt": "2026-08-30T11:00:40.485Z"
     }
   ]
 }

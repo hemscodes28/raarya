@@ -78,10 +78,10 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       try {
         const data = await apiSignup({ name, phone, email: email || undefined, password });
         if (data.success) {
-          setSuccess('Signup successful! Opening verification...');
+          setSuccess('Signup successful! Welcome to Raarya Properties...');
           setTimeout(() => {
             onSuccess(data.user);
-          }, 400);
+          }, 600);
         } else {
           setError(data.message || 'Signup failed.');
         }
@@ -98,7 +98,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       try {
         const data = await apiLogin({ phone, password });
         if (data.success && data.user) {
-          setSuccess('Login successful! Opening verification...');
+          setSuccess('Login successful! Welcome back...');
           if (rememberMe) {
             localStorage.setItem('rememberUser', JSON.stringify({ phone }));
           } else {

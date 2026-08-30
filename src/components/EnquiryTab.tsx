@@ -137,8 +137,8 @@ export function EnquiryTab({ user }: EnquiryTabProps) {
                     <td className="px-6 py-5 text-xs font-bold text-[#141414] whitespace-nowrap">{e.propertyName || '-'}</td>
                     <td className="px-6 py-5">
                       <div>
-                        <p className="text-xs font-bold text-[#141414]">{e.buyerName || '-'}</p>
-                        <p className="text-[10px] text-slate-400 font-medium">{e.mobile || '-'}</p>
+                        <p className="text-xs font-bold text-[#141414]">{e.buyerName || e.name || '-'}</p>
+                        <p className="text-[10px] text-slate-400 font-medium">{e.mobile || e.phone || '-'}</p>
                       </div>
                     </td>
                     <td className="px-6 py-5 text-xs text-slate-600 font-semibold">{e.reason || '-'}</td>
