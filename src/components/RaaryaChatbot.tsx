@@ -62,7 +62,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
     try {
       const response = await apiChat(newMessages);
       if (response.success && response.content) {
-        setMessages(prev => [...prev, { role: 'model', content: response.content }]);
+        setMessages(prev => [...prev, { role: 'model', content: response.content || '' }]);
       } else {
         setMessages(prev => [
           ...prev,

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Phone } from 'lucide-react';
 import BoomerangVideoBg from '../components/BoomerangVideoBg';
-import { apiSignup, apiLogin, apiSendOtp } from '../utils/api';
+import { apiSignup, apiLogin } from '../utils/api';
 import { signInWithGoogle } from '../utils/firebaseClient';
 
 interface AuthPageProps {
@@ -78,16 +78,10 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       try {
         const data = await apiSignup({ name, phone, email: email || undefined, password });
         if (data.success) {
-          setSuccess('Signup successful! Sending security code...');
-          const otpRes = await apiSendOtp(phone, email || undefined);
-          if (otpRes.success) {
-            setSuccess('SMS verification code sent!');
-            setTimeout(() => {
-              onSuccess(data.user, otpRes.isMocked ? otpRes.otp : undefined);
-            }, 1000);
-          } else {
-            setError(otpRes.message || 'Failed to send SMS verification code.');
-          }
+          setSuccess('Signup successful! Opening verification...');
+          setTimeout(() => {
+            onSuccess(data.user);
+          }, 400);
         } else {
           setError(data.message || 'Signup failed.');
         }
@@ -103,22 +97,16 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
 
       try {
         const data = await apiLogin({ phone, password });
-        if (data.success) {
-          setSuccess('Login successful! Sending security code...');
+        if (data.success && data.user) {
+          setSuccess('Login successful! Opening verification...');
           if (rememberMe) {
             localStorage.setItem('rememberUser', JSON.stringify({ phone }));
           } else {
             localStorage.removeItem('rememberUser');
           }
-          const otpRes = await apiSendOtp(phone, data.user.email || undefined);
-          if (otpRes.success) {
-            setSuccess('SMS verification code sent!');
-            setTimeout(() => {
-              onSuccess(data.user, otpRes.isMocked ? otpRes.otp : undefined);
-            }, 1000);
-          } else {
-            setError(otpRes.message || 'Failed to send SMS verification code.');
-          }
+          setTimeout(() => {
+            onSuccess(data.user!);
+          }, 400);
         } else {
           setError(data.message || 'Login failed.');
         }

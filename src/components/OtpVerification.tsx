@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { X, ShieldCheck, ArrowRight, RotateCcw, Phone } from "lucide-react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
+import { sendFirebaseSms } from "../utils/firebaseClient";
 
 interface OtpVerificationProps {
   phone: string;
@@ -11,7 +12,6 @@ interface OtpVerificationProps {
 
 export function OtpVerification({ 
   phone: initialPhone, 
-  mockOtp: mockOtpProp, 
   onVerify, 
   onCancel 
 }: OtpVerificationProps) {
@@ -20,24 +20,21 @@ export function OtpVerification({
   const [isPhoneMissing, setIsPhoneMissing] = useState<boolean>(!initialPhone);
   
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
-  const [generatedOtp, setGeneratedOtp] = useState<string>("");
   
   const [timer, setTimer] = useState<number>(30);
-  const [showToast, setShowToast] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const [isSending, setIsSending] = useState<boolean>(false);
+  const [isVerifying, setIsVerifying] = useState<boolean>(false);
 
-  // Trigger OTP sending when phone number is available
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const confirmationResultRef = useRef<any>(null);
+
+  // Trigger Firebase SMS sending when phone number is available
   useEffect(() => {
     if (phone && !isPhoneMissing) {
-      if (mockOtpProp) {
-        setGeneratedOtp(mockOtpProp);
-        setShowToast(true);
-      } else {
-        generateAndSendOtp();
-      }
+      triggerFirebaseSms();
     }
-  }, [phone, isPhoneMissing, mockOtpProp]);
+  }, [phone, isPhoneMissing]);
 
   // Countdown timer for Resend OTP
   useEffect(() => {
@@ -47,31 +44,34 @@ export function OtpVerification({
     }
   }, [timer, isPhoneMissing]);
 
-  // Trigger backend OTP SMS
-  const generateAndSendOtp = async () => {
+  // Dispatch Real SMS via Firebase SMS Gateway
+  const triggerFirebaseSms = async () => {
     if (!phone) return;
-    const { apiSendOtp } = await import("../utils/api");
+    setIsSending(true);
     setTimer(30);
     setError("");
     setOtpValues(Array(6).fill(""));
-    
+
     try {
-      const res = await apiSendOtp(phone);
-      if (res.success) {
-        if (res.isMocked && res.otp) {
-          setGeneratedOtp(res.otp);
-          setShowToast(true);
-        } else {
-          setGeneratedOtp("REAL_SMS_FLOW");
-          setShowToast(false);
-        }
+      const result = await sendFirebaseSms(phone, "recaptcha-container");
+
+      if (result.success && result.confirmationResult) {
+        confirmationResultRef.current = result.confirmationResult;
+        console.log("Firebase SMS dispatched to phone messenger!");
       } else {
-        setError(res.message || "Failed to send verification code.");
+        console.warn("Firebase App Check warning on localhost:", result.error);
+        // Fallback to seamless backend verification code so login is never blocked
+        const { apiSendOtp } = await import("../utils/api");
+        await apiSendOtp(phone);
       }
-    } catch (err) {
-      setError("Unable to connect to verification server.");
+    } catch (err: any) {
+      console.error("Firebase SMS error:", err);
+      const { apiSendOtp } = await import("../utils/api");
+      await apiSendOtp(phone);
+    } finally {
+      setIsSending(false);
     }
-    
+
     setTimeout(() => {
       inputRefs.current[0]?.focus();
     }, 100);
@@ -98,220 +98,183 @@ export function OtpVerification({
 
   const handleVerify = async () => {
     if (otpValues.some(val => val === "")) {
-      setError("Please enter the complete 6-digit code.");
+      setError("Please enter the complete 6-digit code sent to your phone.");
       return;
     }
     const enteredOtp = otpValues.join("");
     setError("");
+    setIsVerifying(true);
     
     try {
+      if (confirmationResultRef.current) {
+        await confirmationResultRef.current.confirm(enteredOtp);
+        setIsVerifying(false);
+        onVerify(phone);
+        return;
+      }
+
+      // Fallback local verify
       const { apiVerifyOtp } = await import("../utils/api");
       const res = await apiVerifyOtp(phone, enteredOtp);
       if (res.success) {
+        setIsVerifying(false);
         onVerify(phone);
       } else {
-        setError(res.message || "Invalid security code. Please check and try again.");
+        setError(res.message || "Invalid security code. Please check your SMS inbox and try again.");
         setOtpValues(Array(6).fill(""));
         inputRefs.current[0]?.focus();
+        setIsVerifying(false);
       }
-    } catch (err) {
-      setError("Invalid security code. Please check and try again.");
+    } catch (err: any) {
+      console.error("Firebase OTP Verification Error:", err);
+      setError("Invalid security code. Please check your SMS inbox and try again.");
       setOtpValues(Array(6).fill(""));
       inputRefs.current[0]?.focus();
+      setIsVerifying(false);
     }
   };
 
-  // 1. Phone Input Form (If user doesn't have a phone number, like on first Google Login)
-  if (isPhoneMissing) {
-    return (
-      <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-[9999] px-4">
-        <motion.div
-          initial={{ scale: 0.95, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="w-full max-w-md bg-[#141414] border border-white/10 rounded-3xl p-6 md:p-8 text-center relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
-        >
-          {/* Close Button */}
-          <button
-            onClick={onCancel}
-            className="absolute right-5 top-5 text-white/40 hover:text-white transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
+  const handlePhoneSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!tempPhone || tempPhone.length < 10) {
+      setError("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+    setPhone(tempPhone);
+    setIsPhoneMissing(false);
+    setError("");
+  };
 
-          {/* Icon */}
-          <div className="mx-auto w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white mb-5">
-            <Phone className="w-7 h-7 text-white" />
-          </div>
-
-          <h3 className="text-lg font-bold text-white tracking-wide">Enter Phone Number</h3>
-          <p className="text-xs text-white/50 mt-2 px-2 leading-relaxed mb-6">
-            To secure your account, please enter your mobile number. A 6-digit security code will be sent to this number.
-          </p>
-
-          {/* Error Message */}
-          {error && (
-            <p className="text-[11px] font-semibold text-rose-500 mb-4">
-              {error}
-            </p>
-          )}
-
-          {/* Phone Input */}
-          <div className="mb-6 relative">
-            <input
-              type="tel"
-              placeholder="e.g. 9876543210"
-              value={tempPhone}
-              onChange={(e) => setTempPhone(e.target.value.replace(/\D/g, ''))}
-              maxLength={15}
-              className="w-full bg-white/5 border border-white/10 hover:border-white/20 focus:border-white focus:bg-white/10 text-center text-md font-bold text-white rounded-xl py-3 outline-none focus:ring-1 focus:ring-white transition-all duration-300 shadow-sm"
-            />
-          </div>
-
-          {/* Submit Button */}
-          <button
-            onClick={async () => {
-              if (tempPhone.length < 10) {
-                setError("Please enter a valid phone number (at least 10 digits).");
-                return;
-              }
-              setError("");
-              
-              const { apiSendOtp } = await import("../utils/api");
-              try {
-                const res = await apiSendOtp(tempPhone);
-                if (res.success) {
-                  if (res.isMocked && res.otp) {
-                    setGeneratedOtp(res.otp);
-                    setShowToast(true);
-                  } else {
-                    setGeneratedOtp("REAL_SMS_FLOW");
-                    setShowToast(false);
-                  }
-                  setPhone(tempPhone);
-                  setIsPhoneMissing(false);
-                } else {
-                  setError(res.message || "Failed to send verification code.");
-                }
-              } catch (err) {
-                setError("Failed to initialize phone verification.");
-              }
-            }}
-            className="w-full bg-white text-black py-3 rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-white/90 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-          >
-            <span>Send Verification Code</span>
-            <ArrowRight className="w-4 h-4" />
-          </button>
-        </motion.div>
-      </div>
-    );
-  }
-
-  // 2. 6-Digit OTP Code Form
   return (
-    <div className="fixed inset-0 bg-black/85 backdrop-blur-md flex items-center justify-center z-[9999] px-4">
-      {/* Toast simulated SMS notification banner */}
-      <AnimatePresence>
-        {showToast && (
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            className="absolute top-6 left-1/2 -translate-x-1/2 max-w-md w-full bg-[#18181b] border border-emerald-500/30 rounded-2xl p-4 shadow-[0_10px_30px_rgba(16,185,129,0.15)] flex items-start gap-3.5 z-[10000]"
-          >
-            <div className="bg-emerald-500/10 p-2 rounded-xl text-emerald-400">
-              <Phone className="w-5 h-5" />
-            </div>
-            <div className="flex-1 text-left">
-              <div className="flex justify-between items-center">
-                <span className="text-xs font-black uppercase tracking-wider text-emerald-400">Dev SMS Notification</span>
-                <button onClick={() => setShowToast(false)} className="text-zinc-500 hover:text-white transition-colors">
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <p className="text-[11px] text-zinc-400 mt-1 font-semibold">
-                OTP sent successfully to phone number: <span className="text-zinc-200">{phone}</span>.
-              </p>
-              <div className="mt-2.5 flex items-center justify-between bg-zinc-900/80 px-3.5 py-2 rounded-xl border border-zinc-800">
-                <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest">Verification Code:</span>
-                <span className="text-sm font-black tracking-[0.2em] text-white bg-emerald-500/10 border border-emerald-500/25 px-2.5 py-0.5 rounded-lg select-all">
-                  {generatedOtp}
-                </span>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in font-sans">
+      
+      {/* Invisible Recaptcha Container for Firebase Phone Auth */}
+      <div id="recaptcha-container" className="fixed bottom-0 right-0 z-0 opacity-0 pointer-events-none" />
 
-      <motion.div
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className="w-full max-w-md bg-[#141414] border border-white/10 rounded-3xl p-6 md:p-8 text-center relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="relative w-full max-w-md bg-[#121214] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl text-white overflow-hidden"
       >
-        {/* Close Button */}
-        <button
+        <button 
           onClick={onCancel}
-          className="absolute right-5 top-5 text-white/40 hover:text-white transition-colors cursor-pointer"
+          className="absolute top-5 right-5 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        {/* Security Badge Icon */}
-        <div className="mx-auto w-14 h-14 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-white mb-5">
-          <ShieldCheck className="w-7 h-7 text-white" />
-        </div>
+        {isPhoneMissing ? (
+          /* Phone Input Screen */
+          <div className="flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-4">
+              <Phone className="w-6 h-6" />
+            </div>
+            <h3 className="text-lg font-bold text-white tracking-tight">Enter Phone Number</h3>
+            <p className="text-xs text-white/50 mt-1 mb-6 max-w-xs">
+              To secure your account, please enter your mobile number. A 6-digit security code will be sent to your phone messenger via Firebase SMS.
+            </p>
 
-        <h3 className="text-lg font-bold text-white tracking-wide">Two-Factor Authentication</h3>
-        <p className="text-xs text-white/50 mt-2 px-2 leading-relaxed">
-          To protect your Raarya Groups portal account, we have sent a 6-digit security code to your phone number:
-          <span className="block text-white font-semibold mt-1 truncate">{phone}</span>
-        </p>
+            <form onSubmit={handlePhoneSubmit} className="w-full flex flex-col gap-4">
+              <input
+                type="tel"
+                placeholder="Enter 10-digit mobile number"
+                value={tempPhone}
+                onChange={(e) => setTempPhone(e.target.value.replace(/\D/g, ""))}
+                maxLength={10}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-center text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 transition-all font-mono tracking-wider"
+                autoFocus
+              />
 
-        {/* 6 Digit Inputs */}
-        <div className="flex gap-2.5 justify-center my-6">
-          {otpValues.map((val, idx) => (
-            <input
-              key={idx}
-              type="text"
-              pattern="[0-9]*"
-              inputMode="numeric"
-              maxLength={1}
-              value={val}
-              ref={(el) => (inputRefs.current[idx] = el)}
-              onChange={(e) => handleInputChange(e.target.value, idx)}
-              onKeyDown={(e) => handleKeyDown(e, idx)}
-              className="w-12 h-14 bg-white/5 border border-white/10 hover:border-white/20 focus:border-white focus:bg-white/10 text-center text-lg font-bold text-white rounded-xl focus:outline-none focus:ring-1 focus:ring-white transition-all duration-300 shadow-sm"
-            />
-          ))}
-        </div>
+              {error && <p className="text-xs font-medium text-rose-400">{error}</p>}
 
-        {/* Error message */}
-        {error && (
-          <p className="text-[11px] font-semibold text-rose-500 mb-4 animate-shake">
-            {error}
-          </p>
+              <button
+                type="submit"
+                className="w-full py-3 bg-white text-black font-semibold text-xs rounded-xl hover:bg-white/90 transition-all flex items-center justify-center gap-2 shadow-lg"
+              >
+                <span>Send Firebase SMS Code</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </form>
+          </div>
+        ) : (
+          /* OTP Verification Screen */
+          <div className="flex flex-col items-center text-center">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 mb-4">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            
+            <h3 className="text-lg font-bold text-white tracking-tight">Firebase SMS Verification</h3>
+            <p className="text-xs text-white/50 mt-1 max-w-xs">
+              Enter the 6-digit verification code sent to your mobile phone inbox
+            </p>
+            
+            <div className="flex items-center gap-2 mt-2 mb-6">
+              <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-md border border-white/10">
+                +91 {phone}
+              </span>
+              <button 
+                onClick={() => setIsPhoneMissing(true)}
+                className="text-[11px] text-indigo-400 hover:underline font-medium"
+              >
+                Change
+              </button>
+            </div>
+
+            {/* 6 Digit Input Boxes */}
+            <div className="flex items-center justify-center gap-2 mb-6">
+              {otpValues.map((digit, idx) => (
+                <input
+                  key={idx}
+                  ref={(el) => (inputRefs.current[idx] = el)}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleInputChange(e.target.value, idx)}
+                  onKeyDown={(e) => handleKeyDown(e, idx)}
+                  className={`w-11 h-12 rounded-xl text-center font-mono text-lg font-bold transition-all outline-none border ${
+                    digit 
+                      ? "bg-white/15 border-white text-white shadow-md shadow-white/5" 
+                      : "bg-white/5 border-white/10 text-white/40 focus:border-white/40 focus:bg-white/10"
+                  }`}
+                />
+              ))}
+            </div>
+
+            {error && <p className="text-xs font-medium text-rose-400 mb-4 animate-shake">{error}</p>}
+
+            <button
+              onClick={handleVerify}
+              disabled={isVerifying}
+              className="w-full py-3.5 bg-gradient-to-r from-white via-slate-100 to-slate-200 text-black font-bold text-xs rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 shadow-xl active:scale-[0.98] disabled:opacity-50"
+            >
+              {isVerifying ? (
+                <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <>
+                  <span>Verify & Proceed</span>
+                  <ArrowRight className="w-4 h-4" />
+                </>
+              )}
+            </button>
+
+            {/* Resend Timer */}
+            <div className="mt-6 flex items-center justify-center gap-1.5 text-xs text-white/40">
+              {timer > 0 ? (
+                <span>Resend code in <strong className="text-white/80 font-mono">{timer}s</strong></span>
+              ) : (
+                <button
+                  onClick={triggerFirebaseSms}
+                  disabled={isSending}
+                  className="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 font-semibold transition-colors disabled:opacity-50"
+                >
+                  <RotateCcw className={`w-3.5 h-3.5 ${isSending ? 'animate-spin' : ''}`} />
+                  <span>Resend Firebase SMS Code</span>
+                </button>
+              )}
+            </div>
+          </div>
         )}
-
-        {/* Submit Verify CTA */}
-        <button
-          onClick={handleVerify}
-          className="w-full bg-white text-black py-3 rounded-2xl text-xs font-black uppercase tracking-wider hover:bg-white/90 active:scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg"
-        >
-          <span>Verify & Unlock Portal</span>
-          <ArrowRight className="w-4 h-4" />
-        </button>
-
-        {/* Resend and Actions */}
-        <div className="mt-5 flex justify-between items-center text-xs border-t border-white/5 pt-4">
-          <span className="text-white/40">Didn't receive the code?</span>
-          <button
-            onClick={generateAndSendOtp}
-            disabled={timer > 0}
-            className="flex items-center gap-1 text-white font-semibold hover:underline disabled:text-white/20 disabled:no-underline transition-colors duration-200 cursor-pointer"
-          >
-            <RotateCcw className="w-3.5 h-3.5" />
-            <span>{timer > 0 ? `Resend (${timer}s)` : "Resend Code"}</span>
-          </button>
-        </div>
       </motion.div>
     </div>
   );

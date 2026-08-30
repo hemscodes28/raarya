@@ -1,11 +1,24 @@
-const BASE_URL = 'http://localhost:5000/api';
+import {
+  ApiResponse,
+  User,
+  SignupPayload,
+  LoginPayload,
+  OtpRequestPayload,
+  OtpVerifyPayload,
+  PropertyListingPayload,
+  ContactEnquiryPayload,
+  ChatMessagePayload
+} from '../types/backend';
+
+// Base API URL configurable via environment variable VITE_API_BASE_URL (defaults to local Express server)
+export const BASE_URL = (import.meta.env?.VITE_API_BASE_URL as string) || 'http://localhost:5000/api';
 
 const DB_KEY = 'raarya_local_db';
 
 interface LocalDB {
-  users: any[];
-  properties: any[];
-  enquiries: any[];
+  users: User[];
+  properties: PropertyListingPayload[];
+  enquiries: ContactEnquiryPayload[];
 }
 
 function getLocalDB(): LocalDB {
@@ -23,7 +36,9 @@ function getLocalDB(): LocalDB {
           state: 'Tamil Nadu',
           district: 'Coimbatore',
           city: 'Saravanampatti',
+          location: 'Saravanampatti, Coimbatore',
           propertyType: 'Plot',
+          type: 'buy',
           status: 'Approved',
           createdAt: new Date().toISOString()
         },
@@ -36,23 +51,24 @@ function getLocalDB(): LocalDB {
           state: 'Tamil Nadu',
           district: 'Coimbatore',
           city: 'Kovaipudur',
+          location: 'Kovaipudur, Coimbatore',
           propertyType: 'Villa',
+          type: 'buy',
           status: 'Pending',
           createdAt: new Date().toISOString()
         }
       ],
       enquiries: [
         {
-          id: 'enq_seed1',
-          ownerEmail: 'hem@example.com',
-          propertyName: 'Raarya Elite Villa Plots',
           name: 'Ramesh Kumar',
-          mobile: '9876543210',
+          email: 'hem@example.com',
+          phone: '9876543210',
+          propertyName: 'Raarya Elite Villa Plots',
+          ownerEmail: 'hem@example.com',
           reason: 'Investment purposes',
           whoAreYou: 'Individual Buyer',
           planningToBuy: 'Within 3 months',
-          message: 'Interested in booking plot 14. Please share registration details.',
-          createdAt: new Date().toISOString()
+          message: 'Interested in booking plot 14. Please share registration details.'
         }
       ]
     };
@@ -70,7 +86,9 @@ function saveLocalDB(db: LocalDB) {
   localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
-export async function apiSignup(userData: { name: string; phone: string; email?: string; password?: string }) {
+// ─── USER AUTHENTICATION ──────────────────────────────────────────────────────
+
+export async function apiSignup(userData: SignupPayload): Promise<ApiResponse<User>> {
   try {
     const response = await fetch(`${BASE_URL}/signup`, {
       method: 'POST',
@@ -95,7 +113,7 @@ export async function apiSignup(userData: { name: string; phone: string; email?:
       }
     }
 
-    const newUser = {
+    const newUser: User = {
       id: 'user_' + Date.now(),
       name: userData.name,
       phone: userData.phone,
@@ -106,11 +124,11 @@ export async function apiSignup(userData: { name: string; phone: string; email?:
     };
     db.users.push(newUser);
     saveLocalDB(db);
-    return { success: true, message: 'Account created successfully! Please log in.' };
+    return { success: true, message: 'Account created successfully! Please log in.', user: newUser };
   }
 }
 
-export async function apiLogin(credentials: { phone: string; password?: string }) {
+export async function apiLogin(credentials: LoginPayload): Promise<ApiResponse<User>> {
   try {
     const response = await fetch(`${BASE_URL}/login`, {
       method: 'POST',
@@ -125,17 +143,17 @@ export async function apiLogin(credentials: { phone: string; password?: string }
     );
     if (user) {
       const { password, ...safeUser } = user;
-      return { success: true, user: safeUser };
+      return { success: true, user: safeUser as User };
     }
     if (credentials.phone === '9876543210' && credentials.password === 'password') {
-      const seedUser = { name: 'Hemkumar Ramesh', email: 'hemkumarr2803@gmail.com', phone: '9876543210', whatsapp: '9876543210' };
+      const seedUser: User = { name: 'Hemkumar Ramesh', email: 'hemkumarr2803@gmail.com', phone: '9876543210', whatsapp: '9876543210' };
       return { success: true, user: seedUser };
     }
     return { success: false, message: 'Invalid phone number or password.' };
   }
 }
 
-export async function apiUpdateProfile(profileData: any) {
+export async function apiUpdateProfile(profileData: Partial<User>): Promise<ApiResponse<User>> {
   try {
     const response = await fetch(`${BASE_URL}/profile`, {
       method: 'PUT',
@@ -145,16 +163,18 @@ export async function apiUpdateProfile(profileData: any) {
     return await response.json();
   } catch (err) {
     const db = getLocalDB();
-    const index = db.users.findIndex(u => u.email.toLowerCase() === profileData.email.toLowerCase());
-    if (index !== -1) {
-      db.users[index] = { ...db.users[index], ...profileData };
-      saveLocalDB(db);
+    if (profileData.email) {
+      const index = db.users.findIndex(u => u.email?.toLowerCase() === profileData.email?.toLowerCase());
+      if (index !== -1) {
+        db.users[index] = { ...db.users[index], ...profileData };
+        saveLocalDB(db);
+      }
     }
-    return { success: true };
+    return { success: true, message: 'Profile updated in offline database.' };
   }
 }
 
-export async function apiChangePassword(passwordData: any) {
+export async function apiChangePassword(passwordData: { email: string; oldPassword?: string; newPassword?: string }): Promise<ApiResponse> {
   try {
     const response = await fetch(`${BASE_URL}/change-password`, {
       method: 'PUT',
@@ -164,17 +184,19 @@ export async function apiChangePassword(passwordData: any) {
     return await response.json();
   } catch (err) {
     const db = getLocalDB();
-    const user = db.users.find(u => u.email.toLowerCase() === passwordData.email.toLowerCase());
+    const user = db.users.find(u => u.email?.toLowerCase() === passwordData.email.toLowerCase());
     if (user && user.password === passwordData.oldPassword) {
       user.password = passwordData.newPassword;
       saveLocalDB(db);
-      return { success: true };
+      return { success: true, message: 'Password updated.' };
     }
     return { success: false, message: 'Incorrect old password.' };
   }
 }
 
-export async function apiGetProperties(email: string) {
+// ─── PROPERTY MANAGEMENT ─────────────────────────────────────────────────────
+
+export async function apiGetProperties(email: string): Promise<ApiResponse<PropertyListingPayload>> {
   try {
     const response = await fetch(`${BASE_URL}/properties/${encodeURIComponent(email)}`);
     return await response.json();
@@ -185,7 +207,7 @@ export async function apiGetProperties(email: string) {
   }
 }
 
-export async function apiAddProperty(propertyData: any) {
+export async function apiAddProperty(propertyData: PropertyListingPayload): Promise<ApiResponse<PropertyListingPayload>> {
   try {
     const response = await fetch(`${BASE_URL}/properties`, {
       method: 'POST',
@@ -195,7 +217,7 @@ export async function apiAddProperty(propertyData: any) {
     return await response.json();
   } catch (err) {
     const db = getLocalDB();
-    const newProp = {
+    const newProp: PropertyListingPayload = {
       id: 'prop_' + Date.now(),
       status: 'Pending',
       sold: false,
@@ -208,7 +230,9 @@ export async function apiAddProperty(propertyData: any) {
   }
 }
 
-export async function apiGetEnquiries(email: string) {
+// ─── LEADS & INQUIRIES ────────────────────────────────────────────────────────
+
+export async function apiGetEnquiries(email: string): Promise<ApiResponse<ContactEnquiryPayload>> {
   try {
     const response = await fetch(`${BASE_URL}/enquiries/${encodeURIComponent(email)}`);
     return await response.json();
@@ -219,40 +243,7 @@ export async function apiGetEnquiries(email: string) {
   }
 }
 
-export async function apiSendOtp(phone: string, email?: string) {
-  try {
-    const response = await fetch(`${BASE_URL}/send-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, email }),
-    });
-    return await response.json();
-  } catch (err) {
-    const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    sessionStorage.setItem(`otp_${phone}`, fallbackOtp);
-    return { success: true, isMocked: true, otp: fallbackOtp };
-  }
-}
-
-export async function apiVerifyOtp(phone: string, otp: string) {
-  try {
-    const response = await fetch(`${BASE_URL}/verify-otp`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ phone, otp }),
-    });
-    return await response.json();
-  } catch (err) {
-    const stored = sessionStorage.getItem(`otp_${phone}`);
-    if (stored === otp) {
-      sessionStorage.removeItem(`otp_${phone}`);
-      return { success: true };
-    }
-    return { success: false, message: 'Invalid OTP code.' };
-  }
-}
-
-export async function apiSendContactMessage(messageData: { name: string; email: string; phone: string; message: string }) {
+export async function apiSendContactMessage(messageData: ContactEnquiryPayload): Promise<ApiResponse> {
   try {
     const response = await fetch(`${BASE_URL}/contact`, {
       method: 'POST',
@@ -263,24 +254,60 @@ export async function apiSendContactMessage(messageData: { name: string; email: 
   } catch (err) {
     const db = getLocalDB();
     if (!db.enquiries) db.enquiries = [];
-    const newEnquiry = {
-      id: 'enq_contact_' + Date.now(),
+    const newEnquiry: ContactEnquiryPayload = {
       ownerEmail: 'raaryagroupsinfo@gmail.com',
-      propertyName: 'General Contact Inquiry',
+      propertyName: messageData.propertyName || 'General Contact Inquiry',
       name: messageData.name,
-      mobile: messageData.phone,
+      phone: messageData.phone,
       email: messageData.email,
-      message: messageData.message,
-      type: 'general_contact',
-      createdAt: new Date().toISOString()
+      message: messageData.message
     };
     db.enquiries.push(newEnquiry);
     saveLocalDB(db);
-    return { success: true, message: 'Message saved successfully in local database.' };
+    return { success: true, message: 'Message saved successfully in offline database.' };
   }
 }
 
-export async function apiChat(messages: { role: 'user' | 'model'; content: string }[]) {
+// ─── OTP SMS VERIFICATION ─────────────────────────────────────────────────────
+
+export async function apiSendOtp(phone: string, email?: string): Promise<ApiResponse> {
+  const payload: OtpRequestPayload = { phone, email };
+  try {
+    const response = await fetch(`${BASE_URL}/send-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch (err) {
+    const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
+    sessionStorage.setItem(`otp_${phone}`, fallbackOtp);
+    return { success: true, isMocked: true, otp: fallbackOtp, message: 'Verification code simulated (on-screen).' };
+  }
+}
+
+export async function apiVerifyOtp(phone: string, otp: string): Promise<ApiResponse> {
+  const payload: OtpVerifyPayload = { phone, otp };
+  try {
+    const response = await fetch(`${BASE_URL}/verify-otp`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch (err) {
+    const stored = sessionStorage.getItem(`otp_${phone}`);
+    if (stored === otp) {
+      sessionStorage.removeItem(`otp_${phone}`);
+      return { success: true, message: 'OTP verified.' };
+    }
+    return { success: false, message: 'Invalid OTP code.' };
+  }
+}
+
+// ─── AI CHATBOT ───────────────────────────────────────────────────────────────
+
+export async function apiChat(messages: ChatMessagePayload[]): Promise<ApiResponse> {
   try {
     const response = await fetch(`${BASE_URL}/chat`, {
       method: 'POST',
@@ -291,9 +318,7 @@ export async function apiChat(messages: { role: 'user' | 'model'; content: strin
   } catch (err) {
     return {
       success: false,
-      message: 'The chat service is temporarily unavailable. Please make sure the backend server is running.'
+      message: 'The chat service is offline. Using local assistant mode.'
     };
   }
 }
-
-

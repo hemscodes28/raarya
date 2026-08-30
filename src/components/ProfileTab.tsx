@@ -42,7 +42,10 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setAvatar(reader.result as string);
+        const newAvatar = reader.result as string;
+        setAvatar(newAvatar);
+        onUserUpdate({ ...user, avatar: newAvatar });
+        apiUpdateProfile({ email: user.email, avatar: newAvatar }).catch(() => {});
       };
       reader.readAsDataURL(file);
     }
@@ -170,26 +173,30 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
               <input className={`${inputCls} bg-slate-50 text-slate-400 cursor-not-allowed`} value={user.email} disabled />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Phone Number <span className="text-rose-400">*</span></label>
-              <input className={inputCls} value={phone} onChange={e => setPhone(e.target.value)} placeholder="e.g. 9566781809" type="tel" />
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Phone Number</label>
+              <input className={inputCls} value={phone} onChange={e => setPhone(e.target.value)} placeholder="10-digit mobile number" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">WhatsApp Number</label>
-              <input className={inputCls} value={whatsapp} onChange={e => setWhatsapp(e.target.value)} placeholder="Same as phone or different" type="tel" />
+              <input className={inputCls} value={whatsapp} onChange={e => setWhatsapp(e.target.value)} placeholder="WhatsApp mobile number" />
             </div>
           </div>
 
-          {profileStatus && <p className="text-xs text-emerald-600 font-semibold bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2.5">{profileStatus}</p>}
-          {profileError && <p className="text-xs text-rose-600 font-semibold bg-rose-50 border border-rose-100 rounded-xl px-4 py-2.5">{profileError}</p>}
+          {/* Error / Success Status */}
+          {profileError && <p className="text-xs text-rose-500 font-medium">{profileError}</p>}
+          {profileStatus && <p className="text-xs text-emerald-600 font-medium">{profileStatus}</p>}
 
-          <button
-            onClick={handleProfileSave}
-            disabled={profileLoading}
-            className="self-start flex items-center gap-2 px-6 py-3 bg-[#141414] hover:bg-black text-white text-xs font-bold tracking-wide rounded-xl shadow-md shadow-black/10 hover:shadow-lg hover:shadow-black/20 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50"
-          >
-            {profileLoading ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <Save className="w-3.5 h-3.5" />}
-            Save & Update
-          </button>
+          <div className="flex justify-end">
+            <button
+              onClick={handleProfileSave}
+              disabled={profileLoading}
+              className="px-6 py-3 rounded-xl bg-[#141414] hover:bg-black text-white text-xs font-semibold flex items-center gap-2 transition-all duration-300 shadow-sm hover:shadow disabled:opacity-50"
+            >
+              <Save className="w-4 h-4" />
+              {profileLoading ? 'Saving...' : 'Save Profile Details'}
+            </button>
+          </div>
+
         </div>
       </motion.div>
 
@@ -201,44 +208,48 @@ export function ProfileTab({ user, onUserUpdate }: ProfileTabProps) {
         className="bg-white border border-slate-100 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300"
       >
         <div className="px-8 py-6 border-b border-slate-100 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-lg bg-rose-50 border border-rose-100 flex items-center justify-center text-rose-500 shrink-0">
-            <Lock className="w-4 h-4" />
+          <div className="w-8 h-8 rounded-lg bg-[#141414] flex items-center justify-center text-white shrink-0">
+            <KeyRound className="w-4 h-4" />
           </div>
           <div>
-            <h3 className="text-sm font-bold text-[#141414] tracking-tight">Change Password</h3>
-            <p className="text-[11px] text-slate-400 mt-0.5">Keep your account secure with a strong password</p>
+            <h3 className="text-sm font-bold text-[#141414] tracking-tight">Security & Password</h3>
+            <p className="text-[11px] text-slate-400 mt-0.5">Update your account password</p>
           </div>
         </div>
 
         <div className="p-8 flex flex-col gap-5">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Old Password</label>
-            <input type="password" className={inputCls} value={oldPass} onChange={e => setOldPass(e.target.value)} placeholder="••••••••••" />
+            <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Current Password</label>
+            <input type="password" className={inputCls} value={oldPass} onChange={e => setOldPass(e.target.value)} placeholder="••••••••" />
           </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">New Password <span className="text-rose-400">*</span></label>
-              <input type="password" className={inputCls} value={newPass} onChange={e => setNewPass(e.target.value)} placeholder="Min 6 characters" />
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">New Password</label>
+              <input type="password" className={inputCls} value={newPass} onChange={e => setNewPass(e.target.value)} placeholder="Min. 6 characters" />
             </div>
             <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Confirm Password <span className="text-rose-400">*</span></label>
-              <input type="password" className={inputCls} value={confirmPass} onChange={e => setConfirmPass(e.target.value)} placeholder="Repeat new password" />
+              <label className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Confirm New Password</label>
+              <input type="password" className={inputCls} value={confirmPass} onChange={e => setConfirmPass(e.target.value)} placeholder="Re-enter new password" />
             </div>
           </div>
 
-          {passStatus && <p className="text-xs text-emerald-600 font-semibold bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-2.5">{passStatus}</p>}
-          {passError && <p className="text-xs text-rose-600 font-semibold bg-rose-50 border border-rose-100 rounded-xl px-4 py-2.5">{passError}</p>}
+          {passError && <p className="text-xs text-rose-500 font-medium">{passError}</p>}
+          {passStatus && <p className="text-xs text-emerald-600 font-medium">{passStatus}</p>}
 
-          <button
-            onClick={handlePasswordChange}
-            disabled={passLoading}
-            className="self-start flex items-center gap-2 px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold tracking-wide rounded-xl shadow-md shadow-rose-500/20 hover:shadow-lg hover:shadow-rose-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 disabled:opacity-50"
-          >
-            {passLoading ? <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <KeyRound className="w-3.5 h-3.5" />}
-            Update Password
-          </button>
+          <div className="flex justify-end pt-2">
+            <button
+              onClick={handlePasswordChange}
+              disabled={passLoading}
+              className="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-[#141414] text-xs font-semibold flex items-center gap-2 transition-all duration-300 disabled:opacity-50"
+            >
+              <Lock className="w-4 h-4" />
+              {passLoading ? 'Updating...' : 'Update Password'}
+            </button>
+          </div>
         </div>
       </motion.div>
+
     </div>
   );
 }
