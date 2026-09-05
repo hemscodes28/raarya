@@ -5,19 +5,21 @@ export function PageShell({
   title,
   subtitle,
   children,
+  maxWidth = "max-w-[1536px]"
 }: {
   title: string;
   subtitle?: string;
   children?: ReactNode;
+  maxWidth?: string;
 }) {
   return (
-    <main className="px-5 pb-24 pt-28 md:px-10 md:pt-32">
-      <div className="mx-auto max-w-7xl">
+    <main className="px-4 sm:px-6 md:px-10 pb-24 pt-28 md:pt-32">
+      <div className={`mx-auto ${maxWidth}`}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-14 max-w-3xl"
+          className="mb-10 max-w-3xl"
         >
           <h1
             className="text-3xl font-medium leading-[1.1] tracking-tight text-[#141414] md:text-5xl"
@@ -26,7 +28,7 @@ export function PageShell({
             {title}
           </h1>
           {subtitle ? (
-            <p className="mt-6 text-[15px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-[17px]" data-editable>
+            <p className="mt-4 text-[15px] leading-relaxed text-zinc-700 font-lora italic tracking-wide md:text-[17px]" data-editable>
               {subtitle}
             </p>
           ) : null}

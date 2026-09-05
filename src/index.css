@@ -9,6 +9,10 @@
   font-family: 'Playfair Display', Georgia, serif;
 }
 
+.font-outfit {
+  font-family: 'Outfit', 'Inter', sans-serif;
+}
+
 html,
 body,
 #root {
@@ -92,6 +96,25 @@ body {
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
+}
+
+/* Custom Scrollbar Light */
+.custom-scrollbar-light::-webkit-scrollbar {
+  width: 5px;
+}
+.custom-scrollbar-light::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar-light::-webkit-scrollbar-thumb {
+  background: rgba(197, 168, 128, 0.35);
+  border-radius: 99px;
+}
+.custom-scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background: rgba(197, 168, 128, 0.65);
+}
+.custom-scrollbar-light {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(197, 168, 128, 0.35) transparent;
 }
 
 /* Shimmer keyframes for luxury button shine effect */
