@@ -3,6 +3,29 @@ import { MapPin, Phone, Mail, Facebook, Instagram, Linkedin, Youtube, Navigation
 export function Footer() {
   const currentYear = new Date().getFullYear();
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, hash: string) => {
+    e.preventDefault();
+
+    const targetHash = hash ? `#${hash.replace(/^#\/?/, '')}` : '#';
+    window.location.hash = targetHash;
+
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
+
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
+
+    setTimeout(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    }, 60);
+  };
+
   const exactLocationUrl =
     "https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D";
 
@@ -17,7 +40,11 @@ export function Footer() {
       {/* TOP BRAND & SOCIAL BAR WITH OUTFIT TYPOGRAPHY */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 border-b border-white/10 flex flex-col sm:flex-row items-center justify-between gap-5 relative z-10">
         {/* Raarya Brand Header */}
-        <div className="flex items-center gap-3 group cursor-pointer">
+        <a
+          href="#"
+          onClick={(e) => handleNavClick(e, '')}
+          className="flex items-center gap-3 group cursor-pointer"
+        >
           <div className="p-1.5 rounded-xl bg-white shadow-md border border-white/20 group-hover:scale-105 transition-transform duration-300">
             <img
               src={`${import.meta.env.BASE_URL}logo.png`}
@@ -28,7 +55,7 @@ export function Footer() {
           <span className="text-2xl font-black tracking-widest text-white uppercase font-heading-display group-hover:text-amber-400 transition-colors">
             RAARYA
           </span>
-        </div>
+        </a>
 
         {/* Social Links with Compact Icons and High Contrast Pinterest */}
         <div className="flex items-center gap-3 font-outfit">
@@ -162,6 +189,7 @@ export function Footer() {
             <li>
               <a
                 href="#"
+                onClick={(e) => handleNavClick(e, '')}
                 className="group flex items-center gap-3 px-3 py-2 -ml-3 rounded-xl border border-transparent hover:border-amber-400/40 hover:bg-gradient-to-r hover:from-amber-500/15 hover:via-white/5 hover:to-transparent hover:translate-x-2.5 hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)] transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-400 group-hover:text-black group-hover:scale-110 transition-all">
@@ -174,6 +202,7 @@ export function Footer() {
             <li>
               <a
                 href="#about"
+                onClick={(e) => handleNavClick(e, 'about')}
                 className="group flex items-center gap-3 px-3 py-2 -ml-3 rounded-xl border border-transparent hover:border-amber-400/40 hover:bg-gradient-to-r hover:from-amber-500/15 hover:via-white/5 hover:to-transparent hover:translate-x-2.5 hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)] transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-400 group-hover:text-black group-hover:scale-110 transition-all">
@@ -186,6 +215,7 @@ export function Footer() {
             <li>
               <a
                 href="#contact"
+                onClick={(e) => handleNavClick(e, 'contact')}
                 className="group flex items-center gap-3 px-3 py-2 -ml-3 rounded-xl border border-transparent hover:border-amber-400/40 hover:bg-gradient-to-r hover:from-amber-500/15 hover:via-white/5 hover:to-transparent hover:translate-x-2.5 hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)] transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-400 group-hover:text-black group-hover:scale-110 transition-all">
@@ -198,6 +228,7 @@ export function Footer() {
             <li>
               <a
                 href="#emi-calculator"
+                onClick={(e) => handleNavClick(e, 'emi-calculator')}
                 className="group flex items-center gap-3 px-3 py-2 -ml-3 rounded-xl border border-transparent hover:border-amber-400/40 hover:bg-gradient-to-r hover:from-amber-500/15 hover:via-white/5 hover:to-transparent hover:translate-x-2.5 hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)] transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-400 group-hover:text-black group-hover:scale-110 transition-all">
@@ -210,6 +241,7 @@ export function Footer() {
             <li>
               <a
                 href="#eligibility-check"
+                onClick={(e) => handleNavClick(e, 'eligibility-check')}
                 className="group flex items-center gap-3 px-3 py-2 -ml-3 rounded-xl border border-transparent hover:border-amber-400/40 hover:bg-gradient-to-r hover:from-amber-500/15 hover:via-white/5 hover:to-transparent hover:translate-x-2.5 hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)] transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-400 group-hover:text-black group-hover:scale-110 transition-all">
@@ -230,6 +262,7 @@ export function Footer() {
             <li>
               <a
                 href="#blog"
+                onClick={(e) => handleNavClick(e, 'blog')}
                 className="group flex items-center gap-3 px-3 py-2 -ml-3 rounded-xl border border-transparent hover:border-amber-400/40 hover:bg-gradient-to-r hover:from-amber-500/15 hover:via-white/5 hover:to-transparent hover:translate-x-2.5 hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)] transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-400 group-hover:text-black group-hover:scale-110 transition-all">
@@ -242,6 +275,7 @@ export function Footer() {
             <li>
               <a
                 href="#post-property"
+                onClick={(e) => handleNavClick(e, 'post-property')}
                 className="group flex items-center gap-3 px-3 py-2 -ml-3 rounded-xl border border-transparent hover:border-amber-400/40 hover:bg-gradient-to-r hover:from-amber-500/15 hover:via-white/5 hover:to-transparent hover:translate-x-2.5 hover:shadow-[0_4px_20px_rgba(245,158,11,0.2)] transition-all duration-300"
               >
                 <div className="w-6 h-6 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center border border-amber-500/20 group-hover:bg-amber-400 group-hover:text-black group-hover:scale-110 transition-all">
