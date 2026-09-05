@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs';
 import path from 'path';
+import nodemailer from 'nodemailer';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -247,10 +248,11 @@ app.post('/api/signup', (req, res) => {
 app.post('/api/login', (req, res) => {
   const { phone, password } = req.body;
   if (!phone || !password)
-    return res.status(400).json({ success: false, message: 'Phone and password are required.' });
+    return res.status(400).json({ success: false, message: 'Phone/Email and password are required.' });
 
   const db = readDatabase();
-  const user = db.users.find(u => u.phone === phone);
+  const target = phone.trim().toLowerCase();
+  const user = db.users.find(u => (u.phone && u.phone.trim() === target) || (u.email && u.email.trim().toLowerCase() === target));
 
   if (!user || user.password !== password) {
     db.history.unshift({
@@ -262,7 +264,7 @@ app.post('/api/login', (req, res) => {
       ipAddress: req.ip || '127.0.0.1'
     });
     writeDatabase(db);
-    return res.status(401).json({ success: false, message: 'Invalid phone number or password.' });
+    return res.status(401).json({ success: false, message: 'Invalid credentials or password.' });
   }
 
   db.history.unshift({
@@ -275,7 +277,7 @@ app.post('/api/login', (req, res) => {
   writeDatabase(db);
   res.status(200).json({
     success: true, message: 'Login successful!',
-    user: { name: user.name, email: user.email || '', phone: user.phone, whatsapp: user.whatsapp || '', avatar: user.avatar || '' }
+    user: { name: user.name, email: user.email || '', phone: user.phone || '', whatsapp: user.whatsapp || '', avatar: user.avatar || '' }
   });
 });
 
@@ -365,6 +367,84 @@ app.get('/api/history', (req, res) => {
   });
 });
 
+// ─── EMAIL OTP DISPATCHER (NODEMAILER) ──────────────────────────────────────────
+async function sendEmailOtp(email, otp) {
+  const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'raaryagroupsinfo@gmail.com';
+  const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
+
+  if (!smtpPass) {
+    console.log(`
+    ======================================================
+    [INFO] Email OTP Simulation Active (No SMTP_PASS in .env).
+    Sent to: ${email}
+    Code generated: ${otp}
+    ======================================================
+    `);
+    return { success: true, isMocked: true, otp };
+  }
+
+  try {
+    const host = process.env.SMTP_HOST;
+    const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
+
+    const transporter = host ? nodemailer.createTransport({
+      host: host,
+      port: port,
+      secure: port === 465,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass
+      }
+    }) : nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: smtpUser,
+        pass: smtpPass
+      }
+    });
+
+    const mailOptions = {
+      from: `"RAARYA Groups Verification" <${smtpUser}>`,
+      to: email,
+      subject: `${otp} is your RAARYA Verification Code`,
+      html: `
+        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background-color: #0c0c0e; color: #ffffff; padding: 32px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);">
+          <div style="text-align: center; margin-bottom: 24px;">
+            <h2 style="color: #fbbf24; margin: 0; font-size: 26px; font-weight: bold; tracking-wide: 2px;">RAARYA GROUPS</h2>
+            <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Secure Account Authentication</p>
+          </div>
+          <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;" />
+          <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
+            Hello,
+          </p>
+          <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
+            You requested a security verification code to access your RAARYA account. Please enter the following 6-digit OTP code:
+          </p>
+          <div style="text-align: center; margin: 30px 0;">
+            <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #fbbf24; background: rgba(251,191,36,0.12); padding: 14px 28px; border-radius: 14px; border: 1px dashed rgba(251,191,36,0.4); display: inline-block;">
+              ${otp}
+            </span>
+          </div>
+          <p style="font-size: 13px; color: #a1a1aa; text-align: center; margin-top: 24px;">
+            This security code is valid for <strong>10 minutes</strong>. Do not share this code with anyone.
+          </p>
+          <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 24px; margin-bottom: 16px;" />
+          <p style="font-size: 11px; color: #71717a; text-align: center; margin: 0;">
+            © 2026 Raarya Groups & Properties. All rights reserved.
+          </p>
+        </div>
+      `
+    };
+
+    const info = await transporter.sendMail(mailOptions);
+    console.log(`[Nodemailer] Sent real OTP email to ${email} (MessageId: ${info.messageId})`);
+    return { success: true, isMocked: false };
+  } catch (err) {
+    console.error('[Nodemailer error]:', err.message);
+    return { success: true, isMocked: true, otp, error: err.message };
+  }
+}
+
 // ─── FAST2SMS SENDER HELPER ────────────────────────────────────────────────────
 async function sendFast2Sms(phone, otp) {
   const apiKey = process.env.FAST2SMS_API_KEY;
@@ -412,15 +492,41 @@ async function sendFast2Sms(phone, otp) {
 
 // ─── SEND OTP ──────────────────────────────────────────────────────────────────
 app.post('/api/send-otp', async (req, res) => {
-  const { phone } = req.body;
-  if (!phone) return res.status(400).json({ success: false, message: 'Phone number required.' });
+  const { phone, email } = req.body;
+  if (!phone && !email) return res.status(400).json({ success: false, message: 'Phone number or email required.' });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
-  pendingOtps.set(phone, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
+  const targetKey = (email || phone).toLowerCase().trim();
 
-  const smsResult = await sendFast2Sms(phone, otp);
+  pendingOtps.set(targetKey, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
 
-  if (smsResult.isMocked) {
+  let emailResult = null;
+  if (email) {
+    emailResult = await sendEmailOtp(email, otp);
+  }
+
+  let smsResult = null;
+  if (phone) {
+    smsResult = await sendFast2Sms(phone, otp);
+  }
+
+  if (email) {
+    if (emailResult && emailResult.isMocked) {
+      return res.json({ 
+        success: true, 
+        isMocked: true, 
+        otp, 
+        message: `OTP code generated for ${email}. (Set SMTP_PASS in .env for inbox delivery)` 
+      });
+    }
+    return res.json({ 
+      success: true, 
+      isMocked: false,
+      message: `Verification code sent to email: ${email}` 
+    });
+  }
+
+  if (smsResult && smsResult.isMocked) {
     return res.json({ 
       success: true, 
       isMocked: true, 
@@ -438,24 +544,122 @@ app.post('/api/send-otp', async (req, res) => {
 
 // ─── VERIFY OTP ───────────────────────────────────────────────────────────────
 app.post('/api/verify-otp', (req, res) => {
-  const { phone, otp } = req.body;
-  if (!phone || !otp) return res.status(400).json({ success: false, message: 'Phone and OTP are required.' });
+  const { phone, email, otp } = req.body;
+  if ((!phone && !email) || !otp) return res.status(400).json({ success: false, message: 'Phone/Email and OTP are required.' });
 
-  const record = pendingOtps.get(phone);
-  if (!record) return res.status(400).json({ success: false, message: 'No OTP generated for this phone number.' });
+  const targetKey = (email || phone).toLowerCase().trim();
+  const record = pendingOtps.get(targetKey);
+  if (!record) return res.status(400).json({ success: false, message: 'No OTP generated for this address.' });
 
   if (Date.now() > record.expiresAt) {
-    pendingOtps.delete(phone);
+    pendingOtps.delete(targetKey);
     return res.status(400).json({ success: false, message: 'OTP code has expired.' });
   }
 
   if (record.otp === otp) {
-    pendingOtps.delete(phone);
-    return res.json({ success: true, message: 'OTP verified.' });
+    pendingOtps.delete(targetKey);
+    return res.json({ success: true, message: 'OTP verified successfully.' });
   } else {
     return res.status(400).json({ success: false, message: 'Incorrect OTP code.' });
   }
 });
+
+// ─── FORGOT PASSWORD (EMAIL DISPATCH) ───────────────────────────────────────
+app.post('/api/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) return res.status(400).json({ success: false, message: 'Email address is required.' });
+
+  const db = readDatabase();
+  const user = db.users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase().trim());
+
+  const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+  pendingOtps.set(`reset_${email.toLowerCase().trim()}`, { otp: resetCode, expiresAt: Date.now() + 15 * 60 * 1000 });
+
+  const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'raaryagroups@gmail.com';
+  const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
+
+  if (smtpPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: { user: smtpUser, pass: smtpPass }
+      });
+      await transporter.sendMail({
+        from: `"RAARYA Groups Support" <${smtpUser}>`,
+        to: email,
+        subject: 'RAARYA Account Password Reset Instructions',
+        html: `
+          <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background-color: #0c0c0e; color: #ffffff; padding: 32px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);">
+            <div style="text-align: center; margin-bottom: 24px;">
+              <h2 style="color: #fbbf24; margin: 0; font-size: 26px; font-weight: bold;">RAARYA GROUPS</h2>
+              <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Password Reset Request</p>
+            </div>
+            <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;" />
+            <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
+              Hello${user ? ' ' + user.name : ''},
+            </p>
+            <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
+              We received a request to reset the password for your RAARYA account. Your security code is:
+            </p>
+            <div style="text-align: center; margin: 30px 0;">
+              <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #fbbf24; background: rgba(251,191,36,0.12); padding: 14px 28px; border-radius: 14px; border: 1px dashed rgba(251,191,36,0.4); display: inline-block;">
+                ${resetCode}
+              </span>
+            </div>
+            <p style="font-size: 13px; color: #a1a1aa; text-align: center; margin-top: 24px;">
+              This code will expire in <strong>15 minutes</strong>. If you did not request a password reset, please ignore this email.
+            </p>
+          </div>
+        `
+      });
+      console.log(`[Nodemailer] Sent password reset code to ${email}`);
+    } catch (e) {
+      console.error("[Nodemailer] Password reset email error:", e.message);
+    }
+  }
+
+  res.json({
+    success: true,
+    message: `Password reset instructions sent to ${email}. Please check your inbox!`
+  });
+});
+
+// ─── RESET PASSWORD (WITH 6-DIGIT EMAIL CODE) ──────────────────────────────────
+app.post('/api/reset-password', async (req, res) => {
+  const { email, code, newPassword } = req.body;
+  if (!email || !code || !newPassword) {
+    return res.status(400).json({ success: false, message: 'Email, reset code, and new password are required.' });
+  }
+
+  const targetKey = `reset_${email.toLowerCase().trim()}`;
+  const record = pendingOtps.get(targetKey);
+
+  if (!record) {
+    return res.status(400).json({ success: false, message: 'Reset code expired or not requested. Please request a new code.' });
+  }
+
+  if (Date.now() > record.expiresAt) {
+    pendingOtps.delete(targetKey);
+    return res.status(400).json({ success: false, message: 'Reset code has expired. Please request a new code.' });
+  }
+
+  if (record.otp === code.trim()) {
+    pendingOtps.delete(targetKey);
+
+    const db = readDatabase();
+    const userIndex = db.users.findIndex(u => u.email && u.email.toLowerCase() === email.toLowerCase().trim());
+    
+    if (userIndex !== -1) {
+      db.users[userIndex].password = newPassword;
+      writeDatabase(db);
+    }
+
+    return res.json({ success: true, message: 'Password updated successfully! You can now login with your new password.' });
+  } else {
+    return res.status(400).json({ success: false, message: 'Invalid reset code. Please check your email inbox.' });
+  }
+});
+
 
 // ─── GENERAL CONTACT INQUIRY ──────────────────────────────────────────────────
 app.post('/api/contact', (req, res) => {

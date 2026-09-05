@@ -14,7 +14,8 @@ import {
   PlusCircle,
   BookOpen,
   Percent,
-  PhoneCall
+  PhoneCall,
+  LogIn
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ZenithLogo } from './ZenithLogo';
@@ -43,6 +44,7 @@ export interface PillNavProps {
   initialLoadAnimation?: boolean;
   currentUser?: any;
   onAvatarClick?: () => void;
+  onLoginClick?: () => void;
 }
 
 const DROPDOWNS: Record<string, { label: string; route: string; desc: string }[]> = {
@@ -90,7 +92,8 @@ export function PillNav({
   onItemClick,
   initialLoadAnimation = true,
   currentUser,
-  onAvatarClick
+  onAvatarClick,
+  onLoginClick
 }: PillNavProps) {
   const resolvedPillTextColor = pillTextColor ?? baseColor;
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -103,6 +106,21 @@ export function PillNav({
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  // Lock background page scroll when mobile navbar menu is open
+  useEffect(() => {
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
+    };
+  }, [isMobileMenuOpen]);
   
   const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const tlRefs = useRef<(gsap.core.Timeline | null)[]>([]);
@@ -281,15 +299,17 @@ export function PillNav({
 
     if (menu) {
       if (newState) {
-        gsap.set(menu, { visibility: 'visible', left: '50%', top: '50%', xPercent: -50, yPercent: -50 });
+        gsap.set(menu, { visibility: 'visible', left: '50%', top: '50%', x: '-50%', y: '-50%' });
         gsap.fromTo(
           menu,
-          { opacity: 0, scale: 0.9, xPercent: -50, yPercent: -50 },
+          { opacity: 0, scale: 0.9, left: '50%', top: '50%', x: '-50%', y: '-50%' },
           {
             opacity: 1,
             scale: 1,
-            xPercent: -50,
-            yPercent: -50,
+            left: '50%',
+            top: '50%',
+            x: '-50%',
+            y: '-50%',
             duration: 0.35,
             ease: 'back.out(1.4)',
             transformOrigin: 'center center'
@@ -299,8 +319,10 @@ export function PillNav({
         gsap.to(menu, {
           opacity: 0,
           scale: 0.9,
-          xPercent: -50,
-          yPercent: -50,
+          left: '50%',
+          top: '50%',
+          x: '-50%',
+          y: '-50%',
           duration: 0.2,
           ease: 'power2.in',
           transformOrigin: 'center center',
@@ -588,7 +610,6 @@ export function PillNav({
             position: 'fixed',
             top: '50%',
             left: '50%',
-            transform: 'translate(-50%, -50%)',
             width: '90vw',
             maxWidth: '340px',
             maxHeight: '85vh',
@@ -608,7 +629,7 @@ export function PillNav({
             <img 
               src={`${import.meta.env.BASE_URL}logo.png`} 
               alt="Raarya Logo" 
-              className="h-12 object-contain"
+              className="h-16 sm:h-20 object-contain"
             />
             <button
               type="button"
@@ -648,7 +669,7 @@ export function PillNav({
                     <button
                       type="button"
                       onClick={() => setMobileExpanded(mobileExpanded === item.label ? null : item.label)}
-                      className="p-3 text-[#141414]"
+                      className="p-3 text-amber-500"
                       aria-label={`Toggle ${item.label} sub-items`}
                     >
                       <ChevronDown className={`size-4 transition-transform duration-300 ${
@@ -660,7 +681,7 @@ export function PillNav({
                 
                 {/* Mobile Accordion */}
                 {DROPDOWNS[item.label] && mobileExpanded === item.label && (
-                  <div className="flex flex-col gap-1 pl-4 border-l border-black/10 mt-1 mb-2">
+                  <div className="flex flex-col gap-1.5 pl-3 border-l-2 border-amber-500/30 my-2">
                     {DROPDOWNS[item.label].map((subItem) => (
                       <motion.a
                         key={subItem.label}
@@ -670,11 +691,11 @@ export function PillNav({
                           toggleMobileMenu();
                           if (onItemClick) onItemClick(e, subItem.route);
                         }}
-                        className="flex flex-col py-2.5 px-4 rounded-xl hover:bg-black/[0.02] text-left"
-                        whileTap={{ scale: 0.97, backgroundColor: 'rgba(197, 168, 128, 0.1)' }}
+                        className="flex flex-col py-2.5 px-4 rounded-xl bg-[#181818] border border-white/10 text-left text-white hover:bg-amber-500 hover:text-black transition-all"
+                        whileTap={{ scale: 0.97 }}
                       >
-                        <span className="text-[13px] font-semibold text-[#141414]">{subItem.label}</span>
-                        <span className="text-[10px] text-[#A5A5A5] mt-0.5">{subItem.desc}</span>
+                        <span className="text-[13px] font-bold text-white group-hover:text-black">{subItem.label}</span>
+                        <span className="text-[10px] text-white/60 mt-0.5">{subItem.desc}</span>
                       </motion.a>
                     ))}
                   </div>
@@ -709,29 +730,19 @@ export function PillNav({
               ) : (
                 <motion.a
                   href="#login"
-                  className="flex items-center justify-center border border-black/10 bg-white px-6 py-2.5 text-[13px] font-semibold text-[#141414] rounded-full cursor-pointer"
-                  onClick={() => {
+                  className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 text-black px-6 py-3 text-xs font-black tracking-widest uppercase rounded-2xl cursor-pointer shadow-lg shadow-amber-500/25 border border-amber-300/50 hover:brightness-110 active:scale-95 transition-all duration-300"
+                  onClick={(e) => {
+                    e.preventDefault();
                     setIsMobileMenuOpen(false);
                     toggleMobileMenu();
+                    if (onLoginClick) onLoginClick();
                   }}
-                  whileTap={{ scale: 0.96, backgroundColor: '#141414', color: '#ffffff' }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  Login
+                  <LogIn className="w-4 h-4 text-black shrink-0" />
+                  <span>Login / Register</span>
                 </motion.a>
               )}
-              <motion.a
-                href="#contact"
-                className="flex items-center justify-center gap-2 bg-[#141414] px-6 py-2.5 text-[13px] font-semibold text-white rounded-full cursor-pointer"
-                onClick={(e) => {
-                  setIsMobileMenuOpen(false);
-                  toggleMobileMenu();
-                  if (onItemClick) onItemClick(e, '#contact');
-                }}
-                whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
-              >
-                <Home className="size-4" />
-                Book Consultation
-              </motion.a>
             </li>
           </ul>
         </div>,

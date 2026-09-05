@@ -59,22 +59,12 @@ export default function App() {
 
     const unsubscribe = onAuthStateChangedWrapper((user) => {
       if (user) {
-        const safeUser = {
-          name: user.name,
-          email: user.email,
-          phone: user.phone || '',
-          whatsapp: '',
-          avatar: user.avatar || ''
-        };
         const storedUser = localStorage.getItem('currentUser');
-        if (!storedUser) {
-          setCurrentUser(safeUser);
-          localStorage.setItem('currentUser', JSON.stringify(safeUser));
-          setShowLogin(false);
-        } else {
-          setCurrentUser(JSON.parse(storedUser));
+        if (storedUser) {
+          try {
+            setCurrentUser(JSON.parse(storedUser));
+          } catch {}
         }
-
         if (window.location.hash.includes('access_token')) {
           window.location.hash = '';
         }
@@ -111,7 +101,11 @@ export default function App() {
     localStorage.removeItem('currentUser');
     setCurrentUser(null);
     setShowDashboard(false);
+    setShowLogin(false);
     signOutUser();
+    if (window.location.hash === '#login') {
+      history.pushState('', '', window.location.pathname);
+    }
   };
 
   const handleUserUpdate = (updatedUser: any) => {
@@ -167,6 +161,7 @@ export default function App() {
           setDashboardTab('Dashboard');
           setShowDashboard(true);
         }}
+        onLoginClick={() => setShowLogin(true)}
       />
 
       <main className="pt-20">
@@ -184,6 +179,9 @@ export default function App() {
             setCurrentUser(user);
             localStorage.setItem('currentUser', JSON.stringify(user));
             setShowLogin(false);
+            if (window.location.hash === '#login') {
+              history.pushState('', '', window.location.pathname);
+            }
           }}
         />
       )}

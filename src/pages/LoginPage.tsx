@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Phone } from 'lucide-react';
 import BoomerangVideoBg from '../components/BoomerangVideoBg';
+import { OtpVerification } from '../components/OtpVerification';
 import { apiSignup, apiLogin } from '../utils/api';
 import { signInWithGoogle } from '../utils/firebaseClient';
 
@@ -12,8 +13,15 @@ interface AuthPageProps {
 export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
   const [showPassword, setShowPassword] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
+  const [resetStep, setResetStep] = useState<1 | 2>(1);
+  const [resetEmail, setResetEmail] = useState('');
+  const [resetCode, setResetCode] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [resetSending, setResetSending] = useState(false);
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
+  const [loginInput, setLoginInput] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,13 +29,20 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showOtpModal, setShowOtpModal] = useState(false);
+  const [pendingUser, setPendingUser] = useState<any>(null);
+  const [otpTargetPhone, setOtpTargetPhone] = useState('');
+  const [otpTargetEmail, setOtpTargetEmail] = useState('');
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem('rememberUser');
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (parsed.phone) setPhone(parsed.phone);
+        if (parsed.phone) {
+          setPhone(parsed.phone);
+          setLoginInput(parsed.phone);
+        }
       }
     } catch {}
   }, []);
@@ -38,11 +53,12 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     setIsLoading(true);
     try {
       const res = await signInWithGoogle();
-      if (res.success) {
-        setSuccess('Successfully authenticated with Google!');
-        setTimeout(() => {
-          onSuccess(res.user);
-        }, 1500);
+      if (res.success && res.user) {
+        setPendingUser(res.user);
+        setOtpTargetEmail(res.user.email || '');
+        setOtpTargetPhone(res.user.phone || '');
+        setSuccess('Google authenticated! Please enter the verification code sent to your email.');
+        setShowOtpModal(true);
       } else {
         setError(res.error?.message || 'Google Sign-In failed.');
       }
@@ -52,6 +68,69 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     setIsLoading(false);
   };
 
+  const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const targetEmail = resetEmail || email || (loginInput.includes('@') ? loginInput : '');
+    if (!targetEmail || !targetEmail.includes('@')) {
+      setError('Please enter a valid email address to receive reset instructions.');
+      return;
+    }
+    setError('');
+    setSuccess('');
+    setResetSending(true);
+    try {
+      const { sendPasswordReset } = await import('../utils/firebaseClient');
+      const res = await sendPasswordReset(targetEmail);
+      if (res.success) {
+        setSuccess(res.message || `Password reset instructions & code sent to ${targetEmail}. Please check your inbox!`);
+        setResetStep(2);
+      } else {
+        setError(res.message || 'Unable to send reset instructions.');
+      }
+    } catch (err) {
+      setError('Error sending password reset request.');
+    } finally {
+      setResetSending(false);
+    }
+  };
+
+  const handleResetPasswordConfirm = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const targetEmail = resetEmail || email || (loginInput.includes('@') ? loginInput : '');
+    if (!targetEmail || !resetCode || !newPassword) {
+      setError('Please enter the 6-digit code sent to your email and your new password.');
+      return;
+    }
+    if (newPassword.length < 6) {
+      setError('New password must be at least 6 characters long.');
+      return;
+    }
+    setError('');
+    setSuccess('');
+    setResetSending(true);
+    try {
+      const { apiResetPassword } = await import('../utils/api');
+      const res = await apiResetPassword({ email: targetEmail, code: resetCode, newPassword });
+      if (res.success) {
+        setSuccess(res.message || 'Password updated successfully!');
+        setTimeout(() => {
+          setIsForgotPassword(false);
+          setResetStep(1);
+          setResetCode('');
+          setNewPassword('');
+          setSuccess('Password updated! You can now sign in with your new password.');
+        }, 1500);
+      } else {
+        setError(res.message || 'Invalid code or failed to reset password.');
+      }
+    } catch (err) {
+      setError('Unable to reset password.');
+    } finally {
+      setResetSending(false);
+    }
+  };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -59,8 +138,8 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     setIsLoading(true);
 
     if (isSignUp) {
-      if (!name || !phone || !password || !confirmPassword) {
-        setError('Name, Phone, and Password are required.');
+      if (!name || !phone || !email || !password || !confirmPassword) {
+        setError('Name, Phone, Email, and Password are all required.');
         setIsLoading(false);
         return;
       }
@@ -76,12 +155,12 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       }
 
       try {
-        const data = await apiSignup({ name, phone, email: email || undefined, password });
-        if (data.success) {
-          setSuccess('Signup successful! Welcome to Raarya Properties...');
-          setTimeout(() => {
-            onSuccess(data.user);
-          }, 600);
+        const data = await apiSignup({ name, phone, email, password });
+        if (data.success && data.user) {
+          setPendingUser(data.user);
+          setOtpTargetPhone(data.user.phone || phone);
+          setOtpTargetEmail(data.user.email || email);
+          setShowOtpModal(true);
         } else {
           setError(data.message || 'Signup failed.');
         }
@@ -89,24 +168,25 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         setError('Unable to connect to the authentication server.');
       }
     } else {
-      if (!phone || !password) {
-        setError('Phone number and password are required.');
+      const targetVal = email || phone || loginInput;
+      if (!targetVal || !password) {
+        setError('Please enter your Phone Number or Email Address and Password.');
         setIsLoading(false);
         return;
       }
 
       try {
-        const data = await apiLogin({ phone, password });
+        const data = await apiLogin({ phone: targetVal, password });
         if (data.success && data.user) {
-          setSuccess('Login successful! Welcome back...');
+          setPendingUser(data.user);
+          setOtpTargetPhone(data.user.phone || phone);
+          setOtpTargetEmail(data.user.email || email || (targetVal.includes('@') ? targetVal : ''));
+          setShowOtpModal(true);
           if (rememberMe) {
-            localStorage.setItem('rememberUser', JSON.stringify({ phone }));
+            localStorage.setItem('rememberUser', JSON.stringify({ phone: targetVal }));
           } else {
             localStorage.removeItem('rememberUser');
           }
-          setTimeout(() => {
-            onSuccess(data.user!);
-          }, 400);
         } else {
           setError(data.message || 'Login failed.');
         }
@@ -117,8 +197,16 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     setIsLoading(false);
   };
 
+  const handleOtpVerified = () => {
+    setShowOtpModal(false);
+    setSuccess('OTP Verified! Accessing your account...');
+    setTimeout(() => {
+      onSuccess(pendingUser);
+    }, 400);
+  };
+
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center lg:justify-end px-4 sm:px-8 lg:pr-20 bg-black overflow-hidden font-sans select-none">
+    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-start lg:justify-center lg:items-end p-4 sm:p-6 lg:pr-24 bg-black overflow-y-auto font-sans select-none custom-scrollbar">
       
       {/* Seamless Boomerang Video Background */}
       <BoomerangVideoBg
@@ -126,7 +214,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         className="absolute inset-0 w-full h-full object-cover z-0"
       />
 
-      {/* Bottom Blur Overlay (No Gradient Darkening) */}
+      {/* Bottom Blur Overlay */}
       <div 
         className="absolute inset-0 z-1 pointer-events-none backdrop-blur-xl"
         style={{
@@ -136,39 +224,40 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       />
 
       {/* Dark Vignette Overlay for Depth */}
-      <div className="absolute inset-0 bg-black/20 z-2 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/30 z-2 pointer-events-none" />
 
-      {/* Back to Home Button */}
-      <button
-        onClick={onBack}
-        className="absolute top-6 left-6 z-50 flex items-center gap-2 px-4 py-2 rounded-full text-white/80 hover:text-white hover:bg-white/10 transition-all duration-300 text-xs font-semibold tracking-wider uppercase border border-white/10 backdrop-blur-md animate-blur-fade-up"
-        style={{ animationDelay: '0ms' }}
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Home
-      </button>
+      {/* Back to Home Button Header Container (Cleanly separated on mobile, fixed top-left on desktop) */}
+      <div className="w-full lg:absolute lg:top-7 lg:left-7 z-50 flex items-center justify-between mb-3 lg:mb-0 shrink-0 pt-2 lg:pt-0">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-2 px-4 py-2 rounded-full text-white/90 hover:text-white bg-white/10 hover:bg-white/20 transition-all duration-300 text-xs font-bold tracking-wider uppercase border border-white/20 backdrop-blur-md cursor-pointer shadow-lg"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Home
+        </button>
+      </div>
 
-      {/* Auth Card (Centered on Mobile, Sided to Right on Desktop, Compact Size) */}
+      {/* Auth Card (Gaps Top & Bottom, No Overlap with Header) */}
       <div 
-        className="relative z-10 w-full max-w-[410px] h-auto rounded-3xl p-4 sm:p-5 text-white shadow-2xl flex flex-col justify-between overflow-hidden animate-blur-fade-up"
+        className="relative z-10 w-full max-w-[460px] h-auto rounded-3xl p-5 sm:p-7 text-white shadow-2xl flex flex-col justify-between overflow-hidden animate-blur-fade-up my-auto my-4 sm:my-6 shrink-0"
         style={{
           animationDelay: '150ms',
-          background: 'rgba(10, 10, 10, 0.45)',
-          backdropFilter: 'blur(36px)',
-          WebkitBackdropFilter: 'blur(36px)',
-          border: '1px solid rgba(255, 255, 255, 0.08)',
-          boxShadow: '0 24px 64px -16px rgba(0, 0, 0, 0.8)'
+          background: 'rgba(12, 12, 14, 0.65)',
+          backdropFilter: 'blur(40px)',
+          WebkitBackdropFilter: 'blur(40px)',
+          border: '1px solid rgba(255, 255, 255, 0.14)',
+          boxShadow: '0 32px 80px -16px rgba(0, 0, 0, 0.9)'
         }}
       >
         {/* Glow Effects in Card Background */}
-        <div className="absolute -top-24 -left-24 w-48 h-48 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-24 -right-24 w-48 h-48 rounded-full bg-white/5 blur-3xl pointer-events-none" />
+        <div className="absolute -top-24 -left-24 w-56 h-56 rounded-full bg-amber-500/10 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 w-56 h-56 rounded-full bg-white/10 blur-3xl pointer-events-none" />
 
         {/* Card Header (Logo & Welcome) */}
         <div className="flex flex-col items-center mb-3 relative z-10">
           {/* Logo badge */}
           <div 
-            className="flex items-center gap-2 px-3.5 py-1 rounded-xl border border-white/10 mb-2 bg-white/5 backdrop-blur-md animate-blur-fade-up"
+            className="flex items-center gap-2 px-4 py-1 rounded-full border border-white/15 mb-2 bg-white/5 backdrop-blur-md animate-blur-fade-up"
             style={{ animationDelay: '300ms' }}
           >
             <img
@@ -176,86 +265,46 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
               alt="RAARYA"
               className="h-5 w-5 object-contain"
             />
-            <span className="text-[10px] font-semibold tracking-widest uppercase">Raarya Groups</span>
+            <span className="text-[10px] font-bold tracking-widest uppercase text-amber-200">Raarya Groups</span>
           </div>
 
           <h2 
-            className="text-center text-2xl font-bold tracking-tight animate-blur-fade-up"
+            className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-white animate-blur-fade-up"
             style={{ 
               animationDelay: '400ms',
               fontFamily: "'PP Editorial New', 'Playfair Display', Georgia, serif" 
             }}
           >
-            {isSignUp ? 'Create Your Account' : 'Welcome Back'}
+            {isForgotPassword ? 'Reset Password' : (isSignUp ? 'Create Your Account' : 'Welcome Back')}
           </h2>
           <p 
-            className="text-center text-white/50 text-[11px] mt-1 animate-blur-fade-up"
+            className="text-center text-white/60 text-xs mt-1 animate-blur-fade-up"
             style={{ animationDelay: '500ms' }}
           >
-            {isSignUp ? 'Sign up to discover luxury villa plots' : 'Sign in to access premium listings'}
+            {isForgotPassword 
+              ? 'Enter your registered email address to receive reset instructions' 
+              : (isSignUp ? 'Sign up to discover luxury villa plots' : 'Sign in to access premium listings')}
           </p>
         </div>
 
-        {/* Auth Form */}
-        <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 relative z-10">
-          
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-200 text-xs px-4 py-3 rounded-xl animate-blur-fade-up">
-              {error}
-            </div>
-          )}
-          {success && (
-            <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-200 text-xs px-4 py-3 rounded-xl animate-blur-fade-up">
-              {success}
-            </div>
-          )}
-          
-          <div className="flex flex-col gap-2 max-h-[190px] sm:max-h-[260px] overflow-y-auto pr-1.5 custom-scrollbar">
-            {/* Name Field (Sign Up Only) */}
-            {isSignUp && (
-              <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
-                <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-                  Full Name <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-                    <User className="w-4 h-4" />
-                  </span>
-                  <input
-                    type="text"
-                    placeholder="Enter your full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
-                  />
-                </div>
+        {/* Auth Form or Forgot Password Form */}
+        {isForgotPassword ? (
+          <form onSubmit={resetStep === 1 ? handleForgotPasswordSubmit : handleResetPasswordConfirm} className="flex flex-col gap-3 relative z-10 my-2">
+            {error && (
+              <div className="bg-red-500/15 border border-red-500/30 text-red-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+                {success}
               </div>
             )}
 
-            {/* Phone Field (Compulsory for both) */}
-            <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
-              <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-                Phone Number <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-                  <Phone className="w-4 h-4" />
-                </span>
-                <input
-                  type="tel"
-                  placeholder="Enter your phone number"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
-                  maxLength={15}
-                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
-                />
-              </div>
-            </div>
-
-            {/* Email Field (Optional for both) */}
-            <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
-              <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-                Email Address <span className="text-white/30 lowercase font-medium">(optional)</span>
+            {/* Email Address Field */}
+            <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
+              <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                Registered Email Address <span className="text-rose-400">*</span>
               </label>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
@@ -264,105 +313,321 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
                 <input
                   type="email"
                   placeholder="Enter your email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                  value={resetEmail || email || (loginInput.includes('@') ? loginInput : '')}
+                  onChange={(e) => setResetEmail(e.target.value)}
+                  disabled={resetStep === 2}
+                  className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300 disabled:opacity-60"
+                  required
+                  autoFocus={resetStep === 1}
                 />
               </div>
             </div>
 
-            {/* Password Field */}
-            <div className="animate-blur-fade-up" style={{ animationDelay: '650ms' }}>
-              <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-                Password <span className="text-rose-500">*</span>
-              </label>
-              <div className="relative">
-                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
-                  <Lock className="w-4 h-4" />
-                </span>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password here"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 pr-12 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                </button>
-              </div>
-              {isSignUp && password.length > 0 && password.length < 6 && (
-                <p className="mt-1 ml-1 text-[10px] font-semibold text-amber-400 flex items-center gap-1.5 animate-pulse">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-                  Password must be at least 6 characters ({6 - password.length} more needed)
-                </p>
+            {/* Step 2 Fields: 6-Digit Code & New Password */}
+            {resetStep === 2 && (
+              <>
+                <div className="animate-blur-fade-up">
+                  <label className="block text-[11px] font-semibold text-amber-300 uppercase tracking-widest mb-1 ml-1">
+                    6-Digit Security Code <span className="text-rose-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                      <Lock className="w-4 h-4" />
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Enter 6-digit code from email"
+                      value={resetCode}
+                      onChange={(e) => setResetCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+                      className="w-full border border-amber-400/40 bg-amber-400/5 rounded-xl px-11 py-2.5 text-xs text-amber-200 tracking-widest font-mono placeholder:text-white/35 outline-none focus:border-amber-400 focus:bg-white/10 transition-all duration-300"
+                      maxLength={6}
+                      required
+                      autoFocus
+                    />
+                  </div>
+                </div>
+
+                <div className="animate-blur-fade-up">
+                  <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                    New Password <span className="text-rose-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                      <Lock className="w-4 h-4" />
+                    </span>
+                    <input
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Enter new password (min 6 chars)"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 pr-12 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 transition-all duration-300"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                    >
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    </button>
+                  </div>
+                </div>
+              </>
+            )}
+
+            <button
+              type="submit"
+              disabled={resetSending}
+              className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold py-3.5 rounded-xl text-xs tracking-wide hover:from-amber-300 hover:to-amber-400 active:scale-[0.98] transition-all duration-300 shadow-lg shadow-amber-500/20 mt-2 disabled:opacity-50 flex items-center justify-center gap-2 cursor-pointer"
+            >
+              {resetSending ? (
+                <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              ) : resetStep === 1 ? (
+                'Send Reset Code & Instructions'
+              ) : (
+                'Update Password & Sign In'
               )}
-            </div>
+            </button>
 
-            {/* Confirm Password Field (Sign Up Only) */}
-            {isSignUp && (
-              <div className="animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
-                <label className="block text-[10px] font-semibold text-white/60 uppercase tracking-widest mb-0.5 ml-1">
-                  Confirm Password <span className="text-rose-500">*</span>
+            {resetStep === 2 && (
+              <button
+                type="button"
+                onClick={() => setResetStep(1)}
+                className="text-[11px] text-amber-300 hover:underline text-center cursor-pointer"
+              >
+                Resend Reset Code
+              </button>
+            )}
+
+            <button
+              type="button"
+              onClick={() => { setIsForgotPassword(false); setResetStep(1); setError(''); setSuccess(''); }}
+              className="w-full py-2.5 text-xs text-white/60 hover:text-white transition-colors text-center cursor-pointer mt-1"
+            >
+              ← Back to Login
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 relative z-10">
+            
+            {error && (
+              <div className="bg-red-500/15 border border-red-500/30 text-red-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+                {error}
+              </div>
+            )}
+            {success && (
+              <div className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+                {success}
+              </div>
+            )}
+            
+            <div className="flex flex-col gap-2.5 max-h-[calc(100vh-280px)] sm:max-h-none overflow-y-auto custom-scrollbar pr-0.5">
+              {/* Name Field (Sign Up Only) */}
+              {isSignUp && (
+                <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
+                  <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                    Full Name <span className="text-rose-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                      <User className="w-4 h-4" />
+                    </span>
+                    <input
+                      type="text"
+                      placeholder="Enter your full name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Login Input Fields (Separate Phone & Email Entries) */}
+              {!isSignUp ? (
+                <>
+                  {/* Phone Number Entry (Login) */}
+                  <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
+                    <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                      Phone Number <span className="text-white/40 lowercase font-normal">(or enter email below)</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                        <Phone className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="tel"
+                        placeholder="Enter registered mobile number"
+                        value={phone}
+                        onChange={(e) => {
+                          setPhone(e.target.value.replace(/\D/g, ''));
+                          if (e.target.value) setLoginInput(e.target.value.replace(/\D/g, ''));
+                        }}
+                        maxLength={15}
+                        className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email Address Entry (Login) */}
+                  <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
+                    <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                      Email Address <span className="text-white/40 lowercase font-normal">(or enter phone above)</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                        <Mail className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="email"
+                        placeholder="Enter registered email address"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          if (e.target.value) setLoginInput(e.target.value);
+                        }}
+                        className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+                </>
+              ) : (
+                <>
+                  {/* Phone Field (Sign Up) */}
+                  <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
+                    <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                      Phone Number <span className="text-rose-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                        <Phone className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="tel"
+                        placeholder="Enter 10-digit mobile number"
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value.replace(/\D/g, ''))}
+                        maxLength={15}
+                        className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Email Field (Sign Up) */}
+                  <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
+                    <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                      Email Address <span className="text-rose-400">*</span>
+                    </label>
+                    <div className="relative">
+                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                        <Mail className="w-4 h-4" />
+                      </span>
+                      <input
+                        type="email"
+                        placeholder="Enter your email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+
+              {/* Password Field */}
+              <div className="animate-blur-fade-up" style={{ animationDelay: '650ms' }}>
+                <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                  Password <span className="text-rose-400">*</span>
                 </label>
                 <div className="relative">
                   <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
                     <Lock className="w-4 h-4" />
                   </span>
                   <input
-                    type="password"
-                    placeholder="Confirm your password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full border border-white/10 bg-white/5 rounded-xl px-11 py-2 text-xs text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 focus:ring-1 focus:ring-white/20 transition-all duration-300"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password here"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 pr-12 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300"
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white transition-colors"
+                  >
+                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
                 </div>
+                {isSignUp && password.length > 0 && password.length < 6 && (
+                  <p className="mt-1 ml-1 text-[10px] font-semibold text-amber-400 flex items-center gap-1.5 animate-pulse">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                    Password must be at least 6 characters ({6 - password.length} more needed)
+                  </p>
+                )}
               </div>
-            )}
 
-            {/* Remember Me & Forgot Password (Login Only) */}
-            {!isSignUp && (
-              <div className="flex items-center justify-between mt-1 text-xs text-white/60 animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
-                <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors select-none">
-                  <input
-                    type="checkbox"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-white/10 bg-white/5 accent-white cursor-pointer"
-                  />
-                  Remember me
-                </label>
-                <button
-                  type="button"
-                  className="font-medium hover:text-white transition-colors hover:underline"
-                >
-                  Forgot Password?
-                </button>
-              </div>
-            )}
-          </div>
+              {/* Confirm Password Field (Sign Up Only) */}
+              {isSignUp && (
+                <div className="animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
+                  <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
+                    Confirm Password <span className="text-rose-400">*</span>
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white/40">
+                      <Lock className="w-4 h-4" />
+                    </span>
+                    <input
+                      type="password"
+                      placeholder="Confirm your password"
+                      value={confirmPassword}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                      className="w-full border border-white/12 bg-white/5 rounded-xl px-11 py-2.5 text-xs text-white placeholder:text-white/35 outline-none focus:border-amber-400/50 focus:bg-white/10 focus:ring-1 focus:ring-amber-400/30 transition-all duration-300"
+                    />
+                  </div>
+                </div>
+              )}
 
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-white text-black py-2 rounded-xl text-xs font-semibold tracking-wide hover:bg-white/95 active:scale-[0.98] transition-all duration-300 shadow-lg mt-1 animate-blur-fade-up disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-            style={{ animationDelay: '750ms' }}
-          >
-            {isLoading ? (
-              <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
-            ) : (
-              isSignUp ? 'Create Account' : 'Login'
-            )}
-          </button>
-        </form>
+              {/* Remember Me & Forgot Password (Login Only) */}
+              {!isSignUp && (
+                <div className="flex items-center justify-between mt-0.5 text-xs text-white/70 animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
+                  <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors select-none">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                      className="w-4 h-4 rounded border-white/20 bg-white/10 accent-amber-500 cursor-pointer"
+                    />
+                    Remember me
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => { setIsForgotPassword(true); setError(''); setSuccess(''); }}
+                    className="font-medium hover:text-amber-200 transition-colors hover:underline cursor-pointer"
+                  >
+                    Forgot Password?
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold py-3 rounded-xl text-xs tracking-wide hover:from-amber-300 hover:to-amber-400 active:scale-[0.98] transition-all duration-300 shadow-lg shadow-amber-500/20 mt-2 animate-blur-fade-up disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
+              style={{ animationDelay: '750ms' }}
+            >
+              {isLoading ? (
+                <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
+              ) : (
+                isSignUp ? 'Create Account' : 'Login'
+              )}
+            </button>
+          </form>
+        )}
 
         {/* Divider */}
-        <div className="flex items-center gap-3 my-2.5 relative z-10 animate-blur-fade-up" style={{ animationDelay: '800ms' }}>
+        <div className="flex items-center gap-3 my-3 relative z-10 animate-blur-fade-up" style={{ animationDelay: '800ms' }}>
           <div className="flex-1 h-px bg-white/10" />
           <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider">OR</span>
           <div className="flex-1 h-px bg-white/10" />
@@ -372,7 +637,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         <div className="relative z-10 animate-blur-fade-up" style={{ animationDelay: '850ms' }}>
           <button
             type="button"
-            onClick={handleGoogleSignIn} disabled={isLoading} className="w-full flex items-center justify-center gap-2.5 rounded-xl py-2 text-xs font-semibold transition-all duration-300 liquid-glass hover:bg-white/5 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+            onClick={handleGoogleSignIn} disabled={isLoading} className="w-full flex items-center justify-center gap-2.5 rounded-xl py-2.5 text-xs font-semibold border border-white/15 bg-white/5 hover:bg-white/10 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
           >
             <svg className="w-4 h-4" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
@@ -385,17 +650,26 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         </div>
 
         {/* Toggle Login/Signup Switcher */}
-        <p className="text-center text-xs text-white/50 mt-3 relative z-10 animate-blur-fade-up" style={{ animationDelay: '900ms' }}>
+        <p className="text-center text-xs text-white/60 mt-4 relative z-10 animate-blur-fade-up" style={{ animationDelay: '900ms' }}>
           {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
           <button
             type="button"
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-white font-semibold hover:underline"
+            className="text-amber-300 font-bold hover:underline cursor-pointer ml-1"
           >
             {isSignUp ? 'Login' : 'Register'}
           </button>
         </p>
       </div>
+
+      {showOtpModal && (
+        <OtpVerification
+          phone={otpTargetPhone || phone}
+          email={otpTargetEmail || email || pendingUser?.email}
+          onVerify={handleOtpVerified}
+          onCancel={() => setShowOtpModal(false)}
+        />
+      )}
     </div>
   );
 }

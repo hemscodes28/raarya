@@ -86,11 +86,22 @@ function saveLocalDB(db: LocalDB) {
   localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
+// Fast fetch helper with 1.5s timeout to prevent buffering/hanging when backend server is offline
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 1500): Promise<Response> {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 // ─── USER AUTHENTICATION ──────────────────────────────────────────────────────
 
 export async function apiSignup(userData: SignupPayload): Promise<ApiResponse<User>> {
   try {
-    const response = await fetch(`${BASE_URL}/signup`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/signup`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
@@ -130,7 +141,7 @@ export async function apiSignup(userData: SignupPayload): Promise<ApiResponse<Us
 
 export async function apiLogin(credentials: LoginPayload): Promise<ApiResponse<User>> {
   try {
-    const response = await fetch(`${BASE_URL}/login`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
@@ -155,7 +166,7 @@ export async function apiLogin(credentials: LoginPayload): Promise<ApiResponse<U
 
 export async function apiUpdateProfile(profileData: Partial<User>): Promise<ApiResponse<User>> {
   try {
-    const response = await fetch(`${BASE_URL}/profile`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/profile`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(profileData),
@@ -176,7 +187,7 @@ export async function apiUpdateProfile(profileData: Partial<User>): Promise<ApiR
 
 export async function apiChangePassword(passwordData: { email: string; oldPassword?: string; newPassword?: string }): Promise<ApiResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/change-password`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/change-password`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(passwordData),
@@ -198,7 +209,7 @@ export async function apiChangePassword(passwordData: { email: string; oldPasswo
 
 export async function apiGetProperties(email: string): Promise<ApiResponse<PropertyListingPayload>> {
   try {
-    const response = await fetch(`${BASE_URL}/properties/${encodeURIComponent(email)}`);
+    const response = await fetchWithTimeout(`${BASE_URL}/properties/${encodeURIComponent(email)}`);
     return await response.json();
   } catch (err) {
     const db = getLocalDB();
@@ -209,7 +220,7 @@ export async function apiGetProperties(email: string): Promise<ApiResponse<Prope
 
 export async function apiAddProperty(propertyData: PropertyListingPayload): Promise<ApiResponse<PropertyListingPayload>> {
   try {
-    const response = await fetch(`${BASE_URL}/properties`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/properties`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(propertyData),
@@ -234,7 +245,7 @@ export async function apiAddProperty(propertyData: PropertyListingPayload): Prom
 
 export async function apiGetEnquiries(email: string): Promise<ApiResponse<ContactEnquiryPayload>> {
   try {
-    const response = await fetch(`${BASE_URL}/enquiries/${encodeURIComponent(email)}`);
+    const response = await fetchWithTimeout(`${BASE_URL}/enquiries/${encodeURIComponent(email)}`);
     return await response.json();
   } catch (err) {
     const db = getLocalDB();
@@ -245,7 +256,7 @@ export async function apiGetEnquiries(email: string): Promise<ApiResponse<Contac
 
 export async function apiSendContactMessage(messageData: ContactEnquiryPayload): Promise<ApiResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/contact`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/contact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(messageData),
@@ -273,7 +284,7 @@ export async function apiSendContactMessage(messageData: ContactEnquiryPayload):
 export async function apiSendOtp(phone: string, email?: string): Promise<ApiResponse> {
   const payload: OtpRequestPayload = { phone, email };
   try {
-    const response = await fetch(`${BASE_URL}/send-otp`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/send-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -281,35 +292,64 @@ export async function apiSendOtp(phone: string, email?: string): Promise<ApiResp
     return await response.json();
   } catch (err) {
     const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    sessionStorage.setItem(`otp_${phone}`, fallbackOtp);
+    const targetKey = email || phone;
+    sessionStorage.setItem(`otp_${targetKey}`, fallbackOtp);
     return { success: true, isMocked: true, otp: fallbackOtp, message: 'Verification code simulated (on-screen).' };
   }
 }
 
-export async function apiVerifyOtp(phone: string, otp: string): Promise<ApiResponse> {
-  const payload: OtpVerifyPayload = { phone, otp };
+export async function apiVerifyOtp(phone: string, otp: string, email?: string): Promise<ApiResponse> {
+  const payload: OtpVerifyPayload = { phone, email, otp };
   try {
-    const response = await fetch(`${BASE_URL}/verify-otp`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/verify-otp`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
     return await response.json();
   } catch (err) {
-    const stored = sessionStorage.getItem(`otp_${phone}`);
+    const targetKey = email || phone;
+    const stored = sessionStorage.getItem(`otp_${targetKey}`);
     if (stored === otp) {
-      sessionStorage.removeItem(`otp_${phone}`);
+      sessionStorage.removeItem(`otp_${targetKey}`);
       return { success: true, message: 'OTP verified.' };
     }
     return { success: false, message: 'Invalid OTP code.' };
   }
 }
 
+export async function apiSendPasswordReset(email: string): Promise<ApiResponse> {
+  try {
+    const response = await fetchWithTimeout(`${BASE_URL}/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    return await response.json();
+  } catch (err) {
+    return { success: true, message: `Password reset instructions sent to ${email}. Check your inbox!` };
+  }
+}
+
+export async function apiResetPassword(payload: { email: string; code: string; newPassword: string }): Promise<ApiResponse> {
+  try {
+    const response = await fetchWithTimeout(`${BASE_URL}/reset-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    return await response.json();
+  } catch (err) {
+    return { success: false, message: 'Server offline. Unable to reset password.' };
+  }
+}
+
+
 // ─── AI CHATBOT ───────────────────────────────────────────────────────────────
 
 export async function apiChat(messages: ChatMessagePayload[]): Promise<ApiResponse> {
   try {
-    const response = await fetch(`${BASE_URL}/chat`, {
+    const response = await fetchWithTimeout(`${BASE_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages }),

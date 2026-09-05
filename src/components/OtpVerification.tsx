@@ -1,25 +1,29 @@
 import { useState, useEffect, useRef } from "react";
-import { X, ShieldCheck, ArrowRight, RotateCcw, Phone } from "lucide-react";
+import { X, ShieldCheck, ArrowRight, RotateCcw, Phone, Mail } from "lucide-react";
 import { motion } from "motion/react";
 import { sendFirebaseSms } from "../utils/firebaseClient";
 
 interface OtpVerificationProps {
   phone: string;
+  email?: string;
   mockOtp?: string;
-  onVerify: (verifiedPhone: string) => void;
+  onVerify: (verifiedTarget: string) => void;
   onCancel: () => void;
 }
 
 export function OtpVerification({ 
   phone: initialPhone, 
+  email: initialEmail,
   onVerify, 
   onCancel 
 }: OtpVerificationProps) {
   const [phone, setPhone] = useState<string>(initialPhone || "");
-  const [tempPhone, setTempPhone] = useState<string>("");
-  const [isPhoneMissing, setIsPhoneMissing] = useState<boolean>(!initialPhone);
+  const [email, setEmail] = useState<string>(initialEmail || "");
+  const [tempInput, setTempInput] = useState<string>("");
+  const [isTargetMissing, setIsTargetMissing] = useState<boolean>(!initialPhone && !initialEmail);
   
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
+  const [simulatedOtp, setSimulatedOtp] = useState<string>("");
   
   const [timer, setTimer] = useState<number>(30);
   const [error, setError] = useState<string>("");
@@ -29,52 +33,60 @@ export function OtpVerification({
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const confirmationResultRef = useRef<any>(null);
 
-  // Trigger Firebase SMS sending when phone number is available
+  // Trigger OTP sending when phone or email is available
   useEffect(() => {
-    if (phone && !isPhoneMissing) {
-      triggerFirebaseSms();
+    if ((phone || email) && !isTargetMissing) {
+      triggerOtpSend();
     }
-  }, [phone, isPhoneMissing]);
+  }, [phone, email, isTargetMissing]);
 
   // Countdown timer for Resend OTP
   useEffect(() => {
-    if (timer > 0 && !isPhoneMissing) {
+    if (timer > 0 && !isTargetMissing) {
       const interval = setInterval(() => setTimer((t) => t - 1), 1000);
       return () => clearInterval(interval);
     }
-  }, [timer, isPhoneMissing]);
+  }, [timer, isTargetMissing]);
 
-  // Dispatch Real SMS via Firebase SMS Gateway
-  const triggerFirebaseSms = async () => {
-    if (!phone) return;
+  // Dispatch OTP via Email or Firebase SMS
+  const triggerOtpSend = async () => {
+    if (!phone && !email) return;
     setIsSending(true);
     setTimer(30);
     setError("");
+    setSimulatedOtp("");
     setOtpValues(Array(6).fill(""));
 
     try {
-      const result = await sendFirebaseSms(phone, "recaptcha-container");
+      // 1. If phone is present without email, attempt Firebase SMS
+      if (phone && !email) {
+        const result = await sendFirebaseSms(phone, "recaptcha-container");
+        if (result.success && result.confirmationResult) {
+          confirmationResultRef.current = result.confirmationResult;
+          console.log("Firebase SMS dispatched!");
+          setIsSending(false);
+          setTimeout(() => inputRefs.current[0]?.focus(), 100);
+          return;
+        }
+      }
 
-      if (result.success && result.confirmationResult) {
-        confirmationResultRef.current = result.confirmationResult;
-        console.log("Firebase SMS dispatched to phone messenger!");
+      // 2. Call backend /api/send-otp (handles Nodemailer HTML Email & SMS)
+      const { apiSendOtp } = await import("../utils/api");
+      const res = await apiSendOtp(phone, email);
+      if (res.success) {
+        if (res.isMocked && res.otp) {
+          setSimulatedOtp(res.otp);
+        }
       } else {
-        console.warn("Firebase App Check warning on localhost:", result.error);
-        // Fallback to seamless backend verification code so login is never blocked
-        const { apiSendOtp } = await import("../utils/api");
-        await apiSendOtp(phone);
+        setError(res.message || "Failed to send verification code.");
       }
     } catch (err: any) {
-      console.error("Firebase SMS error:", err);
-      const { apiSendOtp } = await import("../utils/api");
-      await apiSendOtp(phone);
+      console.error("OTP send error:", err);
+      setError("Unable to connect to authentication server.");
     } finally {
       setIsSending(false);
+      setTimeout(() => inputRefs.current[0]?.focus(), 100);
     }
-
-    setTimeout(() => {
-      inputRefs.current[0]?.focus();
-    }, 100);
   };
 
   const handleInputChange = (value: string, index: number) => {
@@ -98,7 +110,7 @@ export function OtpVerification({
 
   const handleVerify = async () => {
     if (otpValues.some(val => val === "")) {
-      setError("Please enter the complete 6-digit code sent to your phone.");
+      setError("Please enter the complete 6-digit verification code.");
       return;
     }
     const enteredOtp = otpValues.join("");
@@ -109,39 +121,43 @@ export function OtpVerification({
       if (confirmationResultRef.current) {
         await confirmationResultRef.current.confirm(enteredOtp);
         setIsVerifying(false);
-        onVerify(phone);
+        onVerify(email || phone);
         return;
       }
 
-      // Fallback local verify
+      // Call backend apiVerifyOtp
       const { apiVerifyOtp } = await import("../utils/api");
-      const res = await apiVerifyOtp(phone, enteredOtp);
+      const res = await apiVerifyOtp(phone, enteredOtp, email);
       if (res.success) {
         setIsVerifying(false);
-        onVerify(phone);
+        onVerify(email || phone);
       } else {
-        setError(res.message || "Invalid security code. Please check your SMS inbox and try again.");
+        setError(res.message || "Invalid security code. Please check your inbox and try again.");
         setOtpValues(Array(6).fill(""));
         inputRefs.current[0]?.focus();
         setIsVerifying(false);
       }
     } catch (err: any) {
-      console.error("Firebase OTP Verification Error:", err);
-      setError("Invalid security code. Please check your SMS inbox and try again.");
+      console.error("OTP Verification Error:", err);
+      setError("Invalid security code. Please check your inbox and try again.");
       setOtpValues(Array(6).fill(""));
       inputRefs.current[0]?.focus();
       setIsVerifying(false);
     }
   };
 
-  const handlePhoneSubmit = (e: React.FormEvent) => {
+  const handleTargetSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!tempPhone || tempPhone.length < 10) {
-      setError("Please enter a valid 10-digit mobile number.");
+    if (!tempInput) {
+      setError("Please enter a valid mobile number or email address.");
       return;
     }
-    setPhone(tempPhone);
-    setIsPhoneMissing(false);
+    if (tempInput.includes("@")) {
+      setEmail(tempInput);
+    } else {
+      setPhone(tempInput.replace(/\D/g, ""));
+    }
+    setIsTargetMissing(false);
     setError("");
   };
 
@@ -163,25 +179,24 @@ export function OtpVerification({
           <X className="w-4 h-4" />
         </button>
 
-        {isPhoneMissing ? (
-          /* Phone Input Screen */
+        {isTargetMissing ? (
+          /* Input Screen */
           <div className="flex flex-col items-center text-center">
             <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-white mb-4">
-              <Phone className="w-6 h-6" />
+              <Mail className="w-6 h-6" />
             </div>
-            <h3 className="text-lg font-bold text-white tracking-tight">Enter Phone Number</h3>
+            <h3 className="text-lg font-bold text-white tracking-tight">Security Authentication</h3>
             <p className="text-xs text-white/50 mt-1 mb-6 max-w-xs">
-              To secure your account, please enter your mobile number. A 6-digit security code will be sent to your phone messenger via Firebase SMS.
+              Enter your email address or mobile number to receive a 6-digit verification security code.
             </p>
 
-            <form onSubmit={handlePhoneSubmit} className="w-full flex flex-col gap-4">
+            <form onSubmit={handleTargetSubmit} className="w-full flex flex-col gap-4">
               <input
-                type="tel"
-                placeholder="Enter 10-digit mobile number"
-                value={tempPhone}
-                onChange={(e) => setTempPhone(e.target.value.replace(/\D/g, ""))}
-                maxLength={10}
-                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-center text-white placeholder:text-white/30 outline-none focus:border-white/30 focus:bg-white/10 transition-all font-mono tracking-wider"
+                type="text"
+                placeholder="Enter email or 10-digit phone"
+                value={tempInput}
+                onChange={(e) => setTempInput(e.target.value)}
+                className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-center text-white placeholder:text-white/30 outline-none focus:border-amber-400/40 focus:bg-white/10 transition-all font-mono"
                 autoFocus
               />
 
@@ -189,9 +204,9 @@ export function OtpVerification({
 
               <button
                 type="submit"
-                className="w-full py-3 bg-white text-black font-semibold text-xs rounded-xl hover:bg-white/90 transition-all flex items-center justify-center gap-2 shadow-lg"
+                className="w-full py-3 bg-gradient-to-r from-amber-400 to-amber-500 text-black font-semibold text-xs rounded-xl hover:from-amber-300 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-lg"
               >
-                <span>Send Firebase SMS Code</span>
+                <span>Send Security Code</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
             </form>
@@ -203,18 +218,30 @@ export function OtpVerification({
               <ShieldCheck className="w-6 h-6" />
             </div>
             
-            <h3 className="text-lg font-bold text-white tracking-tight">Firebase SMS Verification</h3>
+            <h3 className="text-lg font-bold text-white tracking-tight">
+              {email ? "Email Security Verification" : "Mobile OTP Verification"}
+            </h3>
             <p className="text-xs text-white/50 mt-1 max-w-xs">
-              Enter the 6-digit verification code sent to your mobile phone inbox
+              {email 
+                ? "Enter the 6-digit security code sent to your email inbox" 
+                : "Enter the 6-digit security code sent to your mobile phone"}
             </p>
             
-            <div className="flex items-center gap-2 mt-2 mb-6">
-              <span className="text-xs font-mono font-bold text-white bg-white/10 px-2.5 py-0.5 rounded-md border border-white/10">
-                +91 {phone}
-              </span>
+            <div className="flex items-center gap-2 mt-2.5 mb-5">
+              {email ? (
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-200">
+                  <Mail className="w-3.5 h-3.5" />
+                  <span className="text-xs font-mono font-bold">{email}</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-200">
+                  <Phone className="w-3.5 h-3.5" />
+                  <span className="text-xs font-mono font-bold">+91 {phone}</span>
+                </div>
+              )}
               <button 
-                onClick={() => setIsPhoneMissing(true)}
-                className="text-[11px] text-indigo-400 hover:underline font-medium"
+                onClick={() => setIsTargetMissing(true)}
+                className="text-[11px] text-amber-400 hover:underline font-medium ml-1"
               >
                 Change
               </button>
@@ -234,8 +261,8 @@ export function OtpVerification({
                   onKeyDown={(e) => handleKeyDown(e, idx)}
                   className={`w-11 h-12 rounded-xl text-center font-mono text-lg font-bold transition-all outline-none border ${
                     digit 
-                      ? "bg-white/15 border-white text-white shadow-md shadow-white/5" 
-                      : "bg-white/5 border-white/10 text-white/40 focus:border-white/40 focus:bg-white/10"
+                      ? "bg-amber-400/15 border-amber-400 text-amber-300 shadow-md shadow-amber-400/10" 
+                      : "bg-white/5 border-white/10 text-white/40 focus:border-amber-400/40 focus:bg-white/10"
                   }`}
                 />
               ))}
@@ -246,13 +273,13 @@ export function OtpVerification({
             <button
               onClick={handleVerify}
               disabled={isVerifying}
-              className="w-full py-3.5 bg-gradient-to-r from-white via-slate-100 to-slate-200 text-black font-bold text-xs rounded-xl hover:bg-white transition-all flex items-center justify-center gap-2 shadow-xl active:scale-[0.98] disabled:opacity-50"
+              className="w-full py-3.5 bg-gradient-to-r from-amber-400 via-amber-400 to-amber-500 text-black font-bold text-xs rounded-xl hover:from-amber-300 hover:to-amber-400 transition-all flex items-center justify-center gap-2 shadow-xl active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
               {isVerifying ? (
                 <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
               ) : (
                 <>
-                  <span>Verify & Proceed</span>
+                  <span>Verify Code & Login</span>
                   <ArrowRight className="w-4 h-4" />
                 </>
               )}
@@ -264,12 +291,12 @@ export function OtpVerification({
                 <span>Resend code in <strong className="text-white/80 font-mono">{timer}s</strong></span>
               ) : (
                 <button
-                  onClick={triggerFirebaseSms}
+                  onClick={triggerOtpSend}
                   disabled={isSending}
-                  className="flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 font-semibold transition-colors disabled:opacity-50"
+                  className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-semibold transition-colors disabled:opacity-50 cursor-pointer"
                 >
                   <RotateCcw className={`w-3.5 h-3.5 ${isSending ? 'animate-spin' : ''}`} />
-                  <span>Resend Firebase SMS Code</span>
+                  <span>Resend Security Code</span>
                 </button>
               )}
             </div>
@@ -279,3 +306,4 @@ export function OtpVerification({
     </div>
   );
 }
+

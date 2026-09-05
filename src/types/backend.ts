@@ -45,6 +45,7 @@ export interface OtpRequestPayload {
 
 export interface OtpVerifyPayload {
   phone: string;
+  email?: string;
   otp: string;
 }
 

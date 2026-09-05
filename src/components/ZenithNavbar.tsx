@@ -7,9 +7,10 @@ import { LayoutGrid } from 'lucide-react';
 interface NavbarProps {
   currentUser?: any;
   onAvatarClick?: () => void;
+  onLoginClick?: () => void;
 }
 
-export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
+export function ZenithNavbar({ currentUser, onAvatarClick, onLoginClick }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [activeHref, setActiveHref] = useState('');
 
@@ -59,6 +60,7 @@ export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
           initialLoadAnimation={false}
           currentUser={currentUser}
           onAvatarClick={onAvatarClick}
+          onLoginClick={onLoginClick}
         />
 
         {/* Desktop Login button or Avatar */}
@@ -88,7 +90,11 @@ export function ZenithNavbar({ currentUser, onAvatarClick }: NavbarProps) {
           ) : (
             <a
               href="#login"
-              className="px-7 py-2.5 text-[13px] font-semibold text-[#141414] border border-black/10 bg-white/80 backdrop-blur-md hover:bg-white rounded-full shadow-sm transition-all"
+              onClick={(e) => {
+                e.preventDefault();
+                if (onLoginClick) onLoginClick();
+              }}
+              className="px-7 py-2.5 text-[13px] font-semibold text-[#141414] border border-black/10 bg-white/80 backdrop-blur-md hover:bg-white rounded-full shadow-sm transition-all cursor-pointer"
             >
               Login
             </a>

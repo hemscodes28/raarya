@@ -39,17 +39,19 @@
 }
 
 .pill-logo {
-  height: 96px;
-  width: 96px;
+  height: 120px;
+  width: 120px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   text-decoration: none;
   flex-shrink: 0;
+  transition: transform 0.3s ease;
 }
 
 .pill-logo img {
   height: 100%;
+  width: 100%;
   object-fit: contain;
   display: block;
 }
@@ -201,7 +203,6 @@
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%) scale(0.95);
   width: 90%;
   max-width: 350px;
   background: #ffffff;
@@ -232,21 +233,28 @@
 }
 
 .mobile-menu-popover .mobile-menu-link {
-  display: block;
-  padding: 9px 16px;
-  color: var(--pill-text, #fff);
-  background-color: var(--pill-bg, #141414);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  color: #ffffff;
+  background-color: #141414;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   text-decoration: none;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 700;
-  border-radius: 50px;
+  border-radius: 18px;
   text-transform: uppercase;
   letter-spacing: 0.7px;
   transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.mobile-menu-popover .mobile-menu-link:hover {
+.mobile-menu-popover .mobile-menu-link:hover,
+.mobile-menu-popover .mobile-menu-link.is-active {
   cursor: pointer;
-  background-color: var(--base);
-  color: var(--hover-text, #141414);
+  background-color: #B89047;
+  color: #ffffff;
+  border-color: #B89047;
+  box-shadow: 0 6px 18px rgba(184, 144, 71, 0.35);
 }
