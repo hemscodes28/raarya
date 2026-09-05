@@ -123,7 +123,7 @@ export function CompanyPage() {
             transition={{ duration: 0.5 }}
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-700 text-xs font-mono font-bold uppercase tracking-widest shadow-sm backdrop-blur-sm"
           >
-            <span>Coimbatore’s Trusted Real Estate Partner Since 2022</span>
+            <span>Coimbatore’s Trusted Property Promoters</span>
           </motion.div>
 
           <motion.h1
@@ -141,7 +141,7 @@ export function CompanyPage() {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="max-w-3xl mx-auto text-base sm:text-lg text-zinc-700 leading-relaxed font-light"
           >
-            Transforming Coimbatore’s property landscape with modern architecture, sustainable developments, and customer-first integrity.
+            Crafting Iconic Living Spaces & High-Appreciation Destinations Across Coimbatore.
           </motion.p>
         </div>
       </section>
