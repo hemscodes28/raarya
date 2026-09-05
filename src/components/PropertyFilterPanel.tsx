@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { SlidersHorizontal, X, ChevronDown, Check } from "lucide-react";
 import { INDIA_STATES_AND_DISTRICTS, PROPERTY_AREAS_MAPPING } from "../data/indiaData";
 
 export interface FilterState {
@@ -25,6 +25,119 @@ const RESIDENTIAL_TYPES = ["Flat", "Villa", "Plot", "House", "Builder Floor", "F
 const COMMERCIAL_TYPES = ["Office Space", "Shop", "Showroom", "Warehouse", "Godown", "Commercial Land"];
 const AREA_UNITS = ["Sq.Ft", "Sq.m", "Cent", "Acre", "BHK"];
 const CONSTRUCTION_STATUSES = ["Any", "Ready to Move", "Under Construction", "New Launch"];
+
+// --- Ultra-Premium Luxury Dropdown Component ---
+interface LuxuryDropdownProps {
+  placeholder: string;
+  value: string;
+  options: { label: string; value: string }[] | string[];
+  onChange: (val: string) => void;
+  enableSearch?: boolean;
+}
+
+function LuxuryDropdown({ placeholder, value, options, onChange, enableSearch = false }: LuxuryDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  // Close dropdown when clicked outside
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const normalizedOptions = options.map((opt) =>
+    typeof opt === "string" ? { label: opt, value: opt } : opt
+  );
+
+  const filteredOptions = normalizedOptions.filter((opt) =>
+    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const selectedOption = normalizedOptions.find((opt) => opt.value === value);
+  const displayLabel = selectedOption && selectedOption.value ? selectedOption.label : placeholder;
+
+  return (
+    <div className="relative w-full font-outfit" ref={dropdownRef}>
+      {/* Trigger Button */}
+      <button
+        type="button"
+        onClick={() => setIsOpen(!isOpen)}
+        className={`w-full bg-white hover:bg-slate-50/80 border rounded-2xl px-4 py-2.5 sm:py-3 text-xs font-bold transition-all duration-200 flex items-center justify-between shadow-2xs cursor-pointer ${
+          isOpen
+            ? "border-[#c5a880] ring-2 ring-[#c5a880]/20 text-[#141414]"
+            : value && value !== placeholder && !value.startsWith("Select") && !value.startsWith("Any")
+            ? "border-[#c5a880]/80 text-[#141414] bg-[#fefcf8]"
+            : "border-zinc-200 text-slate-700 hover:border-zinc-300"
+        }`}
+      >
+        <span className="truncate pr-2">
+          {displayLabel}
+        </span>
+        <ChevronDown
+          className={`w-4 h-4 text-slate-400 shrink-0 transition-transform duration-300 ${
+            isOpen ? "rotate-180 text-[#c5a880]" : ""
+          }`}
+        />
+      </button>
+
+      {/* Floating Dropdown Menu */}
+      {isOpen && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#c5a880]/40 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12),_0_2px_10px_rgba(197,168,128,0.15)] z-[100] py-2 flex flex-col max-h-72 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 font-outfit">
+          {/* Optional Search Filter Input */}
+          {(enableSearch || normalizedOptions.length > 6) && (
+            <div className="px-3 pb-2 pt-1 border-b border-zinc-100 mb-1">
+              <input
+                type="text"
+                placeholder="Type to filter options..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onClick={(e) => e.stopPropagation()}
+                className="w-full bg-slate-50 border border-zinc-200 rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-[#c5a880] text-slate-800 placeholder:text-slate-400"
+                autoFocus
+              />
+            </div>
+          )}
+
+          {/* Options List */}
+          <div className="overflow-y-auto max-h-56 custom-scrollbar-light flex-1">
+            {filteredOptions.length === 0 ? (
+              <div className="px-4 py-3 text-xs text-slate-400 italic">No matches found</div>
+            ) : (
+              filteredOptions.map((opt) => {
+                const isSelected = value === opt.value;
+                return (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    onClick={() => {
+                      onChange(opt.value);
+                      setIsOpen(false);
+                      setSearchTerm("");
+                    }}
+                    className={`w-full px-4 py-2.5 text-left text-xs font-bold flex items-center justify-between transition-colors duration-150 cursor-pointer ${
+                      isSelected
+                        ? "bg-[#141414] text-[#e8d5b7]"
+                        : "text-slate-700 hover:bg-[#fefaf3] hover:text-[#141414]"
+                    }`}
+                  >
+                    <span>{opt.label}</span>
+                    {isSelected && <Check className="w-3.5 h-3.5 text-[#c5a880]" />}
+                  </button>
+                );
+              })
+            )}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function PropertyFilterPanel({
   filters,
@@ -238,52 +351,34 @@ export function PropertyFilterPanel({
         </label>
         
         {/* State */}
-        <div className="relative">
-          <select
-            value={filters.state}
-            onChange={(e) => handleStateChange(e.target.value)}
-            className="w-full appearance-none bg-white border border-zinc-200 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#141414] cursor-pointer pr-8 shadow-2xs font-outfit"
-          >
-            <option value="">Select State</option>
-            {Object.keys(INDIA_STATES_AND_DISTRICTS).sort().map((st) => (
-              <option key={st} value={st}>{st}</option>
-            ))}
-          </select>
-          <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-        </div>
+        <LuxuryDropdown
+          placeholder="Select State"
+          value={filters.state}
+          options={["Select State", ...Object.keys(INDIA_STATES_AND_DISTRICTS).sort()]}
+          onChange={(val) => handleStateChange(val === "Select State" ? "" : val)}
+          enableSearch
+        />
 
         {/* District */}
         {filters.state && (
-          <div className="relative">
-            <select
-              value={filters.district}
-              onChange={(e) => handleDistrictChange(e.target.value)}
-              className="w-full appearance-none bg-white border border-zinc-200 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#141414] cursor-pointer pr-8 shadow-2xs font-outfit"
-            >
-              <option value="">Select District</option>
-              {(INDIA_STATES_AND_DISTRICTS[filters.state] || []).map((dt) => (
-                <option key={dt} value={dt}>{dt}</option>
-              ))}
-            </select>
-            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+          <LuxuryDropdown
+            placeholder="Select District"
+            value={filters.district}
+            options={["Select District", ...(INDIA_STATES_AND_DISTRICTS[filters.state] || [])]}
+            onChange={(val) => handleDistrictChange(val === "Select District" ? "" : val)}
+            enableSearch
+          />
         )}
 
         {/* City / Area */}
         {filters.district && areaOptions.length > 0 && (
-          <div className="relative">
-            <select
-              value={filters.city}
-              onChange={(e) => onFilterChange({ ...filters, city: e.target.value })}
-              className="w-full appearance-none bg-white border border-zinc-200 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#141414] cursor-pointer pr-8 shadow-2xs font-outfit"
-            >
-              <option value="">Any Area / Locality</option>
-              {areaOptions.map((area) => (
-                <option key={area} value={area}>{area}</option>
-              ))}
-            </select>
-            <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+          <LuxuryDropdown
+            placeholder="Any Area / Locality"
+            value={filters.city}
+            options={["Any Area / Locality", ...areaOptions]}
+            onChange={(val) => onFilterChange({ ...filters, city: val === "Any Area / Locality" ? "" : val })}
+            enableSearch
+          />
         )}
       </div>
 
@@ -292,18 +387,12 @@ export function PropertyFilterPanel({
         <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
           BUDGET
         </label>
-        <div className="relative">
-          <select
-            value={filters.budget || "Any Budget"}
-            onChange={(e) => onFilterChange({ ...filters, budget: e.target.value })}
-            className="w-full appearance-none bg-white border border-zinc-200 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#141414] cursor-pointer pr-8 shadow-2xs font-outfit"
-          >
-            {getBudgetOptions().map((opt) => (
-              <option key={opt} value={opt}>{opt}</option>
-            ))}
-          </select>
-          <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-        </div>
+        <LuxuryDropdown
+          placeholder="Any Budget"
+          value={filters.budget || "Any Budget"}
+          options={getBudgetOptions()}
+          onChange={(val) => onFilterChange({ ...filters, budget: val })}
+        />
       </div>
 
       {/* 5. AREA */}
@@ -334,18 +423,12 @@ export function PropertyFilterPanel({
         </div>
 
         {/* Area Size Dropdown */}
-        <div className="relative">
-          <select
-            value={filters.areaSize || "Any size"}
-            onChange={(e) => onFilterChange({ ...filters, areaSize: e.target.value })}
-            className="w-full appearance-none bg-white border border-zinc-200 rounded-2xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-[#141414] cursor-pointer pr-8 shadow-2xs font-outfit"
-          >
-            {getAreaSizeOptions().map((sizeOpt) => (
-              <option key={sizeOpt} value={sizeOpt}>{sizeOpt}</option>
-            ))}
-          </select>
-          <ChevronDown className="w-4 h-4 text-slate-400 absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-        </div>
+        <LuxuryDropdown
+          placeholder="Any size"
+          value={filters.areaSize || "Any size"}
+          options={getAreaSizeOptions()}
+          onChange={(val) => onFilterChange({ ...filters, areaSize: val })}
+        />
       </div>
 
       {/* 6. CONSTRUCTION STATUS */}
