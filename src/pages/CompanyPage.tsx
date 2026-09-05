@@ -132,7 +132,7 @@ export function CompanyPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-[#141414] font-heading-display leading-tight"
           >
-            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600">Raarya Property Promoters</span>
+            About <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-amber-500 to-yellow-600">Raarya</span>
           </motion.h1>
 
           <motion.p
