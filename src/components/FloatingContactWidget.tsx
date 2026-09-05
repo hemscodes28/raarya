@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { PhoneCall, Sparkles } from "lucide-react";
 
 interface FloatingContactWidgetProps {
@@ -5,12 +6,34 @@ interface FloatingContactWidgetProps {
 }
 
 export default function FloatingContactWidget({ onOpenChatbot }: FloatingContactWidgetProps) {
+  const [hidden, setHidden] = useState(false);
   const phoneNumber = "9087240400";
   const whatsappUrl = `https://wa.me/91${phoneNumber}`;
   const phoneUrl = `tel:${phoneNumber}`;
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const footer = document.querySelector('footer');
+      if (footer) {
+        const rect = footer.getBoundingClientRect();
+        // Hide widget when the footer is near or entering viewport
+        if (rect.top <= window.innerHeight - 60) {
+          setHidden(true);
+        } else {
+          setHidden(false);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  if (hidden) return null;
+
   return (
-    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] touch-manipulation">
+    <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-[9999] touch-manipulation transition-all duration-300">
       {/* 
         Raarya Luxury Glass Icon Dock
         Icon-only design with sleek floating glass hover tooltips for zero layout reflow

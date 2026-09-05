@@ -423,7 +423,7 @@ export function ContactPage() {
                 <div>
                   <h4 className="text-xs font-bold text-black/40 uppercase tracking-widest">Opening Hours</h4>
                   <p className="mt-1 text-sm text-black/80 font-light">
-                    Monday - Sunday : 09:30 AM - 06:30 PM
+                    Monday - Sunday : 9.45am - 6.15pm
                   </p>
                 </div>
               </div>

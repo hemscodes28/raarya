@@ -389,6 +389,7 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: (i % 6) * 0.04, duration: 0.35 }}
+                className="h-full flex flex-col"
               >
                 <PropertyCard
                   property={property}

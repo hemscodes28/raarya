@@ -67,6 +67,7 @@ export function ShowcaseSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ delay: i * 0.1, duration: 0.55, ease: 'easeOut' }}
+                  className="h-full flex flex-col"
                 >
                   <PropertyCard
                     property={property}
@@ -114,6 +115,7 @@ export function ShowcaseSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ delay: i * 0.1, duration: 0.55, ease: 'easeOut' }}
+                  className="h-full flex flex-col"
                 >
                   <PropertyCard
                     property={property}
@@ -161,6 +163,7 @@ export function ShowcaseSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, margin: '-40px' }}
                   transition={{ delay: i * 0.1, duration: 0.55, ease: 'easeOut' }}
+                  className="h-full flex flex-col"
                 >
                   <PropertyCard
                     property={property}

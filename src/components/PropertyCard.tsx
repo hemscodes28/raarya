@@ -37,42 +37,42 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
     <>
       <article
         onClick={onClick}
-        className="group relative bg-white border border-neutral-200/90 hover:border-amber-500/40 rounded-[24px] shadow-sm hover:shadow-[0_20px_45px_rgba(0,0,0,0.12)] -translate-y-0 hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer overflow-hidden flex flex-col justify-between"
+        className="group relative w-full h-full bg-white border border-neutral-200/90 hover:border-amber-500/40 rounded-[24px] shadow-sm hover:shadow-[0_20px_45px_rgba(0,0,0,0.12)] -translate-y-0 hover:-translate-y-2 transition-all duration-500 ease-out cursor-pointer overflow-hidden flex flex-col justify-between"
       >
-        <div>
-          {/* IMAGE HERO CONTAINER WITH BLENDED CORNERS */}
-          <div className="relative aspect-[4/3] md:aspect-square overflow-hidden bg-neutral-900">
-            <img
-              src={getImageUrl(property.image)}
-              alt={property.title}
-              className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-            />
-            {/* Subtle gradient vignette */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300" />
+        {/* IMAGE HERO CONTAINER WITH BLENDED CORNERS */}
+        <div className="relative aspect-[4/3] md:aspect-square overflow-hidden bg-neutral-900 shrink-0">
+          <img
+            src={getImageUrl(property.image)}
+            alt={property.title}
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          />
+          {/* Subtle gradient vignette */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-300" />
 
-            {/* RE-FRAMED LUXURY TOP BADGES */}
-            <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10 gap-2">
-              <div className="flex flex-wrap gap-1.5">
-                <span className="px-3.5 py-1 text-[10.5px] font-sans font-bold uppercase tracking-wider bg-[#18181B] text-[#D9A74A] rounded-full border border-[#332B1A] shadow-sm">
-                  {property.type === 'buy' ? 'For Sale' : property.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
-                </span>
+          {/* RE-FRAMED LUXURY TOP BADGES */}
+          <div className="absolute top-3.5 left-3.5 right-3.5 flex items-center justify-between z-10 gap-2">
+            <div className="flex flex-wrap gap-1.5">
+              <span className="px-3.5 py-1 text-[10.5px] font-sans font-bold uppercase tracking-wider bg-[#18181B] text-[#D9A74A] rounded-full border border-[#332B1A] shadow-sm">
+                {property.type === 'buy' ? 'For Sale' : property.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
+              </span>
 
-                <span className="px-3.5 py-1 text-[10.5px] font-sans font-bold uppercase tracking-wider bg-white text-[#18181B] rounded-full border border-neutral-200/90 shadow-sm">
-                  {propType}
-                </span>
-              </div>
-            </div>
-
-            {/* QUICK OVERVIEW HOVER BADGE */}
-            <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-              <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-black font-extrabold text-[12.5px] rounded-full shadow-2xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 border border-white/40">
-                <Eye className="size-4 text-amber-500" /> Quick Overview
+              <span className="px-3.5 py-1 text-[10.5px] font-sans font-bold uppercase tracking-wider bg-white text-[#18181B] rounded-full border border-neutral-200/90 shadow-sm">
+                {propType}
               </span>
             </div>
           </div>
 
-          {/* CARD BODY CONTENT */}
-          <div className="space-y-3.5 p-5 md:p-6 bg-white">
+          {/* QUICK OVERVIEW HOVER BADGE */}
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-black font-extrabold text-[12.5px] rounded-full shadow-2xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 border border-white/40">
+              <Eye className="size-4 text-amber-500" /> Quick Overview
+            </span>
+          </div>
+        </div>
+
+        {/* CARD BODY CONTENT - FLEX-1 TO ENSURE ALL BUTTONS ALIGN PERFECTLY */}
+        <div className="flex-1 flex flex-col justify-between p-5 md:p-6 bg-white">
+          <div className="space-y-3">
             <div className="flex items-start justify-between gap-3">
               {/* Title with sleek typography */}
               <h3 className="text-[15.5px] font-bold tracking-tight text-neutral-900 line-clamp-2 leading-snug group-hover:text-amber-600 transition-colors">
@@ -95,7 +95,7 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
 
             {/* DYNAMIC SPECS BAR */}
             {stats.length > 0 && (
-              <div className="flex flex-wrap items-center gap-x-4 gap-y-2 pt-3 border-t border-neutral-100">
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pt-3 border-t border-neutral-100 min-h-[44px]">
                 {stats.map(({ icon: Icon, label }) => (
                   <span key={label} className="flex items-center gap-1.5 text-[11.5px] font-semibold text-neutral-700 bg-neutral-50 px-2.5 py-1 rounded-lg border border-neutral-100">
                     <Icon className="size-[13px] text-amber-500" strokeWidth={2.5} />
@@ -104,18 +104,18 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
                 ))}
               </div>
             )}
+          </div>
 
-            {/* ENQUIRE NOW BUTTON */}
-            <div className="pt-3 border-t border-neutral-100 flex items-center justify-end">
-              <button
-                type="button"
-                onClick={handleEnquireClick}
-                className="w-full py-2.5 px-4 bg-gradient-to-r from-neutral-900 via-slate-900 to-indigo-950 hover:from-black hover:to-indigo-900 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
-              >
-                <Send className="w-3.5 h-3.5 text-amber-400" />
-                <span>Enquire Now</span>
-              </button>
-            </div>
+          {/* ENQUIRE NOW BUTTON - ALWAYS POSITIONED AT THE BOTTOM */}
+          <div className="pt-4 border-t border-neutral-100 mt-4">
+            <button
+              type="button"
+              onClick={handleEnquireClick}
+              className="w-full py-2.5 px-4 bg-gradient-to-r from-neutral-900 via-slate-900 to-indigo-950 hover:from-black hover:to-indigo-900 text-white font-bold text-xs rounded-xl shadow-md flex items-center justify-center gap-2 transition-all active:scale-[0.98]"
+            >
+              <Send className="w-3.5 h-3.5 text-amber-400" />
+              <span>Enquire Now</span>
+            </button>
           </div>
         </div>
       </article>

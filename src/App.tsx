@@ -16,6 +16,7 @@ import { onAuthStateChangedWrapper, signOutUser } from './utils/firebaseClient';
 import FloatingContactWidget from './components/FloatingContactWidget';
 import { BlogDetailPage } from './pages/BlogDetailPage';
 import { RaaryaChatbot } from './components/RaaryaChatbot';
+import { Footer } from './components/Footer';
 
 export default function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -167,6 +168,8 @@ export default function App() {
       <main className="pt-20">
         {renderActivePage()}
       </main>
+
+      {!showLogin && <Footer />}
 
       {showLogin && (
         <LoginPage

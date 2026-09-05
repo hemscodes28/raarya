@@ -14,11 +14,10 @@ import {
   ChevronRight,
   CalendarCheck,
   Building,
-  ExternalLink,
-  Navigation,
   UserCheck,
   CheckCircle,
-  Clock
+  Clock,
+  Tag
 } from 'lucide-react';
 import type { PropertyListing } from '../constants';
 import { getImageUrl } from '../utils/imageHelper';
@@ -67,9 +66,6 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
   const listerName = property.agentName && property.agentName !== 'Raarya Property Representative'
     ? property.agentName
     : 'Rajkumar';
-
-  const mapsUrl = property.googleMapsUrl ||
-    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(property.mapQuery || property.location || property.title)}`;
 
   const whatsappMessage = encodeURIComponent(
     `Hi ${listerName}! I am interested in your property listing: "${property.title}" (${property.price}) at ${property.location}. Please share complete details.`
@@ -209,18 +205,6 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     <MapPin className="size-4 text-amber-400 shrink-0" />
                     <span className="font-medium">{property.location}</span>
                   </div>
-
-                  {/* Google Maps Button in Header */}
-                  <a
-                    href={mapsUrl}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 text-[12px] font-semibold rounded-full border border-amber-500/30 transition-colors"
-                  >
-                    <Navigation className="size-3.5" />
-                    Open Google Maps
-                    <ExternalLink className="size-3" />
-                  </a>
                 </div>
               </div>
 
@@ -328,79 +312,118 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                   )}
                 </div>
 
-                {/* DYNAMIC OVERVIEW SPECIFICATIONS TABLE WITH STYLISH TYPOGRAPHY */}
+                {/* DYNAMIC OVERVIEW SPECIFICATIONS TABLE WITH ULTRA-PREMIUM LUXURY DESIGN */}
                 <div className="space-y-4">
-                  <h3 className="font-serif text-xl tracking-wide text-amber-300 font-bold flex items-center gap-2 border-b border-white/10 pb-3">
-                    <Building className="size-5 text-amber-400" />
-                    Complete Property Specifications
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                      <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">Listed For</span>
-                      <span className="text-[14px] font-bold text-white mt-1 block">{propListedFor}</span>
+                  <div className="flex items-center justify-between border-b border-amber-500/20 pb-3">
+                    <h3 className="font-serif text-xl tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-400 to-yellow-500 font-extrabold flex items-center gap-2.5">
+                      <div className="p-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                        <Building className="size-5" />
+                      </div>
+                      Complete Property Specifications
+                    </h3>
+                    <span className="hidden sm:inline-block text-[11px] font-mono font-semibold tracking-wider text-amber-400/90 uppercase px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
+                      Verified Details
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
+                    {/* Item 1: Listed For */}
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
+                          <Tag className="size-4" />
+                        </div>
+                        <div className="space-y-0.5 min-w-0">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400/90 block font-mono">Listed For</span>
+                          <span className="text-[14.5px] font-extrabold text-white tracking-tight block truncate">{propListedFor}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                      <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">Property Type</span>
-                      <span className="text-[14px] font-bold text-white mt-1 block">{propType}</span>
+                    {/* Item 2: Property Type */}
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-blue-500/15 text-blue-400 border border-blue-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
+                          <Building className="size-4" />
+                        </div>
+                        <div className="space-y-0.5 min-w-0">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400/90 block font-mono">Property Type</span>
+                          <span className="text-[14.5px] font-extrabold text-white tracking-tight block truncate">{propType}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                      <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">Extent / Area</span>
-                      <span className="text-[14px] font-bold text-white mt-1 block">{rawArea}</span>
+                    {/* Item 3: Extent / Area */}
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
+                          <Square className="size-4" />
+                        </div>
+                        <div className="space-y-0.5 min-w-0">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400/90 block font-mono">Extent / Area</span>
+                          <span className="text-[14.5px] font-extrabold text-white tracking-tight block truncate">{rawArea}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                      <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">Construction Status</span>
-                      <span className="text-[14px] font-bold text-emerald-400 mt-1 block">{propStatus}</span>
+                    {/* Item 4: Construction Status */}
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-purple-500/15 text-purple-400 border border-purple-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
+                          <Clock className="size-4" />
+                        </div>
+                        <div className="space-y-0.5 min-w-0">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400/90 block font-mono">Construction Status</span>
+                          <span className="text-[14.5px] font-extrabold text-emerald-400 tracking-tight block truncate">{propStatus}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                      <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">Furnishing</span>
-                      <span className="text-[14px] font-bold text-white mt-1 block">{propFurnishing}</span>
+                    {/* Item 5: Furnishing */}
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
+                          <Layers className="size-4" />
+                        </div>
+                        <div className="space-y-0.5 min-w-0">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400/90 block font-mono">Furnishing</span>
+                          <span className="text-[14.5px] font-extrabold text-white tracking-tight block truncate">{propFurnishing}</span>
+                        </div>
+                      </div>
                     </div>
 
-                    <div className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-white/20 transition-all">
-                      <span className="text-[10px] uppercase font-bold text-amber-400 tracking-wider block">Legal Approvals</span>
-                      <span className="text-[14px] font-bold text-emerald-400 mt-1 block">DTCP & RERA Approved</span>
+                    {/* Item 6: Legal Approvals */}
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="flex items-center gap-3">
+                        <div className="p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
+                          <ShieldCheck className="size-4" />
+                        </div>
+                        <div className="space-y-0.5 min-w-0">
+                          <span className="text-[10px] uppercase font-bold tracking-widest text-amber-400/90 block font-mono">Legal Approvals</span>
+                          <span className="text-[14.5px] font-extrabold text-emerald-400 tracking-tight block truncate">DTCP & RERA Approved</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* LOCATION & GOOGLE MAPS SECTION WITH STYLISH TYPOGRAPHY */}
-                <div className="space-y-4 pt-2">
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/10 pb-3">
-                    <h3 className="font-serif text-xl tracking-wide text-amber-300 font-bold flex items-center gap-2">
-                      <Navigation className="size-5 text-amber-400" />
-                      Exact Property Location & Navigation
-                    </h3>
+                {/* PROPERTY ADDRESS SECTION */}
+                <div className="space-y-3 pt-2">
+                  <h3 className="font-serif text-lg tracking-wide text-amber-300 font-bold flex items-center gap-2 border-b border-white/10 pb-3">
+                    <MapPin className="size-5 text-amber-400" />
+                    Address
+                  </h3>
 
-                    {/* View on Google Maps Button */}
-                    <a
-                      href={mapsUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-black font-bold text-[12.5px] rounded-xl shadow-lg transition-all shrink-0"
-                    >
-                      <Navigation className="size-4" />
-                      View on Google Maps
-                      <ExternalLink className="size-3.5" />
-                    </a>
-                  </div>
-
-                  <p className="text-[13.5px] text-white/80">
-                    Exact Location: <strong className="text-white font-semibold">{property.location}</strong>
-                  </p>
-
-                  {/* Map Embed Container */}
-                  <div className="relative w-full h-[280px] rounded-2xl overflow-hidden border border-white/15 bg-white/5 shadow-inner">
-                    <iframe
-                      title="Google Maps Location"
-                      src={property.mapEmbedUrl || `https://maps.google.com/maps?q=${encodeURIComponent(property.location)}&z=15&output=embed`}
-                      className="w-full h-full border-0"
-                      loading="lazy"
-                      allowFullScreen
-                    />
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <p className="text-[14.5px] text-white font-medium leading-relaxed">
+                      {property.location}
+                    </p>
                   </div>
                 </div>
               </div>
