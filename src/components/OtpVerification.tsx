@@ -23,7 +23,6 @@ export function OtpVerification({
   const [isTargetMissing, setIsTargetMissing] = useState<boolean>(!initialPhone && !initialEmail);
   
   const [otpValues, setOtpValues] = useState<string[]>(Array(6).fill(""));
-  const [simulatedOtp, setSimulatedOtp] = useState<string>("");
   
   const [timer, setTimer] = useState<number>(30);
   const [error, setError] = useState<string>("");
@@ -54,7 +53,6 @@ export function OtpVerification({
     setIsSending(true);
     setTimer(30);
     setError("");
-    setSimulatedOtp("");
     setOtpValues(Array(6).fill(""));
 
     try {
@@ -73,11 +71,7 @@ export function OtpVerification({
       // 2. Call backend /api/send-otp (handles Nodemailer HTML Email & SMS)
       const { apiSendOtp } = await import("../utils/api");
       const res = await apiSendOtp(phone, email);
-      if (res.success) {
-        if (res.isMocked && res.otp) {
-          setSimulatedOtp(res.otp);
-        }
-      } else {
+      if (!res.success) {
         setError(res.message || "Failed to send verification code.");
       }
     } catch (err: any) {
