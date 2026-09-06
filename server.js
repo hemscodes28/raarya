@@ -369,19 +369,8 @@ app.get('/api/history', (req, res) => {
 
 // ─── EMAIL OTP DISPATCHER (NODEMAILER) ──────────────────────────────────────────
 async function sendEmailOtp(email, otp) {
-  const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'raaryagroupsinfo@gmail.com';
-  const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD;
-
-  if (!smtpPass) {
-    console.log(`
-    ======================================================
-    [INFO] Email OTP Simulation Active (No SMTP_PASS in .env).
-    Sent to: ${email}
-    Code generated: ${otp}
-    ======================================================
-    `);
-    return { success: true, isMocked: true, otp };
-  }
+  const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'raaryagroups@gmail.com';
+  const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || 'hbtpxiotrupxdsoe';
 
   try {
     const host = process.env.SMTP_HOST;
