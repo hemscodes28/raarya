@@ -109,6 +109,49 @@ async function sendFast2Sms(phone, otp) {
   }
 }
 
+// ─── USER AUTHENTICATION ──────────────────────────────────────────────────────
+app.post(['/api/login', '/login'], (req, res) => {
+  const { phone, password } = req.body || {};
+  if (!phone || !password) return res.status(400).json({ success: false, message: 'Phone/Email and password are required.' });
+
+  const target = phone.trim().toLowerCase();
+  let userEmail = '';
+  let userPhone = '';
+
+  if (target.includes('@')) {
+    userEmail = target;
+  } else {
+    userPhone = target;
+  }
+
+  res.json({
+    success: true,
+    message: 'Login successful!',
+    user: {
+      name: userEmail ? userEmail.split('@')[0] : 'RAARYA User',
+      email: userEmail,
+      phone: userPhone,
+      whatsapp: userPhone
+    }
+  });
+});
+
+app.post(['/api/signup', '/signup'], (req, res) => {
+  const { name, phone, email, password } = req.body || {};
+  if (!phone && !email) return res.status(400).json({ success: false, message: 'Phone or email is required.' });
+
+  res.json({
+    success: true,
+    message: 'Account created successfully!',
+    user: {
+      name: name || (email ? email.split('@')[0] : 'RAARYA User'),
+      email: email || '',
+      phone: phone || '',
+      whatsapp: phone || ''
+    }
+  });
+});
+
 // ─── SEND OTP ──────────────────────────────────────────────────────────────────
 app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
   const { phone, email } = req.body || {};

@@ -178,9 +178,11 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       try {
         const data = await apiLogin({ phone: targetVal, password });
         if (data.success && data.user) {
-          setPendingUser(data.user);
+          const finalEmail = targetVal.includes('@') ? targetVal : (data.user.email || email || '');
+          const updatedUser = { ...data.user, email: finalEmail || data.user.email };
+          setPendingUser(updatedUser);
           setOtpTargetPhone(data.user.phone || phone);
-          setOtpTargetEmail(data.user.email || email || (targetVal.includes('@') ? targetVal : ''));
+          setOtpTargetEmail(finalEmail);
           setShowOtpModal(true);
           if (rememberMe) {
             localStorage.setItem('rememberUser', JSON.stringify({ phone: targetVal }));
