@@ -374,12 +374,14 @@ async function sendEmailOtp(email, otp) {
 
   try {
     const host = process.env.SMTP_HOST;
-    const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
+    const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 465;
 
     const transporter = nodemailer.createTransport({
       host: host || 'smtp.gmail.com',
-      port: port || 465,
-      secure: port === 465 || !port,
+      port: port,
+      secure: port === 465,
+      pool: true,
+      maxConnections: 5,
       auth: {
         user: smtpUser,
         pass: smtpPass
@@ -390,21 +392,22 @@ async function sendEmailOtp(email, otp) {
     });
 
     const mailOptions = {
-      from: `"RAARYA Groups Verification" <${smtpUser}>`,
+      from: `"RAARYA Groups" <${smtpUser}>`,
       to: email,
-      subject: `${otp} is your RAARYA Verification Code`,
+      subject: `Your RAARYA Security Code is ${otp}`,
+      text: `Hello,\n\nYour RAARYA verification code is: ${otp}\n\nThis code is valid for 10 minutes.\n\n© 2026 Raarya Groups & Properties.`,
       html: `
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background-color: #0c0c0e; color: #ffffff; padding: 32px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);">
           <div style="text-align: center; margin-bottom: 24px;">
             <h2 style="color: #fbbf24; margin: 0; font-size: 26px; font-weight: bold; tracking-wide: 2px;">RAARYA GROUPS</h2>
-            <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Secure Account Authentication</p>
+            <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Account Security Verification</p>
           </div>
           <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;" />
           <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
             Hello,
           </p>
           <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
-            You requested a security verification code to access your RAARYA account. Please enter the following 6-digit OTP code:
+            Your security verification code to access your RAARYA account is:
           </p>
           <div style="text-align: center; margin: 30px 0;">
             <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #fbbf24; background: rgba(251,191,36,0.12); padding: 14px 28px; border-radius: 14px; border: 1px dashed rgba(251,191,36,0.4); display: inline-block;">
@@ -419,7 +422,12 @@ async function sendEmailOtp(email, otp) {
             © 2026 Raarya Groups & Properties. All rights reserved.
           </p>
         </div>
-      `
+      `,
+      headers: {
+        'X-Priority': '1 (Highest)',
+        'X-MSMail-Priority': 'High',
+        'Importance': 'High'
+      }
     };
 
     const info = await transporter.sendMail(mailOptions);

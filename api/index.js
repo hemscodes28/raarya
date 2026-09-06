@@ -11,35 +11,53 @@ app.use(express.json({ limit: '10mb' }));
 const pendingOtps = global._pendingOtps || new Map();
 if (!global._pendingOtps) global._pendingOtps = pendingOtps;
 
-// Nodemailer helper using production Gmail SMTP credentials
+// Singleton Nodemailer transporter with connection pooling
+let cachedTransporter = null;
+
+function getTransporter(smtpUser, smtpPass) {
+  if (!cachedTransporter) {
+    cachedTransporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      pool: true,
+      maxConnections: 5,
+      maxMessages: 100,
+      auth: {
+        user: smtpUser,
+        pass: smtpPass
+      },
+      tls: {
+        rejectUnauthorized: false
+      }
+    });
+  }
+  return cachedTransporter;
+}
+
+// Nodemailer helper using production Gmail SMTP credentials with instant high priority headers
 async function sendEmailOtp(email, otp) {
   const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'raaryagroups@gmail.com';
   const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || 'hbtpxiotrupxdsoe';
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: smtpUser,
-        pass: smtpPass
-      }
-    });
+    const transporter = getTransporter(smtpUser, smtpPass);
 
     const mailOptions = {
-      from: `"RAARYA Groups Verification" <${smtpUser}>`,
+      from: `"RAARYA Groups" <${smtpUser}>`,
       to: email,
-      subject: `${otp} is your RAARYA Verification Code`,
-      text: `Hello,\n\nYou requested a security verification code to access your RAARYA account.\n\nYour 6-digit OTP code is: ${otp}\n\nThis code is valid for 10 minutes.\n\n© 2026 Raarya Groups & Properties.`,
+      subject: `Your RAARYA Security Code is ${otp}`,
+      text: `Hello,\n\nYour RAARYA verification code is: ${otp}\n\nThis code is valid for 10 minutes.\n\n© 2026 Raarya Groups & Properties.`,
       html: `
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background-color: #0c0c0e; color: #ffffff; padding: 32px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);">
           <div style="text-align: center; margin-bottom: 24px;">
             <h2 style="color: #fbbf24; margin: 0; font-size: 26px; font-weight: bold; tracking-wide: 2px;">RAARYA GROUPS</h2>
-            <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Secure Account Authentication</p>
+            <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Account Security Verification</p>
           </div>
           <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;" />
           <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">Hello,</p>
           <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
-            You requested a security verification code to access your RAARYA account. Please enter the following 6-digit OTP code:
+            Your security verification code to access your RAARYA account is:
           </p>
           <div style="text-align: center; margin: 30px 0;">
             <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #fbbf24; background: rgba(251,191,36,0.12); padding: 14px 28px; border-radius: 14px; border: 1px dashed rgba(251,191,36,0.4); display: inline-block;">
@@ -54,11 +72,16 @@ async function sendEmailOtp(email, otp) {
             © 2026 Raarya Groups & Properties. All rights reserved.
           </p>
         </div>
-      `
+      `,
+      headers: {
+        'X-Priority': '1 (Highest)',
+        'X-MSMail-Priority': 'High',
+        'Importance': 'High'
+      }
     };
 
     const info = await transporter.sendMail(mailOptions);
-    console.log(`[Nodemailer] Sent real OTP email to ${email} (MessageId: ${info.messageId})`);
+    console.log(`[Nodemailer] Sent high priority OTP email to ${email} (MessageId: ${info.messageId})`);
     return { success: true, isMocked: false, messageId: info.messageId, response: info.response };
   } catch (err) {
     console.error('[Nodemailer error]:', err);
