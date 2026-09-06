@@ -155,7 +155,7 @@ app.post(['/api/signup', '/signup'], (req, res) => {
 // ─── SEND OTP ──────────────────────────────────────────────────────────────────
 app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
   let { phone, email } = req.body || {};
-  if (phone && phone.includes('@') && !email) {
+  if (phone && typeof phone === 'string' && phone.includes('@')) {
     email = phone;
     phone = '';
   }
@@ -200,7 +200,7 @@ app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
 // ─── VERIFY OTP ───────────────────────────────────────────────────────────────
 app.post(['/api/verify-otp', '/verify-otp'], (req, res) => {
   let { phone, email, otp } = req.body || {};
-  if (phone && phone.includes('@') && !email) {
+  if (phone && typeof phone === 'string' && phone.includes('@')) {
     email = phone;
     phone = '';
   }
