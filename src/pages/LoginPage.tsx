@@ -33,6 +33,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
   const [pendingUser, setPendingUser] = useState<any>(null);
   const [otpTargetPhone, setOtpTargetPhone] = useState('');
   const [otpTargetEmail, setOtpTargetEmail] = useState('');
+  const [mockResetOtp, setMockResetOtp] = useState<string | null>(null);
 
   useEffect(() => {
     try {
@@ -77,11 +78,15 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     }
     setError('');
     setSuccess('');
+    setMockResetOtp(null);
     setResetSending(true);
     try {
       const { sendPasswordReset } = await import('../utils/firebaseClient');
       const res = await sendPasswordReset(targetEmail);
       if (res.success) {
+        if (res.isMocked && res.otp) {
+          setMockResetOtp(res.otp);
+        }
         setSuccess(res.message || `Password reset instructions & code sent to ${targetEmail}. Please check your inbox!`);
         setResetStep(2);
       } else {
@@ -326,6 +331,18 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
             {/* Step 2 Fields: 6-Digit Code & New Password */}
             {resetStep === 2 && (
               <>
+                {mockResetOtp && (
+                  <div className="p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs text-center flex flex-col items-center gap-1.5 animate-blur-fade-up">
+                    <span className="font-semibold text-amber-300 text-[11px] uppercase tracking-wider">Demo Reset Code:</span>
+                    <span className="font-mono text-xl font-black tracking-[0.25em] text-amber-400 bg-black/60 px-4 py-1.5 rounded-xl border border-amber-400/40 select-all shadow-inner">
+                      {mockResetOtp}
+                    </span>
+                    <span className="text-[10px] text-white/50">
+                      (Enter this 6-digit code below to reset your password)
+                    </span>
+                  </div>
+                )}
+
                 <div className="animate-blur-fade-up">
                   <label className="block text-[11px] font-semibold text-amber-300 uppercase tracking-widest mb-1 ml-1">
                     6-Digit Security Code <span className="text-rose-400">*</span>

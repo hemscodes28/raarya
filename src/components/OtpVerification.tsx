@@ -28,6 +28,7 @@ export function OtpVerification({
   const [error, setError] = useState<string>("");
   const [isSending, setIsSending] = useState<boolean>(false);
   const [isVerifying, setIsVerifying] = useState<boolean>(false);
+  const [mockedOtpCode, setMockedOtpCode] = useState<string | null>(null);
 
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const confirmationResultRef = useRef<any>(null);
@@ -54,6 +55,7 @@ export function OtpVerification({
     setTimer(30);
     setError("");
     setOtpValues(Array(6).fill(""));
+    setMockedOtpCode(null);
 
     try {
       // 1. If phone is present without email, attempt Firebase SMS
@@ -71,7 +73,11 @@ export function OtpVerification({
       // 2. Call backend /api/send-otp (handles Nodemailer HTML Email & SMS)
       const { apiSendOtp } = await import("../utils/api");
       const res = await apiSendOtp(phone, email);
-      if (!res.success) {
+      if (res.success) {
+        if (res.isMocked && res.otp) {
+          setMockedOtpCode(res.otp);
+        }
+      } else {
         setError(res.message || "Failed to send verification code.");
       }
     } catch (err: any) {
@@ -240,6 +246,19 @@ export function OtpVerification({
                 Change
               </button>
             </div>
+
+            {/* Demo / Simulated OTP Code Banner */}
+            {mockedOtpCode && (
+              <div className="w-full mb-5 p-3 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-xs text-center flex flex-col items-center gap-1.5 animate-blur-fade-up">
+                <span className="font-semibold text-amber-300 text-[11px] uppercase tracking-wider">Demo Security Code:</span>
+                <span className="font-mono text-xl font-black tracking-[0.3em] text-amber-400 bg-black/60 px-4 py-1.5 rounded-xl border border-amber-400/40 shadow-inner select-all">
+                  {mockedOtpCode}
+                </span>
+                <span className="text-[10px] text-white/50">
+                  (Enter this 6-digit code below to complete verification)
+                </span>
+              </div>
+            )}
 
             {/* 6 Digit Input Boxes */}
             <div className="flex items-center justify-center gap-2 mb-6">

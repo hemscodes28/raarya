@@ -173,7 +173,7 @@ export async function sendFirebaseSms(
   }
 }
 
-export async function sendPasswordReset(email: string): Promise<{ success: boolean; message?: string }> {
+export async function sendPasswordReset(email: string): Promise<{ success: boolean; message?: string; isMocked?: boolean; otp?: string }> {
   let fbSuccess = false;
   if (auth) {
     try {
