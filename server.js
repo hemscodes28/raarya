@@ -376,19 +376,16 @@ async function sendEmailOtp(email, otp) {
     const host = process.env.SMTP_HOST;
     const port = process.env.SMTP_PORT ? parseInt(process.env.SMTP_PORT) : 587;
 
-    const transporter = host ? nodemailer.createTransport({
-      host: host,
-      port: port,
-      secure: port === 465,
+    const transporter = nodemailer.createTransport({
+      host: host || 'smtp.gmail.com',
+      port: port || 465,
+      secure: port === 465 || !port,
       auth: {
         user: smtpUser,
         pass: smtpPass
-      }
-    }) : nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: smtpUser,
-        pass: smtpPass
+      },
+      tls: {
+        rejectUnauthorized: false
       }
     });
 
