@@ -154,7 +154,11 @@ app.post(['/api/signup', '/signup'], (req, res) => {
 
 // ─── SEND OTP ──────────────────────────────────────────────────────────────────
 app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
-  const { phone, email } = req.body || {};
+  let { phone, email } = req.body || {};
+  if (phone && phone.includes('@') && !email) {
+    email = phone;
+    phone = '';
+  }
   if (!phone && !email) return res.status(400).json({ success: false, message: 'Phone number or email required.' });
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
@@ -195,7 +199,11 @@ app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
 
 // ─── VERIFY OTP ───────────────────────────────────────────────────────────────
 app.post(['/api/verify-otp', '/verify-otp'], (req, res) => {
-  const { phone, email, otp } = req.body || {};
+  let { phone, email, otp } = req.body || {};
+  if (phone && phone.includes('@') && !email) {
+    email = phone;
+    phone = '';
+  }
   if ((!phone && !email) || !otp) return res.status(400).json({ success: false, message: 'Phone/Email and OTP are required.' });
 
   const targetKey = (email || phone).toLowerCase().trim();

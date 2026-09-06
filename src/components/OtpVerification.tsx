@@ -49,7 +49,13 @@ export function OtpVerification({
 
   // Dispatch OTP via Email or Firebase SMS
   const triggerOtpSend = async () => {
-    if (!phone && !email) return;
+    let activePhone = phone;
+    let activeEmail = email;
+    if (activePhone && activePhone.includes('@') && !activeEmail) {
+      activeEmail = activePhone;
+      activePhone = "";
+    }
+    if (!activePhone && !activeEmail) return;
     setIsSending(true);
     setTimer(30);
     setError("");
@@ -57,8 +63,8 @@ export function OtpVerification({
 
     try {
       // 1. If phone is present without email, attempt Firebase SMS
-      if (phone && !email) {
-        const result = await sendFirebaseSms(phone, "recaptcha-container");
+      if (activePhone && !activeEmail) {
+        const result = await sendFirebaseSms(activePhone, "recaptcha-container");
         if (result.success && result.confirmationResult) {
           confirmationResultRef.current = result.confirmationResult;
           console.log("Firebase SMS dispatched!");
@@ -70,7 +76,7 @@ export function OtpVerification({
 
       // 2. Call backend /api/send-otp (handles Nodemailer HTML Email & SMS)
       const { apiSendOtp } = await import("../utils/api");
-      const res = await apiSendOtp(phone, email);
+      const res = await apiSendOtp(activePhone, activeEmail);
       if (!res.success) {
         setError(res.message || "Failed to send verification code.");
       }

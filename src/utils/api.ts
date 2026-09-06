@@ -290,7 +290,13 @@ export async function apiSendContactMessage(messageData: ContactEnquiryPayload):
 // ─── OTP SMS & EMAIL VERIFICATION ─────────────────────────────────────────────
 
 export async function apiSendOtp(phone: string, email?: string): Promise<ApiResponse> {
-  const payload: OtpRequestPayload = { phone, email };
+  let targetPhone = phone || '';
+  let targetEmail = email || '';
+  if (targetPhone.includes('@') && !targetEmail) {
+    targetEmail = targetPhone;
+    targetPhone = '';
+  }
+  const payload: OtpRequestPayload = { phone: targetPhone, email: targetEmail };
   try {
     const response = await fetchWithTimeout(`${BASE_URL}/send-otp`, {
       method: 'POST',
@@ -299,20 +305,26 @@ export async function apiSendOtp(phone: string, email?: string): Promise<ApiResp
     });
     const data = await response.json();
     if (data.isMocked && data.otp) {
-      const targetKey = (email || phone).toLowerCase().trim();
+      const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
       sessionStorage.setItem(`otp_${targetKey}`, data.otp);
     }
     return data;
   } catch (err) {
     const fallbackOtp = Math.floor(100000 + Math.random() * 900000).toString();
-    const targetKey = (email || phone).toLowerCase().trim();
+    const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
     sessionStorage.setItem(`otp_${targetKey}`, fallbackOtp);
     return { success: true, isMocked: true, otp: fallbackOtp, message: `Verification code generated (${fallbackOtp}).` };
   }
 }
 
 export async function apiVerifyOtp(phone: string, otp: string, email?: string): Promise<ApiResponse> {
-  const payload: OtpVerifyPayload = { phone, email, otp };
+  let targetPhone = phone || '';
+  let targetEmail = email || '';
+  if (targetPhone.includes('@') && !targetEmail) {
+    targetEmail = targetPhone;
+    targetPhone = '';
+  }
+  const payload: OtpVerifyPayload = { phone: targetPhone, email: targetEmail, otp };
   try {
     const response = await fetchWithTimeout(`${BASE_URL}/verify-otp`, {
       method: 'POST',
@@ -321,12 +333,12 @@ export async function apiVerifyOtp(phone: string, otp: string, email?: string): 
     });
     const data = await response.json();
     if (data.success) {
-      const targetKey = (email || phone).toLowerCase().trim();
+      const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
       sessionStorage.removeItem(`otp_${targetKey}`);
     }
     return data;
   } catch (err) {
-    const targetKey = (email || phone).toLowerCase().trim();
+    const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
     const stored = sessionStorage.getItem(`otp_${targetKey}`);
     if (otp === '123456' || (stored && stored === otp.trim())) {
       sessionStorage.removeItem(`otp_${targetKey}`);
