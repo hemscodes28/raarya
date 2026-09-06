@@ -18,15 +18,10 @@ async function sendEmailOtp(email, otp) {
 
   try {
     const transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
+      service: 'gmail',
       auth: {
         user: smtpUser,
         pass: smtpPass
-      },
-      tls: {
-        rejectUnauthorized: false
       }
     });
 
@@ -34,6 +29,7 @@ async function sendEmailOtp(email, otp) {
       from: `"RAARYA Groups Verification" <${smtpUser}>`,
       to: email,
       subject: `${otp} is your RAARYA Verification Code`,
+      text: `Hello,\n\nYou requested a security verification code to access your RAARYA account.\n\nYour 6-digit OTP code is: ${otp}\n\nThis code is valid for 10 minutes.\n\n© 2026 Raarya Groups & Properties.`,
       html: `
         <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background-color: #0c0c0e; color: #ffffff; padding: 32px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);">
           <div style="text-align: center; margin-bottom: 24px;">
@@ -63,10 +59,10 @@ async function sendEmailOtp(email, otp) {
 
     const info = await transporter.sendMail(mailOptions);
     console.log(`[Nodemailer] Sent real OTP email to ${email} (MessageId: ${info.messageId})`);
-    return { success: true, isMocked: false };
+    return { success: true, isMocked: false, messageId: info.messageId, response: info.response };
   } catch (err) {
-    console.error('[Nodemailer error]:', err.message);
-    return { success: false, error: err.message };
+    console.error('[Nodemailer error]:', err);
+    return { success: false, error: err.message || String(err) };
   }
 }
 
@@ -114,7 +110,7 @@ app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
     if (emailResult && !emailResult.success) {
       return res.status(500).json({
         success: false,
-        message: `Failed to send verification email to ${email}. Please check email address.`
+        message: `Failed to send email to ${email}: ${emailResult.error || 'SMTP Error'}`
       });
     }
     return res.json({
@@ -168,7 +164,7 @@ app.post(['/api/forgot-password', '/forgot-password'], async (req, res) => {
   if (emailResult && !emailResult.success) {
     return res.status(500).json({
       success: false,
-      message: `Unable to send password reset email to ${email}.`
+      message: `Unable to send password reset email to ${email}: ${emailResult.error}`
     });
   }
 
@@ -195,6 +191,14 @@ app.post(['/api/reset-password', '/reset-password'], (req, res) => {
   }
 
   return res.status(400).json({ success: false, message: 'Invalid or expired reset code. Check your email inbox.' });
+});
+
+// ─── DEBUG TEST ROUTE ────────────────────────────────────────────────────────
+app.get(['/api/test-send', '/test-send'], async (req, res) => {
+  const targetEmail = req.query.email || 'hemkumarr2803@gmail.com';
+  const testOtp = '123456';
+  const result = await sendEmailOtp(targetEmail, testOtp);
+  res.json({ targetEmail, result });
 });
 
 // ─── HEALTH / ROOT CHECK ──────────────────────────────────────────────────────

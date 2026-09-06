@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 
 async function test() {
-  console.log("Testing Gmail SMTP connection...");
+  console.log("Sending real test email to hemkumarr2803@gmail.com...");
   const smtpUser = 'raaryagroups@gmail.com';
   const smtpPass = 'hbtpxiotrupxdsoe';
 
@@ -13,21 +13,22 @@ async function test() {
       user: smtpUser,
       pass: smtpPass
     },
-    tls: {
-      rejectUnauthorized: false
-    }
+    logger: true,
+    debug: true
   });
 
   try {
     const info = await transporter.sendMail({
-      from: `"RAARYA Groups Test" <${smtpUser}>`,
-      to: 'raaryagroups@gmail.com',
-      subject: 'Test Verification Email',
-      html: '<h1>Test Email from RAARYA</h1>'
+      from: `"RAARYA Groups Verification" <${smtpUser}>`,
+      to: 'hemkumarr2803@gmail.com',
+      subject: 'RAARYA Verification Code Test - 998877',
+      html: '<h2>Your RAARYA verification code is: 998877</h2>'
     });
-    console.log("SUCCESS! MessageId:", info.messageId);
+    console.log("SUCCESS! Accepted by Gmail SMTP:", info.accepted);
+    console.log("MessageId:", info.messageId);
+    console.log("Response:", info.response);
   } catch (err) {
-    console.error("FAILED! Error details:", err);
+    console.error("FAILED! Error:", err);
   }
 }
 

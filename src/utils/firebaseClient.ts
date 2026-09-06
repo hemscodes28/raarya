@@ -13,12 +13,12 @@ import {
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from "firebase/app-check";
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "",
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "",
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "",
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "",
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "",
-  appId: import.meta.env.VITE_FIREBASE_APP_ID || "",
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyBooYMrZdEBZ7PVR7vo2jZtiMkrngZNft8",
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "raarya-web.firebaseapp.com",
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "raarya-web",
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "raarya-web.firebasestorage.app",
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "107793223236",
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:107793223236:web:33b63781061c703a413611",
 };
 
 const isFirebaseConfigured = !!firebaseConfig.apiKey;
