@@ -47,11 +47,94 @@ function getTransporter(smtpUser, smtpPass) {
   });
 }
 
-// Nodemailer helper using production Gmail SMTP credentials with instant high priority headers
+// Nodemailer / Transactional Email helper with Resend & Brevo API fallback for instant Vercel inbox delivery
 async function sendEmailOtp(email, otp) {
   const smtpUser = process.env.SMTP_USER || process.env.GMAIL_USER || 'raaryagroups@gmail.com';
   const smtpPass = process.env.SMTP_PASS || process.env.GMAIL_APP_PASSWORD || 'hbtpxiotrupxdsoe';
+  const resendApiKey = process.env.RESEND_API_KEY;
+  const brevoApiKey = process.env.BREVO_API_KEY;
 
+  const htmlContent = `
+    <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background-color: #0c0c0e; color: #ffffff; padding: 32px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);">
+      <div style="text-align: center; margin-bottom: 24px;">
+        <h2 style="color: #fbbf24; margin: 0; font-size: 26px; font-weight: bold; tracking-wide: 2px;">RAARYA GROUPS</h2>
+        <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Account Security Verification</p>
+      </div>
+      <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;" />
+      <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">Hello,</p>
+      <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
+        Your security verification code to access your RAARYA account is:
+      </p>
+      <div style="text-align: center; margin: 30px 0;">
+        <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #fbbf24; background: rgba(251,191,36,0.12); padding: 14px 28px; border-radius: 14px; border: 1px dashed rgba(251,191,36,0.4); display: inline-block;">
+          ${otp}
+        </span>
+      </div>
+      <p style="font-size: 13px; color: #a1a1aa; text-align: center; margin-top: 24px;">
+        This security code is valid for <strong>10 minutes</strong>. Do not share this code with anyone.
+      </p>
+      <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 24px; margin-bottom: 16px;" />
+      <p style="font-size: 11px; color: #71717a; text-align: center; margin: 0;">
+        © 2026 Raarya Groups & Properties. All rights reserved.
+      </p>
+    </div>
+  `;
+
+  // 1. Try Resend HTTP API (Instant 100ms delivery to Gmail inbox)
+  if (resendApiKey) {
+    try {
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${resendApiKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          from: 'RAARYA Groups <onboarding@resend.dev>',
+          to: [email],
+          subject: `Your RAARYA Security Code is ${otp}`,
+          html: htmlContent
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        console.log('[Resend API] Instant email sent to:', email);
+        return { success: true, isMocked: false, messageId: data.id };
+      }
+      console.warn('[Resend API warning]:', data);
+    } catch (e) {
+      console.error('[Resend Error]:', e);
+    }
+  }
+
+  // 2. Try Brevo HTTP API
+  if (brevoApiKey) {
+    try {
+      const res = await fetch('https://api.brevo.com/v3/smtp/email', {
+        method: 'POST',
+        headers: {
+          'api-key': brevoApiKey,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          sender: { name: 'RAARYA Groups', email: smtpUser },
+          to: [{ email }],
+          subject: `Your RAARYA Security Code is ${otp}`,
+          htmlContent: htmlContent
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        console.log('[Brevo API] Instant email sent to:', email);
+        return { success: true, isMocked: false, messageId: data.messageId };
+      }
+      console.warn('[Brevo API warning]:', data);
+    } catch (e) {
+      console.error('[Brevo Error]:', e);
+    }
+  }
+
+  // 3. Fallback to Nodemailer Gmail SMTP
   try {
     const transporter = getTransporter(smtpUser, smtpPass);
 
@@ -60,31 +143,7 @@ async function sendEmailOtp(email, otp) {
       to: email,
       subject: `Your RAARYA Security Code is ${otp}`,
       text: `Hello,\n\nYour RAARYA verification code is: ${otp}\n\nThis code is valid for 10 minutes.\n\n© 2026 Raarya Groups & Properties.`,
-      html: `
-        <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 500px; margin: 0 auto; background-color: #0c0c0e; color: #ffffff; padding: 32px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.12);">
-          <div style="text-align: center; margin-bottom: 24px;">
-            <h2 style="color: #fbbf24; margin: 0; font-size: 26px; font-weight: bold; tracking-wide: 2px;">RAARYA GROUPS</h2>
-            <p style="color: #a1a1aa; font-size: 13px; margin-top: 6px;">Account Security Verification</p>
-          </div>
-          <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-bottom: 24px;" />
-          <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">Hello,</p>
-          <p style="font-size: 15px; line-height: 1.6; color: #e4e4e7;">
-            Your security verification code to access your RAARYA account is:
-          </p>
-          <div style="text-align: center; margin: 30px 0;">
-            <span style="font-size: 34px; font-weight: 800; letter-spacing: 8px; color: #fbbf24; background: rgba(251,191,36,0.12); padding: 14px 28px; border-radius: 14px; border: 1px dashed rgba(251,191,36,0.4); display: inline-block;">
-              ${otp}
-            </span>
-          </div>
-          <p style="font-size: 13px; color: #a1a1aa; text-align: center; margin-top: 24px;">
-            This security code is valid for <strong>10 minutes</strong>. Do not share this code with anyone.
-          </p>
-          <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 24px; margin-bottom: 16px;" />
-          <p style="font-size: 11px; color: #71717a; text-align: center; margin: 0;">
-            © 2026 Raarya Groups & Properties. All rights reserved.
-          </p>
-        </div>
-      `,
+      html: htmlContent,
       headers: {
         'X-Priority': '1 (Highest)',
         'X-MSMail-Priority': 'High',
