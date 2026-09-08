@@ -89,8 +89,8 @@ function saveLocalDB(db: LocalDB) {
   localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
-// Fast fetch helper with 1.5s timeout to prevent buffering/hanging when backend server is offline
-async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 1500): Promise<Response> {
+// Reliable fetch helper with 15s timeout to support Vercel Serverless Function & Nodemailer SMTP response times
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 15000): Promise<Response> {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), timeoutMs);
   try {

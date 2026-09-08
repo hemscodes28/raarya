@@ -380,8 +380,9 @@ async function sendEmailOtp(email, otp) {
       host: host || 'smtp.gmail.com',
       port: port,
       secure: port === 465,
-      pool: true,
-      maxConnections: 5,
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
       auth: {
         user: smtpUser,
         pass: smtpPass

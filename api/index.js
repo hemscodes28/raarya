@@ -12,27 +12,22 @@ const pendingOtps = global._pendingOtps || new Map();
 if (!global._pendingOtps) global._pendingOtps = pendingOtps;
 
 // Singleton Nodemailer transporter with connection pooling
-let cachedTransporter = null;
-
 function getTransporter(smtpUser, smtpPass) {
-  if (!cachedTransporter) {
-    cachedTransporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      pool: true,
-      maxConnections: 5,
-      maxMessages: 100,
-      auth: {
-        user: smtpUser,
-        pass: smtpPass
-      },
-      tls: {
-        rejectUnauthorized: false
-      }
-    });
-  }
-  return cachedTransporter;
+  return nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+    auth: {
+      user: smtpUser,
+      pass: smtpPass
+    },
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
 }
 
 // Nodemailer helper using production Gmail SMTP credentials with instant high priority headers
