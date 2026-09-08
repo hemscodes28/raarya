@@ -82,24 +82,47 @@ async function sendEmailOtp(email, otp) {
 
   // 1. Try Resend HTTP API (Instant 100ms delivery to Gmail inbox)
   if (resendApiKey) {
+    const fromAddress = process.env.RESEND_FROM_EMAIL || 'RAARYA Groups <otp@raarya.com>';
     try {
-      const res = await fetch('https://api.resend.com/emails', {
+      let res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${resendApiKey}`,
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          from: 'RAARYA Groups <onboarding@resend.dev>',
+          from: fromAddress,
           to: [email],
           subject: `Your RAARYA Security Code is ${otp}`,
           html: htmlContent
         })
       });
-      const data = await res.json();
+      let data = await res.json();
       if (res.ok) {
         console.log('[Resend API] Instant email sent to:', email);
         return { success: true, isMocked: false, messageId: data.id };
+      }
+      
+      // Fallback to onboarding@resend.dev if domain verification is pending
+      if (!res.ok && fromAddress !== 'RAARYA Groups <onboarding@resend.dev>') {
+        res = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${resendApiKey}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            from: 'RAARYA Groups <onboarding@resend.dev>',
+            to: [email],
+            subject: `Your RAARYA Security Code is ${otp}`,
+            html: htmlContent
+          })
+        });
+        data = await res.json();
+        if (res.ok) {
+          console.log('[Resend API Onboarding Fallback] Email sent to:', email);
+          return { success: true, isMocked: false, messageId: data.id };
+        }
       }
       console.warn('[Resend API warning]:', data);
     } catch (e) {
