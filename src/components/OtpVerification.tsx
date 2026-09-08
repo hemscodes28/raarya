@@ -237,7 +237,7 @@ export function OtpVerification({
             </h3>
             <p className="text-xs text-white/50 mt-1 max-w-xs">
               {email 
-                ? "Enter the 6-digit security code sent to your email inbox" 
+                ? "Enter the 6-digit security code sent to your email (check Spam/Promotions folder if needed)" 
                 : "Enter the 6-digit security code sent to your mobile phone"}
             </p>
             
