@@ -12,6 +12,7 @@ export interface ApiResponse<T = any> {
   enquiries?: T[];
   isMocked?: boolean;
   otp?: string;
+  otpToken?: string;
   content?: string;
 }
 
@@ -47,6 +48,7 @@ export interface OtpVerifyPayload {
   phone: string;
   email?: string;
   otp: string;
+  otpToken?: string;
 }
 
 export interface PropertyListingPayload {

@@ -304,8 +304,11 @@ export async function apiSendOtp(phone: string, email?: string): Promise<ApiResp
       body: JSON.stringify(payload),
     });
     const data = await response.json();
+    const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
+    if (data.otpToken) {
+      sessionStorage.setItem(`otpToken_${targetKey}`, data.otpToken);
+    }
     if (data.isMocked && data.otp) {
-      const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
       sessionStorage.setItem(`otp_${targetKey}`, data.otp);
     }
     return data;
@@ -324,7 +327,10 @@ export async function apiVerifyOtp(phone: string, otp: string, email?: string): 
     targetEmail = targetPhone;
     targetPhone = '';
   }
-  const payload: OtpVerifyPayload = { phone: targetPhone, email: targetEmail, otp };
+  const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
+  const otpToken = sessionStorage.getItem(`otpToken_${targetKey}`) || undefined;
+
+  const payload: OtpVerifyPayload = { phone: targetPhone, email: targetEmail, otp, otpToken };
   try {
     const response = await fetchWithTimeout(`${BASE_URL}/verify-otp`, {
       method: 'POST',
@@ -333,15 +339,15 @@ export async function apiVerifyOtp(phone: string, otp: string, email?: string): 
     });
     const data = await response.json();
     if (data.success) {
-      const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
       sessionStorage.removeItem(`otp_${targetKey}`);
+      sessionStorage.removeItem(`otpToken_${targetKey}`);
     }
     return data;
   } catch (err) {
-    const targetKey = (targetEmail || targetPhone).toLowerCase().trim();
     const stored = sessionStorage.getItem(`otp_${targetKey}`);
     if (otp === '123456' || (stored && stored === otp.trim())) {
       sessionStorage.removeItem(`otp_${targetKey}`);
+      sessionStorage.removeItem(`otpToken_${targetKey}`);
       return { success: true, message: 'OTP verified successfully.' };
     }
     return { success: false, message: 'Invalid OTP code. Please check your inbox or code on screen.' };

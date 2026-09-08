@@ -1,15 +1,32 @@
 import express from 'express';
 import cors from 'cors';
 import nodemailer from 'nodemailer';
+import crypto from 'crypto';
 
 const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 
-// Memory OTP store for serverless instance lifecycle
+// Memory OTP store for local / single instance lifecycle
 const pendingOtps = global._pendingOtps || new Map();
 if (!global._pendingOtps) global._pendingOtps = pendingOtps;
+
+const OTP_SECRET = process.env.OTP_SECRET || 'raarya_sec_key_2026_coimbatore';
+
+function generateOtpToken(targetKey, otp, expiresAt) {
+  const hmac = crypto.createHmac('sha256', OTP_SECRET).update(`${targetKey}:${otp}:${expiresAt}`).digest('hex');
+  return `${expiresAt}.${hmac}`;
+}
+
+function verifyOtpToken(targetKey, otp, token) {
+  if (!token || typeof token !== 'string' || !token.includes('.')) return false;
+  const [expiresAtStr, hmac] = token.split('.');
+  const expiresAt = parseInt(expiresAtStr, 10);
+  if (isNaN(expiresAt) || Date.now() > expiresAt) return false;
+  const expectedHmac = crypto.createHmac('sha256', OTP_SECRET).update(`${targetKey}:${otp}:${expiresAtStr}`).digest('hex');
+  return hmac === expectedHmac;
+}
 
 // Singleton Nodemailer transporter with connection pooling
 function getTransporter(smtpUser, smtpPass) {
@@ -158,8 +175,10 @@ app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
 
   const otp = Math.floor(100000 + Math.random() * 900000).toString();
   const targetKey = (email || phone).toLowerCase().trim();
+  const expiresAt = Date.now() + 10 * 60 * 1000;
 
-  pendingOtps.set(targetKey, { otp, expiresAt: Date.now() + 10 * 60 * 1000 });
+  pendingOtps.set(targetKey, { otp, expiresAt });
+  const otpToken = generateOtpToken(targetKey, otp, expiresAt);
 
   let emailResult = null;
   if (email) {
@@ -181,6 +200,7 @@ app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
     return res.json({
       success: true,
       isMocked: false,
+      otpToken,
       message: `Verification code sent to your email address: ${email}`
     });
   }
@@ -188,13 +208,14 @@ app.post(['/api/send-otp', '/send-otp'], async (req, res) => {
   res.json({
     success: true,
     isMocked: false,
+    otpToken,
     message: `Verification code sent to your mobile phone: ${phone}`
   });
 });
 
 // ─── VERIFY OTP ───────────────────────────────────────────────────────────────
 app.post(['/api/verify-otp', '/verify-otp'], (req, res) => {
-  let { phone, email, otp } = req.body || {};
+  let { phone, email, otp, otpToken } = req.body || {};
   if (phone && typeof phone === 'string' && phone.includes('@')) {
     email = phone;
     phone = '';
@@ -204,16 +225,13 @@ app.post(['/api/verify-otp', '/verify-otp'], (req, res) => {
   const targetKey = (email || phone).toLowerCase().trim();
   const record = pendingOtps.get(targetKey);
 
-  // Master fallback code 123456 or matching record
-  if (otp.trim() === '123456' || (record && record.otp === otp.trim() && Date.now() <= record.expiresAt)) {
+  const isMasterCode = otp.trim() === '123456';
+  const isMemoryValid = record && record.otp === otp.trim() && Date.now() <= record.expiresAt;
+  const isTokenValid = otpToken && verifyOtpToken(targetKey, otp.trim(), otpToken);
+
+  if (isMasterCode || isMemoryValid || isTokenValid) {
     if (record) pendingOtps.delete(targetKey);
     return res.json({ success: true, message: 'OTP verified successfully.' });
-  }
-
-  if (!record) return res.status(400).json({ success: false, message: 'No OTP requested or code has expired. Please resend code.' });
-  if (Date.now() > record.expiresAt) {
-    pendingOtps.delete(targetKey);
-    return res.status(400).json({ success: false, message: 'OTP code has expired. Please resend code.' });
   }
 
   return res.status(400).json({ success: false, message: 'Incorrect security code. Please check your email inbox.' });
