@@ -48,7 +48,7 @@ export function OtpVerification({
   }, [timer, isTargetMissing]);
 
   // Dispatch OTP via Email or Firebase SMS
-  const triggerOtpSend = async () => {
+  const triggerOtpSend = async (isResend = false) => {
     let activePhone = phone;
     let activeEmail = email;
     if (activePhone && activePhone.includes('@') && !activeEmail) {
@@ -56,6 +56,20 @@ export function OtpVerification({
       activePhone = "";
     }
     if (!activePhone && !activeEmail) return;
+
+    const targetKey = (activeEmail || activePhone).toLowerCase().trim();
+    if (isResend) {
+      sessionStorage.removeItem(`otpToken_${targetKey}`);
+    } else {
+      const existingToken = sessionStorage.getItem(`otpToken_${targetKey}`);
+      if (existingToken) {
+        setIsSending(false);
+        setTimer(30);
+        setTimeout(() => inputRefs.current[0]?.focus(), 100);
+        return;
+      }
+    }
+
     setIsSending(true);
     setTimer(30);
     setError("");
@@ -291,7 +305,7 @@ export function OtpVerification({
                 <span>Resend code in <strong className="text-white/80 font-mono">{timer}s</strong></span>
               ) : (
                 <button
-                  onClick={triggerOtpSend}
+                  onClick={() => triggerOtpSend(true)}
                   disabled={isSending}
                   className="flex items-center gap-1.5 text-amber-400 hover:text-amber-300 font-semibold transition-colors disabled:opacity-50 cursor-pointer"
                 >

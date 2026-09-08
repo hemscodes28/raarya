@@ -122,7 +122,7 @@ async function sendFast2Sms(phone, otp) {
 }
 
 // ─── USER AUTHENTICATION ──────────────────────────────────────────────────────
-app.post(['/api/login', '/login'], (req, res) => {
+app.post(['/api/login', '/login'], async (req, res) => {
   const { phone, password } = req.body || {};
   if (!phone || !password) return res.status(400).json({ success: false, message: 'Phone/Email and password are required.' });
 
@@ -136,9 +136,20 @@ app.post(['/api/login', '/login'], (req, res) => {
     userPhone = target;
   }
 
+  let otpToken = null;
+  if (userEmail) {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const targetKey = userEmail.toLowerCase().trim();
+    const expiresAt = Date.now() + 10 * 60 * 1000;
+    pendingOtps.set(targetKey, { otp, expiresAt });
+    otpToken = generateOtpToken(targetKey, otp, expiresAt);
+    sendEmailOtp(userEmail, otp).catch(err => console.error("Login OTP error:", err));
+  }
+
   res.json({
     success: true,
     message: 'Login successful!',
+    otpToken,
     user: {
       name: userEmail ? userEmail.split('@')[0] : 'RAARYA User',
       email: userEmail,
@@ -148,13 +159,24 @@ app.post(['/api/login', '/login'], (req, res) => {
   });
 });
 
-app.post(['/api/signup', '/signup'], (req, res) => {
+app.post(['/api/signup', '/signup'], async (req, res) => {
   const { name, phone, email, password } = req.body || {};
   if (!phone && !email) return res.status(400).json({ success: false, message: 'Phone or email is required.' });
+
+  const targetEmail = (email || (phone && phone.includes('@') ? phone : '')).toLowerCase().trim();
+  let otpToken = null;
+  if (targetEmail) {
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiresAt = Date.now() + 10 * 60 * 1000;
+    pendingOtps.set(targetEmail, { otp, expiresAt });
+    otpToken = generateOtpToken(targetEmail, otp, expiresAt);
+    sendEmailOtp(targetEmail, otp).catch(err => console.error("Signup OTP error:", err));
+  }
 
   res.json({
     success: true,
     message: 'Account created successfully!',
+    otpToken,
     user: {
       name: name || (email ? email.split('@')[0] : 'RAARYA User'),
       email: email || '',

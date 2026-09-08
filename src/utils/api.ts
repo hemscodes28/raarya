@@ -109,7 +109,12 @@ export async function apiSignup(userData: SignupPayload): Promise<ApiResponse<Us
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(userData),
     });
-    return await response.json();
+    const data = await response.json();
+    if (data.otpToken) {
+      const targetKey = (userData.email || userData.phone || '').toLowerCase().trim();
+      if (targetKey) sessionStorage.setItem(`otpToken_${targetKey}`, data.otpToken);
+    }
+    return data;
   } catch (err) {
     const db = getLocalDB();
     
@@ -149,7 +154,15 @@ export async function apiLogin(credentials: LoginPayload): Promise<ApiResponse<U
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(credentials),
     });
-    return await response.json();
+    const data = await response.json();
+    if (data.otpToken) {
+      const targetKey = credentials.phone.toLowerCase().trim();
+      if (targetKey) sessionStorage.setItem(`otpToken_${targetKey}`, data.otpToken);
+      if (data.user?.email) {
+        sessionStorage.setItem(`otpToken_${data.user.email.toLowerCase().trim()}`, data.otpToken);
+      }
+    }
+    return data;
   } catch (err) {
     const db = getLocalDB();
     const target = credentials.phone.trim().toLowerCase();
