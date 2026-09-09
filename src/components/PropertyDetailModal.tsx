@@ -130,23 +130,24 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/90 sm:backdrop-blur-xl transition-opacity duration-200"
+          className="fixed inset-0 bg-black/85 transition-opacity duration-150"
         />
 
         {/* Main Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 16 }}
+          initial={{ opacity: 0, scale: 0.97, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.96, y: 16 }}
-          transition={{ type: 'spring', damping: 30, stiffness: 350 }}
-          className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto bg-[#0d0d10] text-white border border-white/15 rounded-3xl shadow-2xl sm:backdrop-blur-2xl scrollbar-thin scrollbar-thumb-white/20 my-auto transform-gpu"
+          exit={{ opacity: 0, scale: 0.97, y: 12 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto bg-[#0d0d12] text-white border border-white/15 rounded-3xl shadow-2xl scrollbar-thin scrollbar-thumb-white/20 my-auto will-change-transform"
         >
           {/* Close Button */}
           <button
             type="button"
             onClick={onClose}
-            className="absolute top-4 right-4 z-30 flex size-10 items-center justify-center rounded-full bg-black/75 text-white/90 hover:bg-black hover:text-white border border-amber-400/40 backdrop-blur-md transition-all shadow-lg cursor-pointer hover:scale-105"
+            className="absolute top-4 right-4 z-30 flex size-10 items-center justify-center rounded-full bg-black/80 text-white/90 hover:bg-black hover:text-white border border-amber-400/40 transition-all shadow-lg cursor-pointer hover:scale-105"
             aria-label="Close modal"
           >
             <X className="size-5" />
@@ -155,7 +156,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
           {/* GALLERY HERO SECTION WITH LUXURY CREAM / CHAMPAGNE BLENDED BORDER */}
           <div className="relative p-3 sm:p-5 md:p-6 bg-gradient-to-b from-[#09090c] via-[#0e0e12] to-[#0a0a0d] border-b border-white/10">
             {/* Luxury Outer Frame with Cream / Ivory Champagne Border & Glowing Blended Corners */}
-            <div className="relative group/showcase rounded-2xl md:rounded-3xl p-1.5 sm:p-2 bg-[#121218] border-2 border-[#e8d5b7]/70 hover:border-[#f5ebe0] shadow-[0_0_35px_rgba(232,213,183,0.28)] hover:shadow-[0_0_55px_rgba(245,235,224,0.45)] transition-all duration-500 overflow-hidden">
+            <div className="relative group/showcase rounded-2xl md:rounded-3xl p-1.5 sm:p-2 bg-[#121218] border-2 border-[#e8d5b7]/70 hover:border-[#f5ebe0] shadow-[0_0_30px_rgba(232,213,183,0.2)] hover:shadow-[0_0_45px_rgba(245,235,224,0.35)] transition-all duration-300 overflow-hidden">
               
               {/* 4 Blended Corner Radial Light Glows */}
               <div className="absolute top-0 left-0 size-28 corner-glow-tl pointer-events-none z-10" />
@@ -176,16 +177,16 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     animate="center"
                     exit="exit"
                     transition={{
-                      x: { type: 'spring', stiffness: 280, damping: 30 },
-                      opacity: { duration: 0.35 },
-                      scale: { duration: 0.35 },
+                      x: { duration: 0.25, ease: 'easeOut' },
+                      opacity: { duration: 0.2 },
+                      scale: { duration: 0.2 },
                     }}
-                    className="absolute inset-0 h-full w-full object-cover group-hover/showcase:scale-[1.02] transition-transform duration-700 ease-out"
+                    className="absolute inset-0 h-full w-full object-cover group-hover/showcase:scale-[1.02] transition-transform duration-500 ease-out"
                   />
                 </AnimatePresence>
 
                 {/* Cream Shimmer Light Beam Swipe across frame on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#f5ebe0]/25 to-transparent -translate-x-full group-hover/showcase:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-10" />
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#f5ebe0]/25 to-transparent -translate-x-full group-hover/showcase:translate-x-full transition-transform duration-700 ease-in-out pointer-events-none z-10" />
 
                 {/* Subtle vignette for badge legibility */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30 pointer-events-none z-10" />
@@ -195,11 +196,11 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                   <span className="px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase bg-[#e8d5b7] text-[#141414] rounded-full shadow-lg border border-[#f5ebe0]/60">
                     {property.type === 'buy' ? 'For Sale' : property.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
                   </span>
-                  <span className="px-3.5 py-1 text-[11px] font-semibold tracking-wide bg-black/60 text-white backdrop-blur-md border border-white/20 rounded-full shadow-lg">
+                  <span className="px-3.5 py-1 text-[11px] font-semibold tracking-wide bg-black/80 text-white border border-white/20 rounded-full shadow-lg">
                     {propType}
                   </span>
                   {galleryImages.length > 1 && (
-                    <span className="px-3.5 py-1 text-[11px] font-medium tracking-wide bg-black/75 text-[#e8d5b7] backdrop-blur-md border border-[#e8d5b7]/40 rounded-full shadow-lg">
+                    <span className="px-3.5 py-1 text-[11px] font-medium tracking-wide bg-black/85 text-[#e8d5b7] border border-[#e8d5b7]/40 rounded-full shadow-lg">
                       Photo {activeImageIndex + 1} of {galleryImages.length}
                     </span>
                   )}
@@ -211,7 +212,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     <button
                       type="button"
                       onClick={prevImage}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/70 text-white hover:bg-[#e8d5b7] hover:text-black border border-[#e8d5b7]/40 hover:border-[#f5ebe0] backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/80 text-white hover:bg-[#e8d5b7] hover:text-black border border-[#e8d5b7]/40 hover:border-[#f5ebe0] transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
                       aria-label="Previous Photo"
                     >
                       <ChevronLeft className="size-6 group-hover/btn:-translate-x-0.5 transition-transform" />
@@ -219,7 +220,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     <button
                       type="button"
                       onClick={nextImage}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/70 text-white hover:bg-[#e8d5b7] hover:text-black border border-[#e8d5b7]/40 hover:border-[#f5ebe0] backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/80 text-white hover:bg-[#e8d5b7] hover:text-black border border-[#e8d5b7]/40 hover:border-[#f5ebe0] transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
                       aria-label="Next Photo"
                     >
                       <ChevronRight className="size-6 group-hover/btn:translate-x-0.5 transition-transform" />
@@ -272,7 +273,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                 </div>
               </div>
 
-              <div className="shrink-0 md:text-right bg-white/5 p-4 rounded-2xl border border-white/10 backdrop-blur-xl">
+              <div className="shrink-0 md:text-right bg-[#161622] p-4 rounded-2xl border border-white/10">
                 <span className="text-[11px] uppercase tracking-widest text-amber-400 font-bold block">Listing Price</span>
                 <span className="text-3xl font-black text-white tracking-tight">{property.price}</span>
               </div>
@@ -280,7 +281,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
 
             {/* DYNAMIC SPECS CARDS (Real Overview Data from raarya.com) */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
+              <div className="p-4 rounded-2xl bg-[#161622] border border-white/10 flex items-center gap-3">
                 <div className="size-10 rounded-xl bg-amber-500/10 text-amber-400 flex items-center justify-center shrink-0">
                   <Square className="size-5" />
                 </div>
@@ -291,7 +292,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
               </div>
 
               {property.beds > 0 ? (
-                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
+                <div className="p-4 rounded-2xl bg-[#161622] border border-white/10 flex items-center gap-3">
                   <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
                     <Bed className="size-5" />
                   </div>
@@ -301,7 +302,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                   </div>
                 </div>
               ) : (
-                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
+                <div className="p-4 rounded-2xl bg-[#161622] border border-white/10 flex items-center gap-3">
                   <div className="size-10 rounded-xl bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
                     <Layers className="size-5" />
                   </div>
@@ -313,7 +314,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
               )}
 
               {property.baths > 0 ? (
-                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
+                <div className="p-4 rounded-2xl bg-[#161622] border border-white/10 flex items-center gap-3">
                   <div className="size-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
                     <Bath className="size-5" />
                   </div>
@@ -323,7 +324,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                   </div>
                 </div>
               ) : (
-                <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
+                <div className="p-4 rounded-2xl bg-[#161622] border border-white/10 flex items-center gap-3">
                   <div className="size-10 rounded-xl bg-blue-500/10 text-blue-400 flex items-center justify-center shrink-0">
                     <Clock className="size-5" />
                   </div>
@@ -334,7 +335,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                 </div>
               )}
 
-              <div className="p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl flex items-center gap-3">
+              <div className="p-4 rounded-2xl bg-[#161622] border border-white/10 flex items-center gap-3">
                 <div className="size-10 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center shrink-0">
                   <ShieldCheck className="size-5" />
                 </div>
@@ -357,7 +358,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                   </h3>
 
                   {descPoints.length > 0 ? (
-                    <div className="space-y-3.5 p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl">
+                    <div className="space-y-3.5 p-6 rounded-2xl bg-[#14141e] border border-white/10">
                       {descPoints.map((point, idx) => (
                         <div key={idx} className="flex items-start gap-3">
                           <div className="size-5 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0 mt-0.5 border border-amber-500/30">
@@ -370,7 +371,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                       ))}
                     </div>
                   ) : (
-                    <div className="p-6 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-xl text-white/90 text-[14.5px] leading-relaxed">
+                    <div className="p-6 rounded-2xl bg-[#14141e] border border-white/10 text-white/90 text-[14.5px] leading-relaxed">
                       {property.description}
                     </div>
                   )}
@@ -392,7 +393,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
 
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-3.5">
                     {/* Item 1: Listed For */}
-                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824] via-[#12121c] to-[#0d0d14] border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
                       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
@@ -406,7 +407,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     </div>
 
                     {/* Item 2: Property Type */}
-                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824] via-[#12121c] to-[#0d0d14] border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
                       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-blue-500/15 text-blue-400 border border-blue-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
@@ -420,7 +421,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     </div>
 
                     {/* Item 3: Extent / Area */}
-                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824] via-[#12121c] to-[#0d0d14] border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
                       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
@@ -434,7 +435,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     </div>
 
                     {/* Item 4: Construction Status */}
-                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824] via-[#12121c] to-[#0d0d14] border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
                       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-purple-500/15 text-purple-400 border border-purple-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
@@ -448,7 +449,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     </div>
 
                     {/* Item 5: Furnishing */}
-                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824] via-[#12121c] to-[#0d0d14] border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
                       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
@@ -462,7 +463,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     </div>
 
                     {/* Item 6: Legal Approvals */}
-                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824]/90 via-[#12121c]/95 to-[#0d0d14] border border-white/10 hover:border-amber-400/60 backdrop-blur-xl transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
+                    <div className="group relative overflow-hidden p-4 rounded-2xl bg-gradient-to-br from-[#181824] via-[#12121c] to-[#0d0d14] border border-white/10 hover:border-amber-400/60 transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_8px_30px_rgb(245,158,11,0.2)] cursor-default">
                       <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-amber-400 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       <div className="flex items-center gap-3">
                         <div className="p-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30 group-hover:scale-110 group-hover:rotate-3 transition-transform duration-300 shrink-0">
@@ -484,7 +485,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     Address
                   </h3>
 
-                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="p-4 rounded-xl bg-[#161622] border border-white/10">
                     <p className="text-[14.5px] text-white font-medium leading-relaxed">
                       {property.location}
                     </p>
@@ -495,7 +496,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
               {/* Right Column: NEW ULTRA-MODERN & LUXURIOUS LISTED BY CARD */}
               <div className="lg:col-span-4 space-y-6">
                 {/* MODERN GLASSMORPHISM LISTED BY AGENT CARD */}
-                <div className="relative overflow-hidden p-6 rounded-3xl bg-gradient-to-br from-amber-500/15 via-white/5 to-black/80 border border-amber-500/30 backdrop-blur-2xl shadow-2xl space-y-5">
+                <div className="relative overflow-hidden p-6 rounded-3xl bg-gradient-to-br from-amber-500/15 via-[#14141e] to-black/90 border border-amber-500/30 shadow-2xl space-y-5">
                   <div className="absolute top-0 right-0 p-8 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
 
                   {/* Card Header */}
@@ -561,7 +562,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
-                    className="p-6 rounded-3xl bg-white/5 border border-white/10 backdrop-blur-xl space-y-4"
+                    className="p-6 rounded-3xl bg-[#14141e] border border-white/10 space-y-4"
                   >
                     <h4 className="text-sm font-bold text-white">Book Site Inspection</h4>
                     {formSubmitted ? (

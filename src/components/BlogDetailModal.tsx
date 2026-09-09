@@ -55,20 +55,21 @@ export function BlogDetailModal({ post, onClose }: BlogDetailModalProps) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          transition={{ duration: 0.15 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/85 sm:backdrop-blur-md transition-opacity duration-200"
+          className="fixed inset-0 bg-black/80 transition-opacity duration-150"
         />
 
         {/* Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96, y: 12 }}
+          initial={{ opacity: 0, scale: 0.97, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.96, y: 12 }}
-          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-neutral-800 border border-neutral-200/50 rounded-3xl shadow-2xl my-auto scrollbar-thin scrollbar-thumb-neutral-200 transform-gpu"
+          exit={{ opacity: 0, scale: 0.97, y: 12 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-neutral-800 border border-neutral-200/50 rounded-3xl shadow-2xl my-auto scrollbar-thin scrollbar-thumb-neutral-200 will-change-transform"
         >
           {/* Back/Close header bar */}
-          <div className="sticky top-0 bg-white/95 backdrop-blur-md z-30 px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
+          <div className="sticky top-0 bg-white z-30 px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
             <button
               onClick={onClose}
               className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-neutral-500 hover:text-black transition-colors cursor-pointer"
