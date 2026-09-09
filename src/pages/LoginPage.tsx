@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Phone } from 'lucide-react';
+import { motion } from 'motion/react';
 import BoomerangVideoBg from '../components/BoomerangVideoBg';
 import { OtpVerification } from '../components/OtpVerification';
 import { apiSignup, apiLogin } from '../utils/api';
@@ -235,15 +236,17 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         </button>
       </div>
 
-      {/* Auth Card (Gaps Top & Bottom, No Overlap with Header) */}
-      <div 
-        className="relative z-10 w-full max-w-[460px] h-auto rounded-3xl p-5 sm:p-7 text-white shadow-2xl flex flex-col justify-between overflow-hidden animate-blur-fade-up my-auto my-4 sm:my-6 shrink-0"
+      {/* Crisp, Instant Luxury Auth Card */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.96, y: 8 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.2, ease: "easeOut" }}
+        className="relative z-10 w-full max-w-[460px] h-auto rounded-3xl p-5 sm:p-7 text-white shadow-2xl flex flex-col justify-between overflow-hidden my-auto my-4 sm:my-6 shrink-0"
         style={{
-          animationDelay: '150ms',
-          background: 'rgba(12, 12, 14, 0.65)',
+          background: 'rgba(12, 12, 14, 0.75)',
           backdropFilter: 'blur(40px)',
           WebkitBackdropFilter: 'blur(40px)',
-          border: '1px solid rgba(255, 255, 255, 0.14)',
+          border: '1px solid rgba(255, 255, 255, 0.16)',
           boxShadow: '0 32px 80px -16px rgba(0, 0, 0, 0.9)'
         }}
       >
@@ -254,10 +257,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         {/* Card Header (Logo & Welcome) */}
         <div className="flex flex-col items-center mb-3 relative z-10">
           {/* Logo badge */}
-          <div 
-            className="flex items-center gap-2 px-4 py-1 rounded-full border border-white/15 mb-2 bg-white/5 backdrop-blur-md animate-blur-fade-up"
-            style={{ animationDelay: '300ms' }}
-          >
+          <div className="flex items-center gap-2 px-4 py-1 rounded-full border border-white/15 mb-2 bg-white/5 backdrop-blur-md">
             <img
               src={`${import.meta.env.BASE_URL}logo.png`}
               alt="RAARYA"
@@ -267,18 +267,12 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
           </div>
 
           <h2 
-            className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-white animate-blur-fade-up"
-            style={{ 
-              animationDelay: '400ms',
-              fontFamily: "'PP Editorial New', 'Playfair Display', Georgia, serif" 
-            }}
+            className="text-center text-2xl sm:text-3xl font-bold tracking-tight text-white"
+            style={{ fontFamily: "'PP Editorial New', 'Playfair Display', Georgia, serif" }}
           >
             {isForgotPassword ? 'Reset Password' : (isSignUp ? 'Create Your Account' : 'Welcome Back')}
           </h2>
-          <p 
-            className="text-center text-white/60 text-xs mt-1 animate-blur-fade-up"
-            style={{ animationDelay: '500ms' }}
-          >
+          <p className="text-center text-white/60 text-xs mt-1">
             {isForgotPassword 
               ? 'Enter your registered email address to receive reset instructions' 
               : (isSignUp ? 'Sign up to discover luxury villa plots' : 'Sign in to access premium listings')}
@@ -289,18 +283,18 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         {isForgotPassword ? (
           <form onSubmit={resetStep === 1 ? handleForgotPasswordSubmit : handleResetPasswordConfirm} className="flex flex-col gap-3 relative z-10 my-2">
             {error && (
-              <div className="bg-red-500/15 border border-red-500/30 text-red-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+              <div className="bg-red-500/15 border border-red-500/30 text-red-200 text-xs px-4 py-2.5 rounded-xl">
                 {error}
               </div>
             )}
             {success && (
-              <div className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+              <div className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs px-4 py-2.5 rounded-xl">
                 {success}
               </div>
             )}
 
             {/* Email Address Field */}
-            <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
+            <div>
               <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                 Registered Email Address <span className="text-rose-400">*</span>
               </label>
@@ -324,7 +318,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
             {/* Step 2 Fields: 6-Digit Code & New Password */}
             {resetStep === 2 && (
               <>
-                <div className="animate-blur-fade-up">
+                <div>
                   <label className="block text-[11px] font-semibold text-amber-300 uppercase tracking-widest mb-1 ml-1">
                     6-Digit Security Code <span className="text-rose-400">*</span>
                   </label>
@@ -345,7 +339,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
                   </div>
                 </div>
 
-                <div className="animate-blur-fade-up">
+                <div>
                   <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                     New Password <span className="text-rose-400">*</span>
                   </label>
@@ -409,12 +403,12 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
           <form onSubmit={handleSubmit} className="flex flex-col gap-2.5 relative z-10">
             
             {error && (
-              <div className="bg-red-500/15 border border-red-500/30 text-red-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+              <div className="bg-red-500/15 border border-red-500/30 text-red-200 text-xs px-4 py-2.5 rounded-xl">
                 {error}
               </div>
             )}
             {success && (
-              <div className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs px-4 py-2.5 rounded-xl animate-blur-fade-up">
+              <div className="bg-emerald-500/15 border border-emerald-500/30 text-emerald-200 text-xs px-4 py-2.5 rounded-xl">
                 {success}
               </div>
             )}
@@ -422,7 +416,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
             <div className="flex flex-col gap-2.5 max-h-[calc(100vh-280px)] sm:max-h-none overflow-y-auto custom-scrollbar pr-0.5">
               {/* Name Field (Sign Up Only) */}
               {isSignUp && (
-                <div className="animate-blur-fade-up" style={{ animationDelay: '550ms' }}>
+                <div>
                   <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                     Full Name <span className="text-rose-400">*</span>
                   </label>
@@ -445,7 +439,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
               {!isSignUp ? (
                 <>
                   {/* Phone Number Entry (Login) */}
-                  <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
+                  <div>
                     <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                       Phone Number <span className="text-white/40 lowercase font-normal">(or enter email below)</span>
                     </label>
@@ -468,7 +462,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
                   </div>
 
                   {/* Email Address Entry (Login) */}
-                  <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
+                  <div>
                     <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                       Email Address <span className="text-white/40 lowercase font-normal">(or enter phone above)</span>
                     </label>
@@ -492,7 +486,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
               ) : (
                 <>
                   {/* Phone Field (Sign Up) */}
-                  <div className="animate-blur-fade-up" style={{ animationDelay: '580ms' }}>
+                  <div>
                     <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                       Phone Number <span className="text-rose-400">*</span>
                     </label>
@@ -512,7 +506,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
                   </div>
 
                   {/* Email Field (Sign Up) */}
-                  <div className="animate-blur-fade-up" style={{ animationDelay: '610ms' }}>
+                  <div>
                     <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                       Email Address <span className="text-rose-400">*</span>
                     </label>
@@ -533,7 +527,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
               )}
 
               {/* Password Field */}
-              <div className="animate-blur-fade-up" style={{ animationDelay: '650ms' }}>
+              <div>
                 <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                   Password <span className="text-rose-400">*</span>
                 </label>
@@ -566,7 +560,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
 
               {/* Confirm Password Field (Sign Up Only) */}
               {isSignUp && (
-                <div className="animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
+                <div>
                   <label className="block text-[11px] font-semibold text-white/70 uppercase tracking-widest mb-1 ml-1">
                     Confirm Password <span className="text-rose-400">*</span>
                   </label>
@@ -587,7 +581,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
 
               {/* Remember Me & Forgot Password (Login Only) */}
               {!isSignUp && (
-                <div className="flex items-center justify-between mt-0.5 text-xs text-white/70 animate-blur-fade-up" style={{ animationDelay: '700ms' }}>
+                <div className="flex items-center justify-between mt-0.5 text-xs text-white/70">
                   <label className="flex items-center gap-2 cursor-pointer hover:text-white transition-colors select-none">
                     <input
                       type="checkbox"
@@ -612,8 +606,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold py-3 rounded-xl text-xs tracking-wide hover:from-amber-300 hover:to-amber-400 active:scale-[0.98] transition-all duration-300 shadow-lg shadow-amber-500/20 mt-2 animate-blur-fade-up disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
-              style={{ animationDelay: '750ms' }}
+              className="w-full bg-gradient-to-r from-amber-400 to-amber-500 text-black font-bold py-3 rounded-xl text-xs tracking-wide hover:from-amber-300 hover:to-amber-400 active:scale-[0.98] transition-all duration-300 shadow-lg shadow-amber-500/20 mt-2 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 cursor-pointer"
             >
               {isLoading ? (
                 <span className="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin" />
@@ -625,14 +618,14 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         )}
 
         {/* Divider */}
-        <div className="flex items-center gap-3 my-3 relative z-10 animate-blur-fade-up" style={{ animationDelay: '800ms' }}>
+        <div className="flex items-center gap-3 my-3 relative z-10">
           <div className="flex-1 h-px bg-white/10" />
           <span className="text-[10px] text-white/40 font-bold uppercase tracking-wider">OR</span>
           <div className="flex-1 h-px bg-white/10" />
         </div>
 
         {/* Social Authentication */}
-        <div className="relative z-10 animate-blur-fade-up" style={{ animationDelay: '850ms' }}>
+        <div className="relative z-10">
           <button
             type="button"
             onClick={handleGoogleSignIn} disabled={isLoading} className="w-full flex items-center justify-center gap-2.5 rounded-xl py-2.5 text-xs font-semibold border border-white/15 bg-white/5 hover:bg-white/10 transition-all duration-300 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
@@ -648,7 +641,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         </div>
 
         {/* Toggle Login/Signup Switcher */}
-        <p className="text-center text-xs text-white/60 mt-4 relative z-10 animate-blur-fade-up" style={{ animationDelay: '900ms' }}>
+        <p className="text-center text-xs text-white/60 mt-4 relative z-10">
           {isSignUp ? 'Already have an account? ' : "Don't have an account? "}
           <button
             type="button"
@@ -658,7 +651,7 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
             {isSignUp ? 'Login' : 'Register'}
           </button>
         </p>
-      </div>
+      </motion.div>
 
       {showOtpModal && (
         <OtpVerification
