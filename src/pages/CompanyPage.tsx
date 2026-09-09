@@ -115,7 +115,7 @@ export function CompanyPage() {
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#F8F8F8]/20 to-[#F8F8F8] pointer-events-none z-10" />
 
       {/* ─── 1. HERO HEADER SECTION (Compact spacing to eliminate gap) ─── */}
-      <section className="relative pt-24 pb-8 md:pt-32 md:pb-10 px-4 sm:px-6 lg:px-8 border-b border-black/5 overflow-hidden z-20">
+      <section className="relative pt-4 sm:pt-6 pb-8 md:pt-10 md:pb-10 px-4 sm:px-6 lg:px-8 border-b border-black/5 overflow-hidden z-20">
         <div className="max-w-7xl mx-auto text-center space-y-4 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: -15 }}

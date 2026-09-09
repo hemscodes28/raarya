@@ -46,12 +46,11 @@ export default function App() {
     }
   }, [currentUser, postPropertyPending]);
 
-  // Initial mount load/reload transition
-  // Initial mount load/reload transition - ultra-fast 1.2s for snappy experience
+  // Initial mount load/reload transition - full 4.5s sequence (2.8s wireframe + 1.7s RAARYA GROUPS title showcase)
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsTransitioning(false);
-    }, 1200);
+    }, 4500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -175,7 +174,7 @@ export default function App() {
         onLoginClick={() => setShowLogin(true)}
       />
 
-      <main className="pt-20">
+      <main className="pt-[92px] md:pt-[156px]">
         {renderActivePage()}
       </main>
 

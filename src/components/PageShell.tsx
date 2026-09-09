@@ -13,7 +13,7 @@ export function PageShell({
   maxWidth?: string;
 }) {
   return (
-    <main className="px-4 sm:px-6 md:px-10 pb-24 pt-28 md:pt-32">
+    <div className="px-4 sm:px-6 md:px-10 pb-24 pt-4 md:pt-6">
       <div className={`mx-auto ${maxWidth}`}>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -35,6 +35,6 @@ export function PageShell({
         </motion.div>
         {children}
       </div>
-    </main>
+    </div>
   );
 }

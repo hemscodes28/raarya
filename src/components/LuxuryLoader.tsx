@@ -22,19 +22,19 @@ export function LuxuryLoader() {
       timers.push(
         setTimeout(() => {
           setTechLines((prev) => [...prev, line]);
-        }, idx * 650)
+        }, idx * 550)
       );
     });
 
     // Step-by-step progress tracking for BUY -> RENT -> PG/HOSTEL
-    const t1 = setTimeout(() => setActiveStep('buy'), 600);
-    const t2 = setTimeout(() => setActiveStep('rent'), 1600);
-    const t3 = setTimeout(() => setActiveStep('pg'), 2500);
+    const t1 = setTimeout(() => setActiveStep('buy'), 500);
+    const t2 = setTimeout(() => setActiveStep('rent'), 1300);
+    const t3 = setTimeout(() => setActiveStep('pg'), 2100);
 
-    // Transition to centered logo reveal at 3.7 seconds (3.0s drawing + 0.7s completion gap)
+    // Transition to centered logo reveal at 2.8 seconds (allows 0.7s title showcase before 3.5s exit)
     const tReveal = setTimeout(() => {
       setShowReveal(true);
-    }, 3700);
+    }, 2800);
 
     return () => {
       // Restore scroll when unmounted
@@ -485,7 +485,7 @@ export function LuxuryLoader() {
               scale: 1.25 // Smooth zoom-up scaling
             }}
             transition={{ 
-              duration: 1.1, 
+              duration: 0.8, 
               ease: [0.16, 1, 0.3, 1] // super smooth cubic easeOut
             }}
             className="absolute inset-0 flex flex-col items-center justify-center z-20 pointer-events-none px-4"

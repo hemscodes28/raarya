@@ -49,6 +49,13 @@
   transition: transform 0.3s ease;
 }
 
+@media (max-width: 768px) {
+  .pill-logo {
+    height: 60px;
+    width: 60px;
+  }
+}
+
 .pill-logo img {
   height: 100%;
   width: 100%;

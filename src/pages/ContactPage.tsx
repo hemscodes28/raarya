@@ -303,7 +303,7 @@ export function ContactPage() {
   );
 
   return (
-    <div className="relative min-h-[calc(100vh-5rem)] w-full bg-[#F8F8F8] text-[#141414] overflow-hidden flex flex-col justify-center py-12 md:py-20 px-4 sm:px-6 lg:px-8">
+    <div className="relative min-h-[calc(100vh-6rem)] w-full bg-[#F8F8F8] text-[#141414] overflow-hidden flex flex-col justify-center pt-4 sm:pt-6 pb-16 md:py-20 px-4 sm:px-6 lg:px-8">
       {/* Background DotField Component - Calibrated with Gold accent and smaller cursor point */}
       <div className="absolute inset-0 z-0">
         <DotField

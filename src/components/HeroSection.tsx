@@ -61,7 +61,7 @@ export function HeroSection() {
   return (
     <section
       id="hero"
-      className="relative bg-[#F8F8F8] flex flex-col pt-[68px] sm:pt-[72px] md:pt-[76px] pb-6"
+      className="relative bg-[#F8F8F8] flex flex-col pt-3 sm:pt-4 md:pt-6 pb-6"
     >
       {/* Quote — left-aligned, responsive font, wrapped correctly on all mobile screens */}
       <motion.div
