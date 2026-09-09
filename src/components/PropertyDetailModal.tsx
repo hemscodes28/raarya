@@ -152,10 +152,10 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
             <X className="size-5" />
           </button>
 
-          {/* GALLERY HERO SECTION WITH LUXURY BLENDED BORDER */}
+          {/* GALLERY HERO SECTION WITH LUXURY CREAM / CHAMPAGNE BLENDED BORDER */}
           <div className="relative p-3 sm:p-5 md:p-6 bg-gradient-to-b from-[#09090c] via-[#0e0e12] to-[#0a0a0d] border-b border-white/10">
-            {/* Luxury Outer Frame with Amber Border & Glowing Blended Corners */}
-            <div className="relative group/showcase rounded-2xl md:rounded-3xl p-1.5 sm:p-2 bg-[#121218] border-2 border-amber-400/50 hover:border-amber-400/90 shadow-[0_0_35px_rgba(245,158,11,0.22)] hover:shadow-[0_0_55px_rgba(245,158,11,0.4)] transition-all duration-500 overflow-hidden">
+            {/* Luxury Outer Frame with Cream / Ivory Champagne Border & Glowing Blended Corners */}
+            <div className="relative group/showcase rounded-2xl md:rounded-3xl p-1.5 sm:p-2 bg-[#121218] border-2 border-[#e8d5b7]/70 hover:border-[#f5ebe0] shadow-[0_0_35px_rgba(232,213,183,0.28)] hover:shadow-[0_0_55px_rgba(245,235,224,0.45)] transition-all duration-500 overflow-hidden">
               
               {/* 4 Blended Corner Radial Light Glows */}
               <div className="absolute top-0 left-0 size-28 corner-glow-tl pointer-events-none z-10" />
@@ -179,28 +179,27 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                       x: { type: 'spring', stiffness: 280, damping: 30 },
                       opacity: { duration: 0.35 },
                       scale: { duration: 0.35 },
-                      filter: { duration: 0.3 }
                     }}
                     className="absolute inset-0 h-full w-full object-cover group-hover/showcase:scale-[1.02] transition-transform duration-700 ease-out"
                   />
                 </AnimatePresence>
 
-                {/* Shimmer Light Beam Swipe across frame on hover */}
-                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-amber-200/20 to-transparent -translate-x-full group-hover/showcase:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-10" />
+                {/* Cream Shimmer Light Beam Swipe across frame on hover */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#f5ebe0]/25 to-transparent -translate-x-full group-hover/showcase:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-10" />
 
                 {/* Subtle vignette for badge legibility */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/30 pointer-events-none z-10" />
 
                 {/* Badges */}
                 <div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2">
-                  <span className="px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase bg-amber-500 text-black rounded-full shadow-lg border border-amber-300/50">
+                  <span className="px-3.5 py-1 text-[11px] font-bold tracking-wider uppercase bg-[#e8d5b7] text-[#141414] rounded-full shadow-lg border border-[#f5ebe0]/60">
                     {property.type === 'buy' ? 'For Sale' : property.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
                   </span>
                   <span className="px-3.5 py-1 text-[11px] font-semibold tracking-wide bg-black/60 text-white backdrop-blur-md border border-white/20 rounded-full shadow-lg">
                     {propType}
                   </span>
                   {galleryImages.length > 1 && (
-                    <span className="px-3.5 py-1 text-[11px] font-medium tracking-wide bg-black/75 text-amber-300 backdrop-blur-md border border-amber-500/30 rounded-full shadow-lg">
+                    <span className="px-3.5 py-1 text-[11px] font-medium tracking-wide bg-black/75 text-[#e8d5b7] backdrop-blur-md border border-[#e8d5b7]/40 rounded-full shadow-lg">
                       Photo {activeImageIndex + 1} of {galleryImages.length}
                     </span>
                   )}
@@ -212,7 +211,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     <button
                       type="button"
                       onClick={prevImage}
-                      className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/70 text-white hover:bg-amber-500 hover:text-black border border-amber-400/40 hover:border-amber-400 backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
+                      className="absolute left-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/70 text-white hover:bg-[#e8d5b7] hover:text-black border border-[#e8d5b7]/40 hover:border-[#f5ebe0] backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
                       aria-label="Previous Photo"
                     >
                       <ChevronLeft className="size-6 group-hover/btn:-translate-x-0.5 transition-transform" />
@@ -220,7 +219,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                     <button
                       type="button"
                       onClick={nextImage}
-                      className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/70 text-white hover:bg-amber-500 hover:text-black border border-amber-400/40 hover:border-amber-400 backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 z-20 flex size-11 items-center justify-center rounded-full bg-black/70 text-white hover:bg-[#e8d5b7] hover:text-black border border-[#e8d5b7]/40 hover:border-[#f5ebe0] backdrop-blur-md transition-all shadow-xl hover:scale-110 active:scale-95 cursor-pointer group/btn"
                       aria-label="Next Photo"
                     >
                       <ChevronRight className="size-6 group-hover/btn:translate-x-0.5 transition-transform" />
@@ -232,7 +231,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
 
             {/* Upgraded Small Square Thumbnail Gallery Strip */}
             {galleryImages.length > 1 && (
-              <div className="flex gap-2.5 sm:gap-3 pt-3 pb-1 overflow-x-auto scrollbar-none justify-start md:justify-center items-center">
+              <div className="flex gap-3 sm:gap-4 pt-4 pb-5 px-2 overflow-x-auto scrollbar-none justify-start md:justify-center items-center">
                 {galleryImages.map((imgUrl, idx) => {
                   const isActive = activeImageIndex === idx;
                   return (
@@ -242,13 +241,13 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                       onClick={() => handleSelectImage(idx)}
                       className={`relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 aspect-square rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${
                         isActive
-                          ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#09090c] scale-105 shadow-[0_0_18px_rgba(245,158,11,0.6)] z-10 border-2 border-amber-400 opacity-100'
-                          : 'border border-white/25 opacity-60 hover:opacity-100 hover:scale-105 hover:border-amber-400/70'
+                          ? 'ring-2 ring-[#e8d5b7] ring-offset-2 ring-offset-[#09090c] scale-105 shadow-[0_0_20px_rgba(232,213,183,0.65)] z-10 border-2 border-[#f5ebe0] opacity-100'
+                          : 'border border-white/25 opacity-60 hover:opacity-100 hover:scale-105 hover:border-[#e8d5b7]/70'
                       }`}
                     >
                       <img src={getImageUrl(imgUrl)} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
                       {isActive && (
-                        <span className="absolute top-1 right-1 size-2 bg-amber-400 rounded-full shadow-[0_0_6px_#f59e0b]" />
+                        <span className="absolute top-1 right-1 size-2 bg-[#e8d5b7] rounded-full shadow-[0_0_6px_#e8d5b7]" />
                       )}
                     </button>
                   );

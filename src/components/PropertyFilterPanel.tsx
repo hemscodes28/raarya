@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { SlidersHorizontal, X, ChevronDown, Check } from "lucide-react";
 import { INDIA_STATES_AND_DISTRICTS, PROPERTY_AREAS_MAPPING } from "../data/indiaData";
 
@@ -197,6 +197,13 @@ export function PropertyFilterPanel({
     return ["Any size", "Under 1000", "1000 - 2500", "2500 - 5000", "Above 5000"];
   };
 
+  const stateOptions = useMemo(() => ["Select State", ...Object.keys(INDIA_STATES_AND_DISTRICTS).sort()], []);
+
+  const districtOptions = useMemo(() => {
+    if (!filters.state) return ["Select District"];
+    return ["Select District", ...(INDIA_STATES_AND_DISTRICTS[filters.state] || [])];
+  }, [filters.state]);
+
   const visibleResidential = showMoreResidential ? RESIDENTIAL_TYPES : RESIDENTIAL_TYPES.slice(0, 5);
   const hiddenResidentialCount = RESIDENTIAL_TYPES.length - 5;
 
@@ -356,7 +363,7 @@ export function PropertyFilterPanel({
           <LuxuryDropdown
             placeholder="Select State"
             value={filters.state}
-            options={["Select State", ...Object.keys(INDIA_STATES_AND_DISTRICTS).sort()]}
+            options={stateOptions}
             onChange={(val) => handleStateChange(val === "Select State" ? "" : val)}
             enableSearch
           />
@@ -366,7 +373,7 @@ export function PropertyFilterPanel({
             <LuxuryDropdown
               placeholder="Select District"
               value={filters.district}
-              options={["Select District", ...(INDIA_STATES_AND_DISTRICTS[filters.state] || [])]}
+              options={districtOptions}
               onChange={(val) => handleDistrictChange(val === "Select District" ? "" : val)}
               enableSearch
             />
