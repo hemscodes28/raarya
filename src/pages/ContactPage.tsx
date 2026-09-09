@@ -184,9 +184,9 @@ export function SwipeButton({ isSubmitting, onSwipeSuccess, onValidate }: SwipeB
       {/* Floating Swipe Prompt Text */}
       <motion.div 
         style={{ opacity: textOpacity }}
-        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+        className="absolute inset-y-0 left-14 right-2 flex items-center justify-center pointer-events-none overflow-hidden"
       >
-        <span className="text-xs font-bold uppercase tracking-[0.25em] text-amber-800/75 select-none">
+        <span className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.18em] text-amber-800/80 select-none truncate">
           Swipe to Submit Inquiry
         </span>
       </motion.div>

@@ -88,11 +88,11 @@ function SwipeSubmitButton({ isSubmitting, onSwipeSuccess, onValidate }: SwipeSu
       <motion.div 
         style={{ opacity: textOpacity }}
         onClick={handleDirectClick}
-        className="absolute inset-0 flex items-center justify-center cursor-pointer"
+        className="absolute inset-y-0 left-14 right-2 flex items-center justify-center cursor-pointer overflow-hidden"
       >
-        <span className="text-xs font-extrabold uppercase tracking-[0.25em] text-indigo-950 flex items-center gap-2">
-          <span>Swipe or Click to Submit Enquiry</span>
-          <ArrowRight className="w-4 h-4 animate-pulse text-amber-500" />
+        <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-[0.18em] text-indigo-950 flex items-center justify-center gap-1.5 truncate">
+          <span>Swipe or Click to Submit</span>
+          <ArrowRight className="w-3.5 h-3.5 animate-pulse text-amber-500 shrink-0" />
         </span>
       </motion.div>
 
@@ -304,16 +304,16 @@ export function EnquiryModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/85 sm:backdrop-blur-md font-sans overflow-y-auto">
+      <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm font-sans overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.96, y: 12 }}
           transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-4xl bg-white border border-slate-200/80 rounded-3xl shadow-2xl overflow-hidden my-8 text-slate-900 transform-gpu"
+          className="relative w-full max-w-4xl max-h-[88vh] sm:max-h-[85vh] bg-white border border-slate-200/80 rounded-3xl shadow-2xl overflow-hidden text-slate-900 flex flex-col transform-gpu"
         >
           {/* HEADER BANNER WITH LUXURY INDIGO/GOLD THEME */}
-          <div className="relative bg-gradient-to-r from-[#0F172A] via-[#1E1B4B] to-[#0F172A] p-6 sm:p-7 text-white flex items-center justify-between border-b border-white/10">
+          <div className="relative bg-gradient-to-r from-[#0F172A] via-[#1E1B4B] to-[#0F172A] p-5 sm:p-7 text-white flex items-center justify-between border-b border-white/10 shrink-0">
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-[0.25em] text-amber-400 bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20 mb-2 inline-flex items-center gap-1.5 shadow-sm">
                 <Building2 className="w-3 h-3 text-amber-400" />
@@ -329,7 +329,7 @@ export function EnquiryModal({
 
             <button
               onClick={onClose}
-              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all border border-white/10"
+              className="p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all border border-white/10 cursor-pointer"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
@@ -352,7 +352,7 @@ export function EnquiryModal({
               </div>
             </div>
           ) : (
-            <div className="p-6 sm:p-8 bg-white">
+            <div className="p-5 sm:p-8 bg-white flex-1 overflow-y-auto pb-10 sm:pb-8">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-7">
                 
                 {/* LEFT COLUMN: YOUR DETAILS */}
