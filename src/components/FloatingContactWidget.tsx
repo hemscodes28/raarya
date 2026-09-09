@@ -102,12 +102,12 @@ export default function FloatingContactWidget({ onOpenChatbot }: FloatingContact
             </a>
           </div>
 
-          {/* 3. AI CONCIERGE ICON */}
+          {/* 3. ASK RAARYA AI ICON */}
           <div className="relative group/btn">
             {/* Floating Glass Tooltip */}
             <div className="absolute -top-11 left-1/2 -translate-x-1/2 pointer-events-none opacity-0 scale-90 translate-y-1 group-hover/btn:opacity-100 group-hover/btn:scale-100 group-hover/btn:translate-y-0 transition-all duration-200 ease-out z-50">
               <div className="relative bg-[#1c1622]/95 backdrop-blur-md border border-amber-400/40 text-amber-200 px-3 py-1 rounded-lg text-[10px] font-extrabold uppercase tracking-widest whitespace-nowrap shadow-2xl">
-                AI Concierge
+                Ask Raarya AI
                 <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-[#1c1622] border-r border-b border-amber-400/40 rotate-45"></div>
               </div>
             </div>
@@ -115,7 +115,7 @@ export default function FloatingContactWidget({ onOpenChatbot }: FloatingContact
             {/* Icon Button */}
             <button
               onClick={onOpenChatbot}
-              aria-label="AI Concierge"
+              aria-label="Ask Raarya AI"
               className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#1c1622] hover:bg-[#292033] border border-amber-400/50 text-amber-200 active:scale-90 hover:scale-105 transition-all duration-200 cursor-pointer select-none outline-none shadow-md"
             >
               <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-amber-400 to-amber-600 flex items-center justify-center text-black shadow-sm">

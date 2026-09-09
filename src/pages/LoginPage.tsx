@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Eye, EyeOff, Mail, Lock, User, ArrowLeft, Phone } from 'lucide-react';
 import { motion } from 'motion/react';
 import BoomerangVideoBg from '../components/BoomerangVideoBg';
-import { OtpVerification } from '../components/OtpVerification';
 import { apiSignup, apiLogin } from '../utils/api';
 import { signInWithGoogle } from '../utils/firebaseClient';
 
@@ -30,10 +29,6 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [showOtpModal, setShowOtpModal] = useState(false);
-  const [pendingUser, setPendingUser] = useState<any>(null);
-  const [otpTargetPhone, setOtpTargetPhone] = useState('');
-  const [otpTargetEmail, setOtpTargetEmail] = useState('');
 
   useEffect(() => {
     try {
@@ -55,11 +50,8 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     try {
       const res = await signInWithGoogle();
       if (res.success && res.user) {
-        setPendingUser(res.user);
-        setOtpTargetEmail(res.user.email || '');
-        setOtpTargetPhone(res.user.phone || '');
-        setSuccess('Google authenticated! Please enter the verification code sent to your email.');
-        setShowOtpModal(true);
+        setSuccess('Authentication successful! Opening dashboard...');
+        setTimeout(() => onSuccess(res.user), 400);
       } else {
         setError(res.error?.message || 'Google Sign-In failed.');
       }
@@ -137,7 +129,6 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
     setError('');
     setSuccess('');
     setIsLoading(true);
-
     if (isSignUp) {
       if (!name || !phone || !email || !password || !confirmPassword) {
         setError('Name, Phone, Email, and Password are all required.');
@@ -158,10 +149,8 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       try {
         const data = await apiSignup({ name, phone, email, password });
         if (data.success && data.user) {
-          setPendingUser(data.user);
-          setOtpTargetPhone(data.user.phone || phone);
-          setOtpTargetEmail(data.user.email || email);
-          setShowOtpModal(true);
+          setSuccess('Account created successfully! Redirecting...');
+          setTimeout(() => onSuccess(data.user), 400);
         } else {
           setError(data.message || 'Signup failed.');
         }
@@ -181,15 +170,13 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         if (data.success && data.user) {
           const finalEmail = targetVal.includes('@') ? targetVal : (data.user.email || email || '');
           const updatedUser = { ...data.user, email: finalEmail || data.user.email };
-          setPendingUser(updatedUser);
-          setOtpTargetPhone(data.user.phone || phone);
-          setOtpTargetEmail(finalEmail);
-          setShowOtpModal(true);
           if (rememberMe) {
             localStorage.setItem('rememberUser', JSON.stringify({ phone: targetVal }));
           } else {
             localStorage.removeItem('rememberUser');
           }
+          setSuccess('Login successful! Redirecting...');
+          setTimeout(() => onSuccess(updatedUser), 400);
         } else {
           setError(data.message || 'Login failed.');
         }
@@ -198,14 +185,6 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
       }
     }
     setIsLoading(false);
-  };
-
-  const handleOtpVerified = () => {
-    setShowOtpModal(false);
-    setSuccess('OTP Verified! Accessing your account...');
-    setTimeout(() => {
-      onSuccess(pendingUser);
-    }, 400);
   };
 
   return (
@@ -652,15 +631,6 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
           </button>
         </p>
       </motion.div>
-
-      {showOtpModal && (
-        <OtpVerification
-          phone={otpTargetPhone || phone}
-          email={otpTargetEmail || email || pendingUser?.email}
-          onVerify={handleOtpVerified}
-          onCancel={() => setShowOtpModal(false)}
-        />
-      )}
     </div>
   );
 }

@@ -392,6 +392,30 @@ app.get(['/api/test-send', '/test-send'], async (req, res) => {
   res.json({ targetEmail, result });
 });
 
+// ─── CHATBOT ROUTE ────────────────────────────────────────────────────────────
+app.post(['/api/chat', '/chat'], (req, res) => {
+  const { messages } = req.body || {};
+  const lastUserMsg = Array.isArray(messages)
+    ? (messages.filter(m => m.role === 'user').pop()?.content || '')
+    : '';
+
+  const query = lastUserMsg.toLowerCase().trim();
+
+  let reply = "Hello! I am your Raarya AI Real Estate Assistant. How can I help you today?";
+
+  if (query.includes('emi') || query.includes('loan') || query.includes('calculate')) {
+    reply = "📊 **Home Loan EMI Calculator**\n\nFor a ₹35 Lakh loan at 8.5% p.a. interest over 20 years, your estimated EMI is **₹30,374 / month**.\n\nCall our loan expert at **+91 9787255522** for pre-approved home loan options!";
+  } else if (query.includes('contact') || query.includes('phone') || query.includes('rajkumar')) {
+    reply = "📞 **Contact Raarya Groups**\n\n- **Representative**: Mr. Rajkumar\n- **Mobile**: **+91 9787255522** / **+91 9876543210**\n- **Email**: raaryagroups@gmail.com\n- **Address**: Saravanampatti Main Road, Annur Corridor, Coimbatore, Tamil Nadu.";
+  } else if (query.includes('career') || query.includes('job') || query.includes('hiring')) {
+    reply = "💼 **Careers at Raarya Groups**\n\nWe are recruiting Senior Real Estate Executives & Site Managers in Coimbatore. Send your resume to **raaryagroups@gmail.com** or call **+91 9787255522**.";
+  } else {
+    reply = "🔍 **Raarya Properties & Real Estate Services**\n\nWe offer DTCP & RERA approved plot layouts, individual villas, and rental spaces in Saravanampatti, Annur, Kovaipudur, and Coimbatore.\n\nCall **+91 9787255522** for free site visits and property details.";
+  }
+
+  res.json({ success: true, content: reply });
+});
+
 // ─── HEALTH / ROOT CHECK ──────────────────────────────────────────────────────
 app.get(['/api', '/api/health', '/health'], (req, res) => {
   res.json({ status: 'ok', service: 'RAARYA API' });

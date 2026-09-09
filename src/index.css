@@ -1,5 +1,5 @@
 @import "./_shared/preset-site-scroll.css";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;0,800;0,900;1,600;1,700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,6 +7,10 @@
 
 .font-heading-display {
   font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-claude-serif {
+  font-family: 'Newsreader', 'Lora', 'Georgia', serif;
 }
 
 .font-outfit {
@@ -124,6 +128,55 @@ body {
 .custom-scrollbar-light {
   scrollbar-width: thin;
   scrollbar-color: rgba(197, 168, 128, 0.35) transparent;
+}
+
+/* Chatbot Custom Scrollbar Utility */
+.custom-scrollbar-chat::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar-chat::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 99px;
+}
+
+.custom-scrollbar-chat::-webkit-scrollbar-thumb {
+  background: rgba(251, 191, 36, 0.35);
+  border-radius: 99px;
+}
+
+.custom-scrollbar-chat::-webkit-scrollbar-thumb:hover {
+  background: rgba(251, 191, 36, 0.65);
+}
+
+.custom-scrollbar-chat {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(251, 191, 36, 0.35) rgba(0, 0, 0, 0.2);
+}
+
+/* Claude AI Light Theme Custom Scrollbar Utility */
+.custom-scrollbar-claude::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar-claude::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar-claude::-webkit-scrollbar-thumb {
+  background: rgba(217, 119, 87, 0.25);
+  border-radius: 99px;
+}
+
+.custom-scrollbar-claude::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 119, 87, 0.55);
+}
+
+.custom-scrollbar-claude {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(217, 119, 87, 0.3) transparent;
 }
 
 /* Shimmer keyframes for luxury button shine effect */

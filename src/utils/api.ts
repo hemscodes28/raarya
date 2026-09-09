@@ -423,20 +423,31 @@ export async function apiResetPassword(payload: { email: string; code: string; n
 }
 
 
+import { generateAiResponse } from './aiEngine';
+
 // ─── AI CHATBOT ───────────────────────────────────────────────────────────────
 
 export async function apiChat(messages: ChatMessagePayload[]): Promise<ApiResponse> {
+  const lastUserMsg = messages.filter((m) => m.role === 'user').pop()?.content || '';
+
   try {
     const response = await fetchWithTimeout(`${BASE_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ messages }),
-    });
-    return await response.json();
+    }, 4000);
+    const data = await response.json();
+    if (data && data.success && data.content) {
+      return data;
+    }
   } catch (err) {
-    return {
-      success: false,
-      message: 'The chat service is offline. Using local assistant mode.'
-    };
+    // Backend API offline / Vercel static host fallback
   }
+
+  // Generate intelligent response using local AI Concierge engine
+  const aiContent = generateAiResponse(lastUserMsg);
+  return {
+    success: true,
+    content: aiContent
+  };
 }

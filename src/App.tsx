@@ -95,6 +95,8 @@ export default function App() {
         }
       } else if (hash === 'login') {
         setShowLogin(true);
+      } else if (hash === 'ai-assistant' || hash === 'advisor' || hash === 'chatbot') {
+        setShowChatbot(true);
       } else {
         setCurrentRoute(hash);
         window.scrollTo(0, 0);
