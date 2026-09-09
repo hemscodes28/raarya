@@ -168,7 +168,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
 
               {/* Inner Image Viewer Box */}
               <div className="relative aspect-[16/9] md:aspect-[21/9] w-full rounded-xl md:rounded-2xl overflow-hidden bg-black shadow-2xl">
-                <AnimatePresence custom={direction} mode="popLayout">
+                <AnimatePresence custom={direction} mode="wait">
                   <motion.img
                     key={galleryImages[activeImageIndex]}
                     src={getImageUrl(galleryImages[activeImageIndex])}
@@ -184,7 +184,7 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                       scale: { duration: 0.35 },
                       filter: { duration: 0.3 }
                     }}
-                    className="h-full w-full object-cover group-hover/showcase:scale-[1.02] transition-transform duration-700 ease-out"
+                    className="absolute inset-0 h-full w-full object-cover group-hover/showcase:scale-[1.02] transition-transform duration-700 ease-out"
                   />
                 </AnimatePresence>
 
@@ -233,9 +233,9 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
               </div>
             </div>
 
-            {/* Upgraded Thumbnail Gallery Strip */}
+            {/* Upgraded Small Square Thumbnail Gallery Strip */}
             {galleryImages.length > 1 && (
-              <div className="flex gap-3 pt-4 pb-1 overflow-x-auto scrollbar-none justify-start md:justify-center">
+              <div className="flex gap-2.5 sm:gap-3 pt-3 pb-1 overflow-x-auto scrollbar-none justify-start md:justify-center items-center">
                 {galleryImages.map((imgUrl, idx) => {
                   const isActive = activeImageIndex === idx;
                   return (
@@ -243,10 +243,10 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
                       key={idx}
                       type="button"
                       onClick={() => handleSelectImage(idx)}
-                      className={`relative shrink-0 w-22 sm:w-24 aspect-[16/10] rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${
+                      className={`relative shrink-0 w-16 h-16 sm:w-20 sm:h-20 aspect-square rounded-xl overflow-hidden transition-all duration-300 cursor-pointer ${
                         isActive
-                          ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#09090c] scale-105 shadow-[0_0_20px_rgba(245,158,11,0.5)] z-10 border-2 border-amber-400'
-                          : 'border border-white/20 opacity-50 hover:opacity-100 hover:scale-105 hover:border-amber-400/60'
+                          ? 'ring-2 ring-amber-400 ring-offset-2 ring-offset-[#09090c] scale-105 shadow-[0_0_18px_rgba(245,158,11,0.6)] z-10 border-2 border-amber-400 opacity-100'
+                          : 'border border-white/25 opacity-60 hover:opacity-100 hover:scale-105 hover:border-amber-400/70'
                       }`}
                     >
                       <img src={getImageUrl(imgUrl)} alt={`Thumbnail ${idx + 1}`} className="w-full h-full object-cover" />
