@@ -1,0 +1,419 @@
+- generic [ref=f30e3]:
+  - generic [ref=f30e6]:
+    - img [ref=f30e7]:
+      - generic [ref=f30e8]:
+        - generic [ref=f30e13]: BUY
+        - generic [ref=f30e16]: RENT
+        - generic [ref=f30e19]: PG / HOSTEL
+    - generic [ref=f30e38]:
+      - generic [ref=f30e39]: PREMIUM PLOTS BUYING & SELLING
+      - generic [ref=f30e40]: RAARYA GROUPS
+      - generic [ref=f30e41]:
+        - generic [ref=f30e42]:
+          - generic [ref=f30e43]: ❯
+          - generic [ref=f30e44]: ACCESSING PREMIUM PLOT DATABASE...
+        - generic [ref=f30e45]:
+          - generic [ref=f30e46]: ❯
+          - generic [ref=f30e47]: VERIFYING DTCP & RERA APPROVED LISTINGS...
+        - generic [ref=f30e48]:
+          - generic [ref=f30e49]: ❯
+          - generic [ref=f30e50]: LOADING PLOT LAND & INVENTORY MAPS...
+        - generic [ref=f30e51]:
+          - generic [ref=f30e52]: ❯
+          - generic [ref=f30e53]: ESTABLISHING SECURE TRANSACTION PORTAL...
+  - banner [ref=f30e54]:
+    - navigation "Primary" [ref=f30e57]:
+      - link "Home" [ref=f30e58] [cursor=pointer]:
+        - /url: "#/"
+        - img "RAARYA" [ref=f30e59]
+      - button "Toggle menu" [ref=f30e60] [cursor=pointer]
+  - main [ref=f30e63]:
+    - main [ref=f30e64]:
+      - generic [ref=f30e65]:
+        - generic [ref=f30e66]:
+          - heading "Buy Properties (Plots, Villas & Houses)" [level=1] [ref=f30e67]
+          - paragraph [ref=f30e68]: Explore DTCP & RERA approved plot layouts, individual villas, and commercial land available for purchase.
+        - generic [ref=f30e70]:
+          - generic [ref=f30e71]:
+            - textbox "Search by title, location, landmark (e.g. Saravanampatti)..." [ref=f30e76]
+            - button "Filter Properties" [ref=f30e77] [cursor=pointer]
+          - paragraph [ref=f30e81]: Showing 18 of 621 verified properties
+          - generic [ref=f30e82]:
+            - article [ref=f30e84] [cursor=pointer]:
+              - generic [ref=f30e85]:
+                - img "Thangam | Thekkalur, Avinashi Road" [ref=f30e86]
+                - generic [ref=f30e89]:
+                  - generic [ref=f30e90]: For Sale
+                  - generic [ref=f30e91]: Plot
+                - generic [ref=f30e92]: Quick Overview
+              - generic [ref=f30e97]:
+                - generic [ref=f30e98]:
+                  - generic [ref=f30e99]:
+                    - heading "Thangam | Thekkalur, Avinashi Road" [level=3] [ref=f30e100]
+                    - generic [ref=f30e101]: ₹ 5,50,000 Per Cent
+                  - generic [ref=f30e103]: Karumathampatti - 641659, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e108]: 1200 sqft
+                - button "Enquire Now" [ref=f30e113]
+            - article [ref=f30e119] [cursor=pointer]:
+              - generic [ref=f30e120]:
+                - img "SK Garden - Avinashi Road, Near Kaniyur Toll Gate" [ref=f30e121]
+                - generic [ref=f30e124]:
+                  - generic [ref=f30e125]: For Sale
+                  - generic [ref=f30e126]: Plot
+                - generic [ref=f30e127]: Quick Overview
+              - generic [ref=f30e132]:
+                - generic [ref=f30e133]:
+                  - generic [ref=f30e134]:
+                    - heading "SK Garden - Avinashi Road, Near Kaniyur Toll Gate" [level=3] [ref=f30e135]
+                    - generic [ref=f30e136]: ₹ 9,00,000 Total Price
+                  - generic [ref=f30e138]: Karumathampatti - 641659, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e143]: 1 cent
+                - button "Enquire Now" [ref=f30e148]
+            - article [ref=f30e154] [cursor=pointer]:
+              - generic [ref=f30e155]:
+                - img "Residential Plots in Kinathukadavu – Golden Vista" [ref=f30e156]
+                - generic [ref=f30e159]:
+                  - generic [ref=f30e160]: For Sale
+                  - generic [ref=f30e161]: Plot
+                - generic [ref=f30e162]: Quick Overview
+              - generic [ref=f30e167]:
+                - generic [ref=f30e168]:
+                  - generic [ref=f30e169]:
+                    - heading "Residential Plots in Kinathukadavu – Golden Vista" [level=3] [ref=f30e170]
+                    - generic [ref=f30e171]: ₹ 5,90,000 Per Cent
+                  - generic [ref=f30e173]: Kinathukadavu - 642109, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e178]: 2 cent
+                - button "Enquire Now" [ref=f30e183]
+            - article [ref=f30e189] [cursor=pointer]:
+              - generic [ref=f30e190]:
+                - img "Residential DTCP Approved Plots in Annur | Brahma Park" [ref=f30e191]
+                - generic [ref=f30e194]:
+                  - generic [ref=f30e195]: For Sale
+                  - generic [ref=f30e196]: Plot
+                - generic [ref=f30e197]: Quick Overview
+              - generic [ref=f30e202]:
+                - generic [ref=f30e203]:
+                  - generic [ref=f30e204]:
+                    - heading "Residential DTCP Approved Plots in Annur | Brahma Park" [level=3] [ref=f30e205]
+                    - generic [ref=f30e206]: ₹ 3,90,000 Total Price
+                  - generic [ref=f30e208]: Sirumugai - 641302, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e213]: 1200 sqft
+                - button "Enquire Now" [ref=f30e218]
+            - article [ref=f30e224] [cursor=pointer]:
+              - generic [ref=f30e225]:
+                - img "Residential land in Kurumbapalayam - Avanta" [ref=f30e226]
+                - generic [ref=f30e229]:
+                  - generic [ref=f30e230]: For Sale
+                  - generic [ref=f30e231]: Plot
+                - generic [ref=f30e232]: Quick Overview
+              - generic [ref=f30e237]:
+                - generic [ref=f30e238]:
+                  - generic [ref=f30e239]:
+                    - heading "Residential land in Kurumbapalayam - Avanta" [level=3] [ref=f30e240]
+                    - generic [ref=f30e241]: ₹ 14,50,000 Total Price
+                  - generic [ref=f30e243]: Saravanampatti - 641035, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e248]: 436 sqft
+                - button "Enquire Now" [ref=f30e253]
+            - article [ref=f30e259] [cursor=pointer]:
+              - generic [ref=f30e260]:
+                - img "DTCP & RERA Approved Plots in Coimbatore | Premium Layout" [ref=f30e261]
+                - generic [ref=f30e264]:
+                  - generic [ref=f30e265]: For Sale
+                  - generic [ref=f30e266]: Plot
+                - generic [ref=f30e267]: Quick Overview
+              - generic [ref=f30e272]:
+                - generic [ref=f30e273]:
+                  - generic [ref=f30e274]:
+                    - heading "DTCP & RERA Approved Plots in Coimbatore | Premium Layout" [level=3] [ref=f30e275]
+                    - generic [ref=f30e276]: ₹ 5,50,000
+                  - generic [ref=f30e278]: Annur - 641653, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e283]: 2.5 Cents
+                - button "Enquire Now" [ref=f30e288]
+            - article [ref=f30e294] [cursor=pointer]:
+              - generic [ref=f30e295]:
+                - img "Approved Plots in Coimbatore | Best Investment Location" [ref=f30e296]
+                - generic [ref=f30e299]:
+                  - generic [ref=f30e300]: For Sale
+                  - generic [ref=f30e301]: Plot
+                - generic [ref=f30e302]: Quick Overview
+              - generic [ref=f30e307]:
+                - generic [ref=f30e308]:
+                  - generic [ref=f30e309]:
+                    - heading "Approved Plots in Coimbatore | Best Investment Location" [level=3] [ref=f30e310]
+                    - generic [ref=f30e311]: ₹ 5,50,000 Total Price
+                  - generic [ref=f30e313]: Sirumugai - 641302, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e318]: 750 sqft
+                - button "Enquire Now" [ref=f30e323]
+            - article [ref=f30e329] [cursor=pointer]:
+              - generic [ref=f30e330]:
+                - img "DTCP & RERA Approved Plots | Prime Location Investment" [ref=f30e331]
+                - generic [ref=f30e334]:
+                  - generic [ref=f30e335]: For Sale
+                  - generic [ref=f30e336]: Plot
+                - generic [ref=f30e337]: Quick Overview
+              - generic [ref=f30e342]:
+                - generic [ref=f30e343]:
+                  - generic [ref=f30e344]:
+                    - heading "DTCP & RERA Approved Plots | Prime Location Investment" [level=3] [ref=f30e345]
+                    - generic [ref=f30e346]: ₹ 3,90,000
+                  - generic [ref=f30e348]: Sirumugai - 641302, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e353]: 750 Cents
+                - button "Enquire Now" [ref=f30e358]
+            - article [ref=f30e364] [cursor=pointer]:
+              - generic [ref=f30e365]:
+                - img "2 BHK villa in Palakkad" [ref=f30e366]
+                - generic [ref=f30e369]:
+                  - generic [ref=f30e370]: For Sale
+                  - generic [ref=f30e371]: House
+                - generic [ref=f30e372]: Quick Overview
+              - generic [ref=f30e377]:
+                - generic [ref=f30e378]:
+                  - generic [ref=f30e379]:
+                    - heading "2 BHK villa in Palakkad" [level=3] [ref=f30e380]
+                    - generic [ref=f30e381]: ₹ 32,00,000 Total Price
+                  - generic [ref=f30e383]: ", Thrissur, Kerala"
+                  - generic [ref=f30e388]:
+                    - generic [ref=f30e389]: 2 BHK
+                    - generic [ref=f30e392]: 1 floor
+                    - generic [ref=f30e397]: 2 BHK
+                    - generic [ref=f30e400]: 2 Baths
+                - button "Enquire Now" [ref=f30e405]
+            - article [ref=f30e411] [cursor=pointer]:
+              - generic [ref=f30e412]:
+                - img "RRD SOWARGA - DTCP & RERA Approved Plots in Auto Nagar | Mettupalayam Road" [ref=f30e413]
+                - generic [ref=f30e416]:
+                  - generic [ref=f30e417]: For Sale
+                  - generic [ref=f30e418]: Plot
+                - generic [ref=f30e419]: Quick Overview
+              - generic [ref=f30e424]:
+                - generic [ref=f30e425]:
+                  - generic [ref=f30e426]:
+                    - heading "RRD SOWARGA - DTCP & RERA Approved Plots in Auto Nagar | Mettupalayam Road" [level=3] [ref=f30e427]
+                    - generic [ref=f30e428]: ₹ 6,50,000 Total Price
+                  - generic [ref=f30e430]: Mettupalayam - 641301, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e435]: 436 sqft
+                - button "Enquire Now" [ref=f30e440]
+            - article [ref=f30e446] [cursor=pointer]:
+              - generic [ref=f30e447]:
+                - img "Old House for Sale in Thirumuruganpoondi, Tiruppur | Land Value Property" [ref=f30e448]
+                - generic [ref=f30e451]:
+                  - generic [ref=f30e452]: For Sale
+                  - generic [ref=f30e453]: Plot
+                - generic [ref=f30e454]: Quick Overview
+              - generic [ref=f30e459]:
+                - generic [ref=f30e460]:
+                  - generic [ref=f30e461]:
+                    - heading "Old House for Sale in Thirumuruganpoondi, Tiruppur | Land Value Property" [level=3] [ref=f30e462]
+                    - generic [ref=f30e463]: ₹ 58,00,000
+                  - generic [ref=f30e465]: Thirumuruganpoondi - 641652, Tiruppur, Tamil Nadu
+                  - generic [ref=f30e470]: 1200 Cents
+                - button "Enquire Now" [ref=f30e475]
+            - article [ref=f30e481] [cursor=pointer]:
+              - generic [ref=f30e482]:
+                - img "Commercial Building for sale - ESI , Singanallur" [ref=f30e483]
+                - generic [ref=f30e486]:
+                  - generic [ref=f30e487]: For Sale
+                  - generic [ref=f30e488]: Shop
+                - generic [ref=f30e489]: Quick Overview
+              - generic [ref=f30e494]:
+                - generic [ref=f30e495]:
+                  - generic [ref=f30e496]:
+                    - heading "Commercial Building for sale - ESI , Singanallur" [level=3] [ref=f30e497]
+                    - generic [ref=f30e498]: ₹ 55,00,000 Total Price
+                  - generic [ref=f30e500]: Singanallur - 641005, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e505]:
+                    - generic [ref=f30e506]: 1200 sqft
+                    - generic [ref=f30e509]: 1 floor
+                    - generic [ref=f30e514]: 2 BHK
+                    - generic [ref=f30e517]: 2 Baths
+                - button "Enquire Now" [ref=f30e522]
+            - article [ref=f30e528] [cursor=pointer]:
+              - generic [ref=f30e529]:
+                - img "ARK Property - Commercial land in Mettupalayam" [ref=f30e530]
+                - generic [ref=f30e533]:
+                  - generic [ref=f30e534]: For Sale
+                  - generic [ref=f30e535]: Commercial Land
+                - generic [ref=f30e536]: Quick Overview
+              - generic [ref=f30e541]:
+                - generic [ref=f30e542]:
+                  - generic [ref=f30e543]:
+                    - heading "ARK Property - Commercial land in Mettupalayam" [level=3] [ref=f30e544]
+                    - generic [ref=f30e545]: ₹ 3,50,000 Total Price
+                  - generic [ref=f30e547]: Mettupalayam - 641301, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e552]:
+                    - generic [ref=f30e553]: 10890 sqft
+                    - generic [ref=f30e556]: 1 floor
+                    - generic [ref=f30e561]: 2 BHK
+                    - generic [ref=f30e564]: 2 Baths
+                - button "Enquire Now" [ref=f30e569]
+            - article [ref=f30e575] [cursor=pointer]:
+              - generic [ref=f30e576]:
+                - img "Residential Plots for Sale in Vagarayampalayam" [ref=f30e577]
+                - generic [ref=f30e580]:
+                  - generic [ref=f30e581]: For Sale
+                  - generic [ref=f30e582]: Plot
+                - generic [ref=f30e583]: Quick Overview
+              - generic [ref=f30e588]:
+                - generic [ref=f30e589]:
+                  - generic [ref=f30e590]:
+                    - heading "Residential Plots for Sale in Vagarayampalayam" [level=3] [ref=f30e591]
+                    - generic [ref=f30e592]: ₹ 6,15,000 Per Cent
+                  - generic [ref=f30e594]: Kittampalayam - 641659, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e599]: 30 cent
+                - button "Enquire Now" [ref=f30e604]
+            - article [ref=f30e610] [cursor=pointer]:
+              - generic [ref=f30e611]:
+                - img "Commercial Complex for Sale in Tiruppur" [ref=f30e612]
+                - generic [ref=f30e615]:
+                  - generic [ref=f30e616]: For Sale
+                  - generic [ref=f30e617]: Shop
+                - generic [ref=f30e618]: Quick Overview
+              - generic [ref=f30e623]:
+                - generic [ref=f30e624]:
+                  - generic [ref=f30e625]:
+                    - heading "Commercial Complex for Sale in Tiruppur" [level=3] [ref=f30e626]
+                    - generic [ref=f30e627]: ₹ 60,00,000 Total Price
+                  - generic [ref=f30e629]: Tirupur - 641601, Tiruppur, Tamil Nadu
+                  - generic [ref=f30e634]:
+                    - generic [ref=f30e635]: 7 cent
+                    - generic [ref=f30e638]: 1 floor
+                    - generic [ref=f30e643]: 2 BHK
+                    - generic [ref=f30e646]: 2 Baths
+                - button "Enquire Now" [ref=f30e651]
+            - article [ref=f30e657] [cursor=pointer]:
+              - generic [ref=f30e658]:
+                - img "DTCP Land for Sale – PN Pudur, Telungupalayam" [ref=f30e659]
+                - generic [ref=f30e662]:
+                  - generic [ref=f30e663]: For Sale
+                  - generic [ref=f30e664]: Plot
+                - generic [ref=f30e665]: Quick Overview
+              - generic [ref=f30e670]:
+                - generic [ref=f30e671]:
+                  - generic [ref=f30e672]:
+                    - heading "DTCP Land for Sale – PN Pudur, Telungupalayam" [level=3] [ref=f30e673]
+                    - generic [ref=f30e674]: ₹ 23,00,000 Per Cent
+                  - generic [ref=f30e676]: Telungupalayam - 641039, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e681]: 19.45 cent
+                - button "Enquire Now" [ref=f30e686]
+            - article [ref=f30e692] [cursor=pointer]:
+              - generic [ref=f30e693]:
+                - img "Residential Land for Sale – Sri Ram Nagar, Podanur" [ref=f30e694]
+                - generic [ref=f30e697]:
+                  - generic [ref=f30e698]: For Sale
+                  - generic [ref=f30e699]: Plot
+                - generic [ref=f30e700]: Quick Overview
+              - generic [ref=f30e705]:
+                - generic [ref=f30e706]:
+                  - generic [ref=f30e707]:
+                    - heading "Residential Land for Sale – Sri Ram Nagar, Podanur" [level=3] [ref=f30e708]
+                    - generic [ref=f30e709]: ₹ 23,00,000 Per Cent
+                  - generic [ref=f30e711]: Podanur - 641023, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e716]: 11 cent
+                - button "Enquire Now" [ref=f30e721]
+            - article [ref=f30e727] [cursor=pointer]:
+              - generic [ref=f30e728]:
+                - img "PN Pudur – Maruthamalai - 42 Cents - 20L Per Cent" [ref=f30e729]
+                - generic [ref=f30e732]:
+                  - generic [ref=f30e733]: For Sale
+                  - generic [ref=f30e734]: Plot
+                - generic [ref=f30e735]: Quick Overview
+              - generic [ref=f30e740]:
+                - generic [ref=f30e741]:
+                  - generic [ref=f30e742]:
+                    - heading "PN Pudur – Maruthamalai - 42 Cents - 20L Per Cent" [level=3] [ref=f30e743]
+                    - generic [ref=f30e744]: ₹ 20,00,000 Per Cent
+                  - generic [ref=f30e746]: Marudamalai - 641046, Coimbatore, Tamil Nadu
+                  - generic [ref=f30e751]: 42 cent
+                - button "Enquire Now" [ref=f30e756]
+          - button "Load More Properties (603 remaining)" [ref=f30e762] [cursor=pointer]
+  - contentinfo [ref=f30e763]:
+    - generic [ref=f30e764]:
+      - link "RAARYA Logo RAARYA" [ref=f30e765] [cursor=pointer]:
+        - /url: "#"
+        - img "RAARYA Logo" [ref=f30e767]
+        - generic [ref=f30e768]: RAARYA
+      - generic [ref=f30e769]:
+        - generic [ref=f30e770]: "Follow Us:"
+        - link "Facebook" [ref=f30e771] [cursor=pointer]:
+          - /url: https://www.facebook.com/RaaryaGroups
+        - link "Instagram" [ref=f30e774] [cursor=pointer]:
+          - /url: https://www.instagram.com/raaryagroups/
+        - link "LinkedIn" [ref=f30e778] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+        - link "YouTube" [ref=f30e783] [cursor=pointer]:
+          - /url: https://www.youtube.com/@RaaryaGroups
+        - link "Pinterest" [ref=f30e787] [cursor=pointer]:
+          - /url: https://in.pinterest.com/raaryagroups/
+    - generic [ref=f30e790]:
+      - generic [ref=f30e791]:
+        - heading "Contact Us" [level=3] [ref=f30e792]
+        - list [ref=f30e793]:
+          - listitem [ref=f30e794]:
+            - link "2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037" [ref=f30e795] [cursor=pointer]:
+              - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+          - listitem [ref=f30e801]:
+            - link "+91 90872 40400" [ref=f30e802] [cursor=pointer]:
+              - /url: tel:+919087240400
+          - listitem [ref=f30e807]:
+            - link "raaryagroupsinfo@gmail.com" [ref=f30e808] [cursor=pointer]:
+              - /url: mailto:raaryagroupsinfo@gmail.com
+      - generic [ref=f30e814]:
+        - heading "Quick links" [level=3] [ref=f30e815]
+        - list [ref=f30e816]:
+          - listitem [ref=f30e817]:
+            - link "▸ Home" [ref=f30e818] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f30e819]: ▸
+              - generic [ref=f30e821]: Home
+          - listitem [ref=f30e822]:
+            - link "▸ About Us" [ref=f30e823] [cursor=pointer]:
+              - /url: "#about"
+              - generic [ref=f30e824]: ▸
+              - generic [ref=f30e826]: About Us
+          - listitem [ref=f30e827]:
+            - link "▸ Contact Us" [ref=f30e828] [cursor=pointer]:
+              - /url: "#contact"
+              - generic [ref=f30e829]: ▸
+              - generic [ref=f30e831]: Contact Us
+          - listitem [ref=f30e832]:
+            - link "▸ EMI Calculator" [ref=f30e833] [cursor=pointer]:
+              - /url: "#emi-calculator"
+              - generic [ref=f30e834]: ▸
+              - generic [ref=f30e836]: EMI Calculator
+          - listitem [ref=f30e837]:
+            - link "▸ Eligibility Check" [ref=f30e838] [cursor=pointer]:
+              - /url: "#eligibility-check"
+              - generic [ref=f30e839]: ▸
+              - generic [ref=f30e841]: Eligibility Check
+      - generic [ref=f30e842]:
+        - heading "Other Links" [level=3] [ref=f30e843]
+        - list [ref=f30e844]:
+          - listitem [ref=f30e845]:
+            - link "▸ Blog" [ref=f30e846] [cursor=pointer]:
+              - /url: "#blog"
+              - generic [ref=f30e847]: ▸
+              - generic [ref=f30e849]: Blog
+          - listitem [ref=f30e850]:
+            - link "▸ Post Your Property" [ref=f30e851] [cursor=pointer]:
+              - /url: "#post-property"
+              - generic [ref=f30e852]: ▸
+              - generic [ref=f30e854]: Post Your Property
+      - generic [ref=f30e855]:
+        - heading "Location" [level=3] [ref=f30e856]
+        - generic [ref=f30e857]:
+          - iframe [ref=f30e858]
+          - link "View Office Location" [ref=f30e859] [cursor=pointer]:
+            - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+    - paragraph [ref=f30e869]: Copyright © 2026 Raarya. All Rights Reserved
+  - generic [ref=f30e872]:
+    - generic [ref=f30e873]:
+      - generic: Call Direct
+      - link "Call Direct" [ref=f30e874] [cursor=pointer]:
+        - /url: tel:9087240400
+    - generic [ref=f30e880]:
+      - generic: WhatsApp Chat
+      - link "WhatsApp Chat" [ref=f30e881] [cursor=pointer]:
+        - /url: https://wa.me/919087240400
+    - generic [ref=f30e885]:
+      - generic: AI Concierge
+      - button "AI Concierge" [ref=f30e886] [cursor=pointer]

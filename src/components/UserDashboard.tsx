@@ -35,7 +35,7 @@ function DashboardHome({ user }: { user: any }) {
   useEffect(() => {
     apiGetProperties(user.email)
       .then(d => { if (d.success) setProperties(d.properties || []); })
-      .catch(() => {});
+      .catch(() => { });
   }, [user.email]);
 
   const filtered = properties.filter(p =>
@@ -44,32 +44,32 @@ function DashboardHome({ user }: { user: any }) {
   );
 
   const stats = [
-    { 
-      label: 'Your Listings', 
-      value: properties.length, 
-      sub: 'Total active listings', 
-      icon: Building2, 
-      color: 'bg-gradient-to-br from-emerald-50 to-teal-50/50 border-emerald-100 hover:border-emerald-300 hover:shadow-emerald-100/40', 
-      iconColor: 'text-emerald-600 bg-emerald-100/80 ring-4 ring-emerald-50', 
-      accent: 'text-emerald-600 group-hover:translate-x-1' 
+    {
+      label: 'Your Listings',
+      value: properties.length,
+      sub: 'Total active listings',
+      icon: Building2,
+      color: 'bg-gradient-to-br from-emerald-50 to-teal-50/50 border-emerald-100 hover:border-emerald-300 hover:shadow-emerald-100/40',
+      iconColor: 'text-emerald-600 bg-emerald-100/80 ring-4 ring-emerald-50',
+      accent: 'text-emerald-600 group-hover:translate-x-1'
     },
-    { 
-      label: 'Pending', 
-      value: properties.filter(p => p.status === 'Pending').length, 
-      sub: 'Awaiting verification review', 
-      icon: Clock, 
-      color: 'bg-gradient-to-br from-amber-50 to-orange-50/50 border-amber-100 hover:border-amber-300 hover:shadow-amber-100/40', 
-      iconColor: 'text-amber-600 bg-amber-100/80 ring-4 ring-amber-50', 
-      accent: 'text-amber-600 group-hover:translate-x-1' 
+    {
+      label: 'Pending',
+      value: properties.filter(p => p.status === 'Pending').length,
+      sub: 'Awaiting verification review',
+      icon: Clock,
+      color: 'bg-gradient-to-br from-amber-50 to-orange-50/50 border-amber-100 hover:border-amber-300 hover:shadow-amber-100/40',
+      iconColor: 'text-amber-600 bg-amber-100/80 ring-4 ring-amber-50',
+      accent: 'text-amber-600 group-hover:translate-x-1'
     },
-    { 
-      label: 'Sold', 
-      value: properties.filter(p => p.sold).length, 
-      sub: 'Successfully closed deals', 
-      icon: CheckCircle2, 
-      color: 'bg-gradient-to-br from-rose-50 to-pink-50/50 border-rose-100 hover:border-rose-300 hover:shadow-rose-100/40', 
-      iconColor: 'text-rose-600 bg-rose-100/80 ring-4 ring-rose-50', 
-      accent: 'text-rose-600 group-hover:translate-x-1' 
+    {
+      label: 'Sold',
+      value: properties.filter(p => p.sold).length,
+      sub: 'Successfully closed deals',
+      icon: CheckCircle2,
+      color: 'bg-gradient-to-br from-rose-50 to-pink-50/50 border-rose-100 hover:border-rose-300 hover:shadow-rose-100/40',
+      iconColor: 'text-rose-600 bg-rose-100/80 ring-4 ring-rose-50',
+      accent: 'text-rose-600 group-hover:translate-x-1'
     },
   ];
 
@@ -191,16 +191,14 @@ function DashboardHome({ user }: { user: any }) {
                     <td className="px-8 py-5 text-xs text-slate-600 font-semibold">{[p.locality, p.city].filter(Boolean).join(', ') || '-'}</td>
                     <td className="px-8 py-5 text-xs text-slate-600 font-medium">{p.propertyType || '-'}</td>
                     <td className="px-8 py-5">
-                      <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${
-                        p.status === 'Pending' ? 'bg-amber-50 text-amber-700 border border-amber-100'
-                        : p.status === 'Active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
-                        : 'bg-slate-50 text-slate-600 border border-slate-100'
-                      }`}>{p.status || 'Pending'}</span>
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${p.status === 'Pending' ? 'bg-amber-50 text-amber-700 border border-amber-100'
+                          : p.status === 'Active' ? 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                            : 'bg-slate-50 text-slate-600 border border-slate-100'
+                        }`}>{p.status || 'Pending'}</span>
                     </td>
                     <td className="px-8 py-5">
-                      <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${
-                        p.sold ? 'bg-rose-50 text-rose-700 border border-rose-100' : 'bg-slate-50 text-slate-500 border border-slate-100'
-                      }`}>{p.sold ? 'Sold' : 'Not Sold'}</span>
+                      <span className={`px-3 py-1 rounded-full text-[10px] font-bold ${p.sold ? 'bg-rose-50 text-rose-700 border border-rose-100' : 'bg-slate-50 text-slate-500 border border-slate-100'
+                        }`}>{p.sold ? 'Sold' : 'Not Sold'}</span>
                     </td>
                     <td className="px-8 py-5">
                       <button className="px-4 py-2 text-[10px] font-bold border border-slate-200 rounded-xl text-slate-700 hover:bg-[#141414] hover:text-white hover:border-[#141414] hover:scale-[1.02] active:scale-[0.98] transition-all duration-300 shadow-sm">
@@ -283,11 +281,10 @@ export function UserDashboard({ user, onClose, onLogout, onUserUpdate, initialTa
               <button
                 key={item.id}
                 onClick={() => setActiveMenu(item.id)}
-                className={`group/nav flex items-center justify-between px-4 py-3.5 rounded-2xl text-[13px] font-bold tracking-tight transition-all duration-300 w-full hover:-translate-y-0.5 ${
-                  isActive
+                className={`group/nav flex items-center justify-between px-4 py-3.5 rounded-2xl text-[13px] font-bold tracking-tight transition-all duration-300 w-full hover:-translate-y-0.5 ${isActive
                     ? 'bg-[#141414] text-white shadow-xl shadow-black/15'
                     : 'text-slate-500 hover:text-[#141414] hover:bg-slate-50'
-                }`}
+                  }`}
               >
                 <span className="flex items-center gap-3.5">
                   <Icon className={`w-4.5 h-4.5 shrink-0 transition-transform duration-300 ${isActive ? '' : 'group-hover/nav:scale-110'}`} />

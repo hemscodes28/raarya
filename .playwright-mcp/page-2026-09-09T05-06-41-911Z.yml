@@ -1,0 +1,176 @@
+- generic [ref=f15e3]:
+  - generic [ref=f15e6]:
+    - img [ref=f15e7]:
+      - generic [ref=f15e8]:
+        - generic [ref=f15e13]: BUY
+        - generic [ref=f15e15]: RENT
+        - generic [ref=f15e17]: PG / HOSTEL
+    - generic [ref=f15e35]:
+      - generic [ref=f15e36]: PREMIUM PLOTS BUYING & SELLING
+      - generic [ref=f15e37]: RAARYA GROUPS
+      - generic [ref=f15e38]:
+        - generic [ref=f15e39]:
+          - generic [ref=f15e40]: ❯
+          - generic [ref=f15e41]: ACCESSING PREMIUM PLOT DATABASE...
+        - generic [ref=f15e42]:
+          - generic [ref=f15e43]: ❯
+          - generic [ref=f15e44]: VERIFYING DTCP & RERA APPROVED LISTINGS...
+  - banner [ref=f15e45]:
+    - navigation "Primary" [ref=f15e48]:
+      - link "Home" [ref=f15e49] [cursor=pointer]:
+        - /url: "#/"
+        - img "RAARYA" [ref=f15e50]
+      - button "Toggle menu" [ref=f15e51] [cursor=pointer]
+  - main [ref=f15e54]:
+    - generic [ref=f15e56]:
+      - generic [ref=f15e57]:
+        - generic [ref=f15e58]: Home Loan Services
+        - heading "Loan Assist & Calculator" [level=1] [ref=f15e59]
+        - paragraph [ref=f15e60]: Plan your property acquisitions intelligently with our synchronized, real-time calculators.
+        - generic [ref=f15e61]:
+          - button "EMI Calculator" [ref=f15e62] [cursor=pointer]
+          - button "Eligibility Check" [ref=f15e67] [cursor=pointer]
+      - generic [ref=f15e73]:
+        - generic [ref=f15e74]:
+          - heading "Loan Variables" [level=3] [ref=f15e75]
+          - generic [ref=f15e81]:
+            - generic [ref=f15e82]:
+              - generic [ref=f15e83]: Loan Amount
+              - generic [ref=f15e84]:
+                - generic [ref=f15e85]: ₹
+                - spinbutton [ref=f15e86]: "1000000"
+            - slider [ref=f15e87] [cursor=pointer]: "1000000"
+            - generic [ref=f15e88]:
+              - generic [ref=f15e89]: ₹1,00,000.00
+              - generic [ref=f15e90]: ₹10,00,000.00
+              - generic [ref=f15e91]: ₹10,00,00,000.00
+          - generic [ref=f15e92]:
+            - generic [ref=f15e93]:
+              - generic [ref=f15e94]: Rate of Interest (p.a)
+              - generic [ref=f15e95]:
+                - spinbutton [ref=f15e96]: "8.5"
+                - generic [ref=f15e97]: "%"
+            - slider [ref=f15e98] [cursor=pointer]: "8.5"
+            - generic [ref=f15e99]:
+              - generic [ref=f15e100]: 5 %
+              - generic [ref=f15e101]: 8.5%
+              - generic [ref=f15e102]: 20 %
+          - generic [ref=f15e103]:
+            - generic [ref=f15e104]:
+              - generic [ref=f15e105]: Loan Tenure
+              - generic [ref=f15e106]:
+                - spinbutton [ref=f15e107]: "20"
+                - generic [ref=f15e108]: Yrs
+            - slider [ref=f15e109] [cursor=pointer]: "20"
+            - generic [ref=f15e110]:
+              - generic [ref=f15e111]: 1 Year
+              - generic [ref=f15e112]: 20 Years
+              - generic [ref=f15e113]: 30 Years
+        - generic [ref=f15e114]:
+          - generic [ref=f15e115]:
+            - text: Monthly Installment
+            - generic [ref=f15e116]: ₹8,678.23
+          - generic [ref=f15e121]:
+            - generic [ref=f15e122]: Tenure
+            - generic [ref=f15e123]: 20 Years
+          - generic [ref=f15e124]:
+            - generic [ref=f15e125]:
+              - generic [ref=f15e126]: Principal Loan Amount
+              - generic [ref=f15e127]: ₹10,00,000.00
+            - generic [ref=f15e128]:
+              - generic [ref=f15e129]: Total Interest Payable
+              - generic [ref=f15e130]: ₹10,82,775.76
+            - generic [ref=f15e131]:
+              - generic [ref=f15e132]: Total Amount Payable
+              - generic [ref=f15e133]: ₹20,82,775.76
+  - contentinfo [ref=f15e134]:
+    - generic [ref=f15e135]:
+      - link "RAARYA Logo RAARYA" [ref=f15e136] [cursor=pointer]:
+        - /url: "#"
+        - img "RAARYA Logo" [ref=f15e138]
+        - generic [ref=f15e139]: RAARYA
+      - generic [ref=f15e140]:
+        - generic [ref=f15e141]: "Follow Us:"
+        - link "Facebook" [ref=f15e142] [cursor=pointer]:
+          - /url: https://www.facebook.com/RaaryaGroups
+        - link "Instagram" [ref=f15e145] [cursor=pointer]:
+          - /url: https://www.instagram.com/raaryagroups/
+        - link "LinkedIn" [ref=f15e149] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+        - link "YouTube" [ref=f15e154] [cursor=pointer]:
+          - /url: https://www.youtube.com/@RaaryaGroups
+        - link "Pinterest" [ref=f15e158] [cursor=pointer]:
+          - /url: https://in.pinterest.com/raaryagroups/
+    - generic [ref=f15e161]:
+      - generic [ref=f15e162]:
+        - heading "Contact Us" [level=3] [ref=f15e163]
+        - list [ref=f15e164]:
+          - listitem [ref=f15e165]:
+            - link "2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037" [ref=f15e166] [cursor=pointer]:
+              - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+          - listitem [ref=f15e172]:
+            - link "+91 90872 40400" [ref=f15e173] [cursor=pointer]:
+              - /url: tel:+919087240400
+          - listitem [ref=f15e178]:
+            - link "raaryagroupsinfo@gmail.com" [ref=f15e179] [cursor=pointer]:
+              - /url: mailto:raaryagroupsinfo@gmail.com
+      - generic [ref=f15e185]:
+        - heading "Quick links" [level=3] [ref=f15e186]
+        - list [ref=f15e187]:
+          - listitem [ref=f15e188]:
+            - link "▸ Home" [ref=f15e189] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f15e190]: ▸
+              - generic [ref=f15e192]: Home
+          - listitem [ref=f15e193]:
+            - link "▸ About Us" [ref=f15e194] [cursor=pointer]:
+              - /url: "#about"
+              - generic [ref=f15e195]: ▸
+              - generic [ref=f15e197]: About Us
+          - listitem [ref=f15e198]:
+            - link "▸ Contact Us" [ref=f15e199] [cursor=pointer]:
+              - /url: "#contact"
+              - generic [ref=f15e200]: ▸
+              - generic [ref=f15e202]: Contact Us
+          - listitem [ref=f15e203]:
+            - link "▸ EMI Calculator" [ref=f15e204] [cursor=pointer]:
+              - /url: "#emi-calculator"
+              - generic [ref=f15e205]: ▸
+              - generic [ref=f15e207]: EMI Calculator
+          - listitem [ref=f15e208]:
+            - link "▸ Eligibility Check" [ref=f15e209] [cursor=pointer]:
+              - /url: "#eligibility-check"
+              - generic [ref=f15e210]: ▸
+              - generic [ref=f15e212]: Eligibility Check
+      - generic [ref=f15e213]:
+        - heading "Other Links" [level=3] [ref=f15e214]
+        - list [ref=f15e215]:
+          - listitem [ref=f15e216]:
+            - link "▸ Blog" [ref=f15e217] [cursor=pointer]:
+              - /url: "#blog"
+              - generic [ref=f15e218]: ▸
+              - generic [ref=f15e220]: Blog
+          - listitem [ref=f15e221]:
+            - link "▸ Post Your Property" [ref=f15e222] [cursor=pointer]:
+              - /url: "#post-property"
+              - generic [ref=f15e223]: ▸
+              - generic [ref=f15e225]: Post Your Property
+      - generic [ref=f15e226]:
+        - heading "Location" [level=3] [ref=f15e227]
+        - generic [ref=f15e228]:
+          - iframe [ref=f15e229]
+          - link "View Office Location" [ref=f15e230] [cursor=pointer]:
+            - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+    - paragraph [ref=f15e240]: Copyright © 2026 Raarya. All Rights Reserved
+  - generic [ref=f15e243]:
+    - generic [ref=f15e244]:
+      - generic: Call Direct
+      - link "Call Direct" [ref=f15e245] [cursor=pointer]:
+        - /url: tel:9087240400
+    - generic [ref=f15e251]:
+      - generic: WhatsApp Chat
+      - link "WhatsApp Chat" [ref=f15e252] [cursor=pointer]:
+        - /url: https://wa.me/919087240400
+    - generic [ref=f15e256]:
+      - generic: AI Concierge
+      - button "AI Concierge" [ref=f15e257] [cursor=pointer]

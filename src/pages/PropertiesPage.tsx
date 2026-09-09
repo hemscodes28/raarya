@@ -453,7 +453,7 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="relative w-full max-w-md h-full bg-white shadow-2xl p-4 overflow-y-auto z-10"
+              className="relative w-full max-w-md h-full bg-white shadow-2xl overflow-hidden z-10 flex flex-col"
             >
               <PropertyFilterPanel
                 filters={filters}

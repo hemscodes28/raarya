@@ -1,0 +1,216 @@
+- generic [ref=f45e3]:
+  - generic [ref=f45e5]:
+    - generic [ref=f45e6]:
+      - img [ref=f45e7]:
+        - generic [ref=f45e8]:
+          - generic [ref=f45e13]: BUY
+          - generic [ref=f45e16]: RENT
+          - generic [ref=f45e19]: PG / HOSTEL
+      - generic [ref=f45e38]:
+        - generic [ref=f45e39]: PREMIUM PLOTS BUYING & SELLING
+        - generic [ref=f45e40]: RAARYA GROUPS
+        - generic [ref=f45e41]:
+          - generic [ref=f45e42]:
+            - generic [ref=f45e43]: ❯
+            - generic [ref=f45e44]: ACCESSING PREMIUM PLOT DATABASE...
+          - generic [ref=f45e45]:
+            - generic [ref=f45e46]: ❯
+            - generic [ref=f45e47]: VERIFYING DTCP & RERA APPROVED LISTINGS...
+          - generic [ref=f45e48]:
+            - generic [ref=f45e49]: ❯
+            - generic [ref=f45e50]: LOADING PLOT LAND & INVENTORY MAPS...
+          - generic [ref=f45e51]:
+            - generic [ref=f45e52]: ❯
+            - generic [ref=f45e53]: ESTABLISHING SECURE TRANSACTION PORTAL...
+    - generic:
+      - generic: RAARYA GROUPS
+      - generic: PREMIUM PLOTS BUYING & SELLING
+  - banner [ref=f45e54]:
+    - navigation "Primary" [ref=f45e57]:
+      - link "Home" [ref=f45e58] [cursor=pointer]:
+        - /url: "#/"
+        - img "RAARYA" [ref=f45e59]
+      - button "Toggle menu" [ref=f45e60] [cursor=pointer]
+  - main [ref=f45e63]:
+    - generic [ref=f45e64]:
+      - generic [ref=f45e66]:
+        - generic [ref=f45e67]: Coimbatore’s Trusted Property Promoters
+        - heading "About Raarya" [level=1] [ref=f45e69]
+        - paragraph [ref=f45e70]: Crafting Iconic Living Spaces & High-Appreciation Destinations Across Coimbatore.
+      - generic [ref=f45e72]:
+        - generic [ref=f45e74]:
+          - img "Raarya Property Architecture" [ref=f45e76]
+          - generic [ref=f45e77]:
+            - generic [ref=f45e78]:
+              - generic [ref=f45e79]: "2022"
+              - generic [ref=f45e80]: Established
+            - generic [ref=f45e82]:
+              - generic [ref=f45e83]: 650+
+              - generic [ref=f45e84]: Listings
+            - generic [ref=f45e86]:
+              - generic [ref=f45e87]: 100%
+              - generic [ref=f45e88]: Approved
+        - generic [ref=f45e89]:
+          - generic [ref=f45e90]:
+            - generic [ref=f45e91]: WELCOME TO
+            - heading "Raarya Property Promoters" [level=2] [ref=f45e92]
+          - generic [ref=f45e93]:
+            - paragraph [ref=f45e94]:
+              - strong [ref=f45e95]: Raarya Property Promoters
+              - text: has been Coimbatore’s trusted real estate partner since 2022, dedicated to transforming the city’s property landscape with innovation and sustainability. We specialize in creating living and working spaces that blend modern design, environmental responsibility, and lasting value. Guided by our core principles of integrity, quality, and customer satisfaction, Raarya Property Promoters strives to deliver excellence in every project.
+            - paragraph [ref=f45e96]: Our services cover a wide range of real estate solutions, including residential and commercial developments, property management, and investment consultation. Whether you are looking for affordable homes, luxury villas, or strategically located commercial spaces, Raarya Property Promoters ensures that every project is meticulously planned for maximum comfort, convenience, and productivity.
+            - paragraph [ref=f45e97]: We take pride in our commitment to superior construction quality and timely delivery, ensuring that each customer’s dream is realized with precision and care. With a focus on sustainable development, innovation, and transparency, Raarya Property Promoters continues to redefine Coimbatore’s real estate standards. Thank you for choosing us as your trusted real estate partner — together, we are building a brighter and more sustainable future for Coimbatore.
+      - generic [ref=f45e99]:
+        - generic [ref=f45e100]:
+          - generic [ref=f45e101]: OUR BENEFITS
+          - heading "Why Choose Raarya" [level=2] [ref=f45e102]
+          - paragraph [ref=f45e103]: Discover why homebuyers and real estate investors across Coimbatore trust Raarya Property Promoters.
+        - generic [ref=f45e104]:
+          - generic [ref=f45e107]:
+            - generic [ref=f45e112]:
+              - heading "Premium Living" [level=3] [ref=f45e113]
+              - generic [ref=f45e114]: Luxury-designed homes & plots
+            - paragraph [ref=f45e115]: Meticulously planned layouts built with modern architecture and aesthetic elegance.
+          - generic [ref=f45e118]:
+            - generic [ref=f45e123]:
+              - heading "Trusted Quality" [level=3] [ref=f45e124]
+              - generic [ref=f45e125]: Reliable construction & clear titles
+            - paragraph [ref=f45e126]: 100% legally verified DTCP & RERA approved projects ensuring complete peace of mind.
+          - generic [ref=f45e129]:
+            - generic [ref=f45e134]:
+              - heading "Prime Locations" [level=3] [ref=f45e135]
+              - generic [ref=f45e136]: High-appreciation corridors
+            - paragraph [ref=f45e137]: Strategic positioning across Coimbatore’s fastest-growing IT and residential hubs.
+          - generic [ref=f45e140]:
+            - generic [ref=f45e147]:
+              - heading "Customer Support" [level=3] [ref=f45e148]
+              - generic [ref=f45e149]: Dedicated end-to-end assistance
+            - paragraph [ref=f45e150]: Personalized guidance from initial site visit to registration and post-handover care.
+          - generic [ref=f45e153]:
+            - generic [ref=f45e158]:
+              - heading "Eco-Friendly Design" [level=3] [ref=f45e159]
+              - generic [ref=f45e160]: Green & sustainable spaces
+            - paragraph [ref=f45e161]: Thoughtfully planned green environments designed for healthy, modern community living.
+          - generic [ref=f45e164]:
+            - generic [ref=f45e171]:
+              - heading "Professional Team" [level=3] [ref=f45e172]
+              - generic [ref=f45e173]: Proven real estate expertise
+            - paragraph [ref=f45e174]: Experienced industry advisors delivering transparent, client-first real estate solutions.
+      - generic [ref=f45e176]:
+        - generic [ref=f45e177]:
+          - heading "Our Mission" [level=3] [ref=f45e183]
+          - paragraph [ref=f45e184]: To create premium living spaces that combine modern architecture, long-lasting quality, and lifestyle comfort — ensuring every family experiences a better way of living.
+        - generic [ref=f45e185]:
+          - heading "Our Vision" [level=3] [ref=f45e190]
+          - paragraph [ref=f45e191]: To become a trusted real estate brand known for innovation, transparency, and customer-first approach — shaping communities where people love to live, work, and grow.
+      - generic [ref=f45e193]:
+        - generic [ref=f45e194]:
+          - heading "Ready to Find Your Dream Home?" [level=2] [ref=f45e195]
+          - paragraph [ref=f45e196]: Connect with Raarya Properties today and take the next step toward modern, premium living in Coimbatore.
+        - generic [ref=f45e197]:
+          - link "Call +91 90872 40400" [ref=f45e198] [cursor=pointer]:
+            - /url: tel:+919087240400
+          - button "Enquire Online" [ref=f45e204] [cursor=pointer]
+      - generic [ref=f45e207]:
+        - generic [ref=f45e208]:
+          - generic [ref=f45e209]: FAQS
+          - heading "Frequently Asked Questions" [level=2] [ref=f45e210]
+        - generic [ref=f45e211]:
+          - generic [ref=f45e212]:
+            - button "Why should I choose Raarya Properties?" [ref=f45e213] [cursor=pointer]
+            - generic [ref=f45e217]: Raarya Properties offers premium-quality homes built with modern design, trusted construction, and customer-first service. We focus on delivering long-lasting value, prime locations, and lifestyle-enhancing amenities. Contact us for available DTCP plots in Coimbatore – +91 90872 40400.
+          - button "How do I start the home-buying process?" [ref=f45e220] [cursor=pointer]
+          - button "Are Raarya Properties projects legally approved?" [ref=f45e225] [cursor=pointer]
+          - button "Do you provide customer support after the purchase?" [ref=f45e230] [cursor=pointer]
+          - button "Can I customize my home before handover?" [ref=f45e235] [cursor=pointer]
+  - contentinfo [ref=f45e239]:
+    - generic [ref=f45e240]:
+      - link "RAARYA Logo RAARYA" [ref=f45e241] [cursor=pointer]:
+        - /url: "#"
+        - img "RAARYA Logo" [ref=f45e243]
+        - generic [ref=f45e244]: RAARYA
+      - generic [ref=f45e245]:
+        - generic [ref=f45e246]: "Follow Us:"
+        - link "Facebook" [ref=f45e247] [cursor=pointer]:
+          - /url: https://www.facebook.com/RaaryaGroups
+        - link "Instagram" [ref=f45e250] [cursor=pointer]:
+          - /url: https://www.instagram.com/raaryagroups/
+        - link "LinkedIn" [ref=f45e254] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+        - link "YouTube" [ref=f45e259] [cursor=pointer]:
+          - /url: https://www.youtube.com/@RaaryaGroups
+        - link "Pinterest" [ref=f45e263] [cursor=pointer]:
+          - /url: https://in.pinterest.com/raaryagroups/
+    - generic [ref=f45e266]:
+      - generic [ref=f45e267]:
+        - heading "Contact Us" [level=3] [ref=f45e268]
+        - list [ref=f45e269]:
+          - listitem [ref=f45e270]:
+            - link "2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037" [ref=f45e271] [cursor=pointer]:
+              - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+          - listitem [ref=f45e277]:
+            - link "+91 90872 40400" [ref=f45e278] [cursor=pointer]:
+              - /url: tel:+919087240400
+          - listitem [ref=f45e283]:
+            - link "raaryagroupsinfo@gmail.com" [ref=f45e284] [cursor=pointer]:
+              - /url: mailto:raaryagroupsinfo@gmail.com
+      - generic [ref=f45e290]:
+        - heading "Quick links" [level=3] [ref=f45e291]
+        - list [ref=f45e292]:
+          - listitem [ref=f45e293]:
+            - link "▸ Home" [ref=f45e294] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f45e295]: ▸
+              - generic [ref=f45e297]: Home
+          - listitem [ref=f45e298]:
+            - link "▸ About Us" [ref=f45e299] [cursor=pointer]:
+              - /url: "#about"
+              - generic [ref=f45e300]: ▸
+              - generic [ref=f45e302]: About Us
+          - listitem [ref=f45e303]:
+            - link "▸ Contact Us" [ref=f45e304] [cursor=pointer]:
+              - /url: "#contact"
+              - generic [ref=f45e305]: ▸
+              - generic [ref=f45e307]: Contact Us
+          - listitem [ref=f45e308]:
+            - link "▸ EMI Calculator" [ref=f45e309] [cursor=pointer]:
+              - /url: "#emi-calculator"
+              - generic [ref=f45e310]: ▸
+              - generic [ref=f45e312]: EMI Calculator
+          - listitem [ref=f45e313]:
+            - link "▸ Eligibility Check" [ref=f45e314] [cursor=pointer]:
+              - /url: "#eligibility-check"
+              - generic [ref=f45e315]: ▸
+              - generic [ref=f45e317]: Eligibility Check
+      - generic [ref=f45e318]:
+        - heading "Other Links" [level=3] [ref=f45e319]
+        - list [ref=f45e320]:
+          - listitem [ref=f45e321]:
+            - link "▸ Blog" [ref=f45e322] [cursor=pointer]:
+              - /url: "#blog"
+              - generic [ref=f45e323]: ▸
+              - generic [ref=f45e325]: Blog
+          - listitem [ref=f45e326]:
+            - link "▸ Post Your Property" [ref=f45e327] [cursor=pointer]:
+              - /url: "#post-property"
+              - generic [ref=f45e328]: ▸
+              - generic [ref=f45e330]: Post Your Property
+      - generic [ref=f45e331]:
+        - heading "Location" [level=3] [ref=f45e332]
+        - generic [ref=f45e333]:
+          - iframe [ref=f45e334]
+          - link "View Office Location" [ref=f45e335] [cursor=pointer]:
+            - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+    - paragraph [ref=f45e345]: Copyright © 2026 Raarya. All Rights Reserved
+  - generic [ref=f45e348]:
+    - generic [ref=f45e349]:
+      - generic: Call Direct
+      - link "Call Direct" [ref=f45e350] [cursor=pointer]:
+        - /url: tel:9087240400
+    - generic [ref=f45e356]:
+      - generic: WhatsApp Chat
+      - link "WhatsApp Chat" [ref=f45e357] [cursor=pointer]:
+        - /url: https://wa.me/919087240400
+    - generic [ref=f45e361]:
+      - generic: AI Concierge
+      - button "AI Concierge" [ref=f45e362] [cursor=pointer]

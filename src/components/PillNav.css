@@ -66,7 +66,7 @@
   height: 100%;
 }
 
-.pill-list > li {
+.pill-list>li {
   display: flex;
   height: 100%;
   overflow: visible;
@@ -216,11 +216,13 @@
   box-sizing: border-box;
   max-height: 85vh;
   overflow-y: auto;
-  scrollbar-width: none; /* Hide scrollbar for clean look in Firefox */
+  scrollbar-width: none;
+  /* Hide scrollbar for clean look in Firefox */
 }
 
 .mobile-menu-popover::-webkit-scrollbar {
-  display: none; /* Hide scrollbar for Chrome/Safari */
+  display: none;
+  /* Hide scrollbar for Chrome/Safari */
 }
 
 .mobile-menu-list {

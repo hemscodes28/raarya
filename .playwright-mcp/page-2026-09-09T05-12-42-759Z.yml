@@ -1,0 +1,177 @@
+- generic [ref=f35e3]:
+  - generic [ref=f35e6]:
+    - img [ref=f35e7]:
+      - generic [ref=f35e8]:
+        - generic [ref=f35e12]: BUY
+        - generic [ref=f35e14]: RENT
+        - generic [ref=f35e16]: PG / HOSTEL
+    - generic [ref=f35e34]:
+      - generic [ref=f35e35]: PREMIUM PLOTS BUYING & SELLING
+      - generic [ref=f35e36]: RAARYA GROUPS
+      - generic [ref=f35e38]:
+        - generic [ref=f35e39]: ❯
+        - generic [ref=f35e40]: ACCESSING PREMIUM PLOT DATABASE...
+  - banner [ref=f35e41]:
+    - navigation "Primary" [ref=f35e44]:
+      - link "Home" [ref=f35e45] [cursor=pointer]:
+        - /url: "#/"
+        - img "RAARYA" [ref=f35e46]
+      - button "Toggle menu" [ref=f35e47] [cursor=pointer]
+  - main [ref=f35e50]:
+    - generic [ref=f35e56]:
+      - generic [ref=f35e57]:
+        - generic [ref=f35e58]:
+          - generic [ref=f35e59]:
+            - generic [ref=f35e60]: Reach Out
+            - heading "Get in Touch" [level=1] [ref=f35e61]
+          - generic [ref=f35e62]:
+            - blockquote [ref=f35e63]: "\"A home is not just a place of shelter; it is a sanctuary where dreams find their form and futures are built.\""
+            - paragraph [ref=f35e64]: — RAARYA GROUPS
+        - generic [ref=f35e65]:
+          - generic [ref=f35e71]:
+            - heading "Address" [level=4] [ref=f35e72]
+            - paragraph [ref=f35e73]: 2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037.
+            - link "Track Location" [ref=f35e74] [cursor=pointer]:
+              - /url: https://www.google.com/maps/search/?api=1&query=Ram+Apartment,+Avinashi+Road,+Lakshmi+Mills+Junction,+Coimbatore+-+641037
+          - generic [ref=f35e86]:
+            - heading "Information" [level=4] [ref=f35e87]
+            - generic [ref=f35e88]:
+              - link "+91 9087240400" [ref=f35e89] [cursor=pointer]:
+                - /url: tel:+919087240400
+              - link "raaryagroupsinfo@gmail.com" [ref=f35e92] [cursor=pointer]:
+                - /url: mailto:raaryagroupsinfo@gmail.com
+          - generic [ref=f35e101]:
+            - heading "Opening Hours" [level=4] [ref=f35e102]
+            - paragraph [ref=f35e103]: "Monday - Sunday : 9.45am - 6.15pm"
+        - generic [ref=f35e104]:
+          - generic [ref=f35e105]: Follow Us
+          - generic [ref=f35e106]:
+            - link "Follow Raarya Groups on Facebook" [ref=f35e107] [cursor=pointer]:
+              - /url: https://www.facebook.com/RaaryaGroups
+            - link "Follow Raarya Groups on Instagram" [ref=f35e110] [cursor=pointer]:
+              - /url: https://www.instagram.com/raaryagroups/
+            - link "Follow Raarya Groups on LinkedIn" [ref=f35e113] [cursor=pointer]:
+              - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+            - link "Follow Raarya Groups on YouTube" [ref=f35e116] [cursor=pointer]:
+              - /url: https://www.youtube.com/@RaaryaGroups
+            - link "Follow Raarya Groups on Pinterest" [ref=f35e119] [cursor=pointer]:
+              - /url: https://in.pinterest.com/raaryagroups/
+      - generic [ref=f35e123]:
+        - heading "Send a Message" [level=2] [ref=f35e124]
+        - generic [ref=f35e127]:
+          - generic [ref=f35e128]:
+            - generic [ref=f35e129]: Name Details
+            - generic [ref=f35e131]:
+              - textbox "Name" [ref=f35e132]:
+                - /placeholder: " "
+              - generic: Name
+          - generic [ref=f35e133]:
+            - generic [ref=f35e134]: Email Contact
+            - generic [ref=f35e136]:
+              - textbox "Email" [ref=f35e137]:
+                - /placeholder: " "
+              - generic: Email
+          - generic [ref=f35e138]:
+            - generic [ref=f35e139]: Phone Number
+            - generic [ref=f35e141]:
+              - textbox "Phone number" [ref=f35e142]:
+                - /placeholder: " "
+              - generic: Phone number
+          - generic [ref=f35e143]:
+            - generic [ref=f35e144]: Inquiry Message
+            - generic [ref=f35e146]:
+              - textbox "Message" [ref=f35e147]:
+                - /placeholder: " "
+              - generic: Message
+          - generic [ref=f35e148]: Swipe to Submit Inquiry
+  - contentinfo [ref=f35e154]:
+    - generic [ref=f35e155]:
+      - link "RAARYA Logo RAARYA" [ref=f35e156] [cursor=pointer]:
+        - /url: "#"
+        - img "RAARYA Logo" [ref=f35e158]
+        - generic [ref=f35e159]: RAARYA
+      - generic [ref=f35e160]:
+        - generic [ref=f35e161]: "Follow Us:"
+        - link "Facebook" [ref=f35e162] [cursor=pointer]:
+          - /url: https://www.facebook.com/RaaryaGroups
+        - link "Instagram" [ref=f35e165] [cursor=pointer]:
+          - /url: https://www.instagram.com/raaryagroups/
+        - link "LinkedIn" [ref=f35e169] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+        - link "YouTube" [ref=f35e174] [cursor=pointer]:
+          - /url: https://www.youtube.com/@RaaryaGroups
+        - link "Pinterest" [ref=f35e178] [cursor=pointer]:
+          - /url: https://in.pinterest.com/raaryagroups/
+    - generic [ref=f35e181]:
+      - generic [ref=f35e182]:
+        - heading "Contact Us" [level=3] [ref=f35e183]
+        - list [ref=f35e184]:
+          - listitem [ref=f35e185]:
+            - link "2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037" [ref=f35e186] [cursor=pointer]:
+              - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+          - listitem [ref=f35e192]:
+            - link "+91 90872 40400" [ref=f35e193] [cursor=pointer]:
+              - /url: tel:+919087240400
+          - listitem [ref=f35e198]:
+            - link "raaryagroupsinfo@gmail.com" [ref=f35e199] [cursor=pointer]:
+              - /url: mailto:raaryagroupsinfo@gmail.com
+      - generic [ref=f35e205]:
+        - heading "Quick links" [level=3] [ref=f35e206]
+        - list [ref=f35e207]:
+          - listitem [ref=f35e208]:
+            - link "▸ Home" [ref=f35e209] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f35e210]: ▸
+              - generic [ref=f35e212]: Home
+          - listitem [ref=f35e213]:
+            - link "▸ About Us" [ref=f35e214] [cursor=pointer]:
+              - /url: "#about"
+              - generic [ref=f35e215]: ▸
+              - generic [ref=f35e217]: About Us
+          - listitem [ref=f35e218]:
+            - link "▸ Contact Us" [ref=f35e219] [cursor=pointer]:
+              - /url: "#contact"
+              - generic [ref=f35e220]: ▸
+              - generic [ref=f35e222]: Contact Us
+          - listitem [ref=f35e223]:
+            - link "▸ EMI Calculator" [ref=f35e224] [cursor=pointer]:
+              - /url: "#emi-calculator"
+              - generic [ref=f35e225]: ▸
+              - generic [ref=f35e227]: EMI Calculator
+          - listitem [ref=f35e228]:
+            - link "▸ Eligibility Check" [ref=f35e229] [cursor=pointer]:
+              - /url: "#eligibility-check"
+              - generic [ref=f35e230]: ▸
+              - generic [ref=f35e232]: Eligibility Check
+      - generic [ref=f35e233]:
+        - heading "Other Links" [level=3] [ref=f35e234]
+        - list [ref=f35e235]:
+          - listitem [ref=f35e236]:
+            - link "▸ Blog" [ref=f35e237] [cursor=pointer]:
+              - /url: "#blog"
+              - generic [ref=f35e238]: ▸
+              - generic [ref=f35e240]: Blog
+          - listitem [ref=f35e241]:
+            - link "▸ Post Your Property" [ref=f35e242] [cursor=pointer]:
+              - /url: "#post-property"
+              - generic [ref=f35e243]: ▸
+              - generic [ref=f35e245]: Post Your Property
+      - generic [ref=f35e246]:
+        - heading "Location" [level=3] [ref=f35e247]
+        - generic [ref=f35e248]:
+          - iframe [ref=f35e249]
+          - link "View Office Location" [ref=f35e250] [cursor=pointer]:
+            - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+    - paragraph [ref=f35e260]: Copyright © 2026 Raarya. All Rights Reserved
+  - generic [ref=f35e263]:
+    - generic [ref=f35e264]:
+      - generic: Call Direct
+      - link "Call Direct" [ref=f35e265] [cursor=pointer]:
+        - /url: tel:9087240400
+    - generic [ref=f35e271]:
+      - generic: WhatsApp Chat
+      - link "WhatsApp Chat" [ref=f35e272] [cursor=pointer]:
+        - /url: https://wa.me/919087240400
+    - generic [ref=f35e276]:
+      - generic: AI Concierge
+      - button "AI Concierge" [ref=f35e277] [cursor=pointer]

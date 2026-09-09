@@ -124,7 +124,7 @@ export function Footer() {
 
       {/* MAIN FOOTER COLUMNS - ELEGANT OUTFIT FONT & RICH CARDS */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-7 lg:gap-9 relative z-10 font-outfit">
-        
+
         {/* Column 1: Contact Us */}
         <div className="lg:col-span-4 space-y-3.5">
           <h3 className="text-[17px] font-bold tracking-wide text-amber-400 border-b border-amber-500/25 pb-2">

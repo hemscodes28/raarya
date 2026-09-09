@@ -1,4 +1,4 @@
-﻿import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
 
 import banner1 from "../../BANNER-1.jpg.jpeg";
@@ -144,11 +144,10 @@ export function HeroSection() {
               <button
                 key={index}
                 onClick={() => goTo(index)}
-                className={`rounded-full transition-all duration-300 ease-out cursor-pointer ${
-                  index === currentIndex
+                className={`rounded-full transition-all duration-300 ease-out cursor-pointer ${index === currentIndex
                     ? "w-5 md:w-9 h-1.5 md:h-2.5 bg-white shadow-[0_0_12px_rgba(255,255,255,0.7)]"
                     : "w-1.5 md:w-2.5 h-1.5 md:h-2.5 bg-white/40 hover:bg-white/75"
-                }`}
+                  }`}
                 aria-label={`Go to banner ${index + 1}`}
               />
             ))}

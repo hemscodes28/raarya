@@ -1,0 +1,10 @@
+[    8973ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:5173/preset-sites/zenith-realty/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=aa5f2de8:21608
+[    9033ms] [LOG] Firebase App Check initialized with reCAPTCHA Enterprise! @ http://localhost:5173/preset-sites/zenith-realty/src/utils/firebaseClient.ts:29
+[   11683ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5173/favicon.ico:0
+[   11776ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://www.google.com/recaptcha/enterprise/clr?k=6Ld6_Z8tAAAAAFo-38gG7thETZkUQ1eCOCEa9WFt:0
+[   41826ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://www.google.com/recaptcha/enterprise/clr?k=6Ld6_Z8tAAAAAFo-38gG7thETZkUQ1eCOCEa9WFt:0
+[   46102ms] [INFO] %cDownload the React DevTools for a better development experience: https://reactjs.org/link/react-devtools font-weight:bold @ http://localhost:5173/preset-sites/zenith-realty/node_modules/.vite/deps/chunk-FD5SMSK5.js?v=aa5f2de8:21608
+[   46132ms] [LOG] Firebase App Check initialized with reCAPTCHA Enterprise! @ http://localhost:5173/preset-sites/zenith-realty/src/utils/firebaseClient.ts:29
+[   47189ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://www.google.com/recaptcha/enterprise/clr?k=6Ld6_Z8tAAAAAFo-38gG7thETZkUQ1eCOCEa9WFt:0
+[   77246ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://www.google.com/recaptcha/enterprise/clr?k=6Ld6_Z8tAAAAAFo-38gG7thETZkUQ1eCOCEa9WFt:0
+[  137465ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://www.google.com/recaptcha/enterprise/clr?k=6Ld6_Z8tAAAAAFo-38gG7thETZkUQ1eCOCEa9WFt:0

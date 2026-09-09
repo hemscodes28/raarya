@@ -1,15 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { gsap } from 'gsap';
-import { 
-  ChevronDown, 
-  Home, 
-  X, 
-  Calculator, 
-  UserCheck, 
-  ChevronRight, 
-  Building, 
-  Key, 
+import {
+  ChevronDown,
+  Home,
+  X,
+  Calculator,
+  UserCheck,
+  ChevronRight,
+  Building,
+  Key,
   Users,
   PlusCircle,
   BookOpen,
@@ -121,7 +121,7 @@ export function PillNav({
       document.documentElement.style.overflow = '';
     };
   }, [isMobileMenuOpen]);
-  
+
   const circleRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const tlRefs = useRef<(gsap.core.Timeline | null)[]>([]);
   const activeTweenRefs = useRef<(gsap.core.Tween | null)[]>([]);
@@ -188,7 +188,7 @@ export function PillNav({
     window.addEventListener('resize', onResize);
 
     if (document.fonts?.ready) {
-      document.fonts.ready.then(layout).catch(() => {});
+      document.fonts.ready.then(layout).catch(() => { });
     }
 
     const menu = mobileMenuRef.current;
@@ -241,7 +241,7 @@ export function PillNav({
   const handleEnter = (i: number) => {
     const item = items[i];
     if (activeHref === item.href) return; // Do not animate active pill on hover
-    
+
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -255,7 +255,7 @@ export function PillNav({
   const handleLeave = (i: number) => {
     const item = items[i];
     if (activeHref === item.href) return; // Do not animate active pill on hover
-    
+
     const tl = tlRefs.current[i];
     if (!tl) return;
     activeTweenRefs.current[i]?.kill();
@@ -372,8 +372,8 @@ export function PillNav({
               return (
                 <li key={item.href || `item-${i}`} role="none" style={{ overflow: 'visible', position: 'relative' }}>
                   {/* Wrapper div manages React state for dropdown hover */}
-                  <div 
-                    className="relative flex h-full" 
+                  <div
+                    className="relative flex h-full"
                     style={{ overflow: 'visible' }}
                     onMouseEnter={() => {
                       if (DROPDOWNS[item.label]) {
@@ -411,7 +411,7 @@ export function PillNav({
 
                           {/* Top border mask and full stop termination dots for selected state */}
                           {/* Mask covers the top border line underneath the icon */}
-                          <div 
+                          <div
                             className="absolute bg-white z-10 pointer-events-none"
                             style={{
                               width: '36px',
@@ -422,7 +422,7 @@ export function PillNav({
                             }}
                           />
                           {/* Left terminal dot */}
-                          <div 
+                          <div
                             className="absolute rounded-full bg-[#B89047] z-20 pointer-events-none"
                             style={{
                               width: '5px',
@@ -433,7 +433,7 @@ export function PillNav({
                             }}
                           />
                           {/* Right terminal dot */}
-                          <div 
+                          <div
                             className="absolute rounded-full bg-[#B89047] z-20 pointer-events-none"
                             style={{
                               width: '5px',
@@ -498,80 +498,80 @@ export function PillNav({
                       </span>
                     </a>
 
-                  {/* Dropdown popup (Desktop) using Framer Motion for premium animations */}
-                  <AnimatePresence>
-                    {activeDropdown === item.label && DROPDOWNS[item.label] && (
-                      <motion.div
-                        style={{
-                          top: '100%',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          zIndex: 9999,
-                          minWidth: '340px',
-                          position: 'absolute',
-                          paddingTop: '8px'
-                        }}
-                        initial={{ opacity: 0, scale: 0.95, y: 10, x: '-50%' }}
-                        animate={{ opacity: 1, scale: 1, y: 0, x: '-50%' }}
-                        exit={{ opacity: 0, scale: 0.95, y: 10, x: '-50%' }}
-                        transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                        className="flex flex-col"
-                      >
-                        <div className="bg-white border border-amber-500/15 p-3 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] flex flex-col gap-1 relative overflow-hidden">
-                          {/* Subtle top amber gradient highlight */}
-                          <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-500 to-amber-600" />
-                          
-                          {DROPDOWNS[item.label].map((subItem, idx) => {
-                            const Icon = DROPDOWN_ICONS[subItem.label] || Home;
-                            return (
-                              <motion.a
-                                key={subItem.label}
-                                href={subItem.route}
-                                onClick={(e) => {
-                                  if (onItemClick) onItemClick(e, subItem.route);
-                                  setActiveDropdown(null);
-                                }}
-                                onMouseEnter={() => setHoveredSubItem(subItem.label)}
-                                className="relative flex items-center gap-3 p-3 rounded-xl transition-all duration-300 select-none group/sub text-left cursor-pointer"
-                                initial={{ opacity: 0, y: 8 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: idx * 0.05, duration: 0.3 }}
-                              >
-                                {/* layoutId hover highlight background */}
-                                {hoveredSubItem === subItem.label && (
-                                  <motion.div
-                                    layoutId={`${item.label}-highlight`}
-                                    className="absolute inset-0 bg-amber-500/[0.05] rounded-xl -z-10 border border-amber-500/10"
-                                    transition={{ type: 'spring', stiffness: 380, damping: 26 }}
-                                  />
-                                )}
+                    {/* Dropdown popup (Desktop) using Framer Motion for premium animations */}
+                    <AnimatePresence>
+                      {activeDropdown === item.label && DROPDOWNS[item.label] && (
+                        <motion.div
+                          style={{
+                            top: '100%',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 9999,
+                            minWidth: '340px',
+                            position: 'absolute',
+                            paddingTop: '8px'
+                          }}
+                          initial={{ opacity: 0, scale: 0.95, y: 10, x: '-50%' }}
+                          animate={{ opacity: 1, scale: 1, y: 0, x: '-50%' }}
+                          exit={{ opacity: 0, scale: 0.95, y: 10, x: '-50%' }}
+                          transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                          className="flex flex-col"
+                        >
+                          <div className="bg-white border border-amber-500/15 p-3 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.12)] flex flex-col gap-1 relative overflow-hidden">
+                            {/* Subtle top amber gradient highlight */}
+                            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-amber-500 to-amber-600" />
 
-                                {/* Icon badge */}
-                                <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 group-hover/sub:bg-amber-500 group-hover/sub:text-white transition-all duration-300 group-hover/sub:scale-[1.08] group-hover/sub:rotate-3 shadow-sm">
-                                  <Icon className="w-4 h-4" />
-                                </div>
+                            {DROPDOWNS[item.label].map((subItem, idx) => {
+                              const Icon = DROPDOWN_ICONS[subItem.label] || Home;
+                              return (
+                                <motion.a
+                                  key={subItem.label}
+                                  href={subItem.route}
+                                  onClick={(e) => {
+                                    if (onItemClick) onItemClick(e, subItem.route);
+                                    setActiveDropdown(null);
+                                  }}
+                                  onMouseEnter={() => setHoveredSubItem(subItem.label)}
+                                  className="relative flex items-center gap-3 p-3 rounded-xl transition-all duration-300 select-none group/sub text-left cursor-pointer"
+                                  initial={{ opacity: 0, y: 8 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  transition={{ delay: idx * 0.05, duration: 0.3 }}
+                                >
+                                  {/* layoutId hover highlight background */}
+                                  {hoveredSubItem === subItem.label && (
+                                    <motion.div
+                                      layoutId={`${item.label}-highlight`}
+                                      className="absolute inset-0 bg-amber-500/[0.05] rounded-xl -z-10 border border-amber-500/10"
+                                      transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+                                    />
+                                  )}
 
-                                {/* Text wrapper */}
-                                <div className="flex-grow min-w-0 pr-4">
-                                  <div className="text-[13px] font-bold text-[#141414] group-hover/sub:text-amber-600 transition-colors duration-200">
-                                    {subItem.label}
+                                  {/* Icon badge */}
+                                  <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-600 flex items-center justify-center shrink-0 group-hover/sub:bg-amber-500 group-hover/sub:text-white transition-all duration-300 group-hover/sub:scale-[1.08] group-hover/sub:rotate-3 shadow-sm">
+                                    <Icon className="w-4 h-4" />
                                   </div>
-                                  <div className="text-[10px] text-[#A5A5A5] leading-relaxed mt-0.5 truncate">
-                                    {subItem.desc}
-                                  </div>
-                                </div>
 
-                                {/* ChevronRight slide animation */}
-                                <div className="opacity-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-1 transition-all duration-300 text-amber-500 shrink-0 transform -translate-x-1 pr-1">
-                                  <ChevronRight className="w-3.5 h-3.5" />
-                                </div>
-                              </motion.a>
-                            );
-                          })}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
+                                  {/* Text wrapper */}
+                                  <div className="flex-grow min-w-0 pr-4">
+                                    <div className="text-[13px] font-bold text-[#141414] group-hover/sub:text-amber-600 transition-colors duration-200">
+                                      {subItem.label}
+                                    </div>
+                                    <div className="text-[10px] text-[#A5A5A5] leading-relaxed mt-0.5 truncate">
+                                      {subItem.desc}
+                                    </div>
+                                  </div>
+
+                                  {/* ChevronRight slide animation */}
+                                  <div className="opacity-0 group-hover/sub:opacity-100 group-hover/sub:translate-x-1 transition-all duration-300 text-amber-500 shrink-0 transform -translate-x-1 pr-1">
+                                    <ChevronRight className="w-3.5 h-3.5" />
+                                  </div>
+                                </motion.a>
+                              );
+                            })}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </li>
               );
@@ -592,7 +592,7 @@ export function PillNav({
 
       {/* Glassmorphic Mobile Menu Backdrop Overlay */}
       {isMobileMenuOpen && isMounted && typeof document !== 'undefined' && createPortal(
-        <div 
+        <div
           className="fixed inset-0 bg-black/65 backdrop-blur-[6px] z-[998] transition-all duration-300 mobile-only"
           onClick={() => {
             setIsMobileMenuOpen(false);
@@ -603,9 +603,9 @@ export function PillNav({
       )}
 
       {isMounted && typeof document !== 'undefined' && createPortal(
-        <div 
-          className="mobile-menu-popover mobile-only" 
-          ref={mobileMenuRef} 
+        <div
+          className="mobile-menu-popover mobile-only"
+          ref={mobileMenuRef}
           style={{
             position: 'fixed',
             top: '50%',
@@ -626,9 +626,9 @@ export function PillNav({
         >
           {/* Mobile Header: Gold Logo + Close button */}
           <div className="flex justify-between items-center mb-6 pb-4 border-b border-black/5 relative z-10 select-none">
-            <img 
-              src={`${import.meta.env.BASE_URL}logo.png`} 
-              alt="Raarya Logo" 
+            <img
+              src={`${import.meta.env.BASE_URL}logo.png`}
+              alt="Raarya Logo"
               className="h-16 sm:h-20 object-contain"
             />
             <button
@@ -672,13 +672,12 @@ export function PillNav({
                       className="p-3 text-amber-500"
                       aria-label={`Toggle ${item.label} sub-items`}
                     >
-                      <ChevronDown className={`size-4 transition-transform duration-300 ${
-                        mobileExpanded === item.label ? 'rotate-180' : ''
-                      }`} />
+                      <ChevronDown className={`size-4 transition-transform duration-300 ${mobileExpanded === item.label ? 'rotate-180' : ''
+                        }`} />
                     </button>
                   )}
                 </div>
-                
+
                 {/* Mobile Accordion */}
                 {DROPDOWNS[item.label] && mobileExpanded === item.label && (
                   <div className="flex flex-col gap-1.5 pl-3 border-l-2 border-amber-500/30 my-2">

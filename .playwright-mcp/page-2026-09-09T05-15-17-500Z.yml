@@ -1,0 +1,178 @@
+- generic [ref=f55e3]:
+  - generic [ref=f55e6]:
+    - img [ref=f55e7]:
+      - generic [ref=f55e8]:
+        - generic [ref=f55e12]: BUY
+        - generic [ref=f55e14]: RENT
+        - generic [ref=f55e16]: PG / HOSTEL
+    - generic [ref=f55e34]:
+      - generic [ref=f55e35]: PREMIUM PLOTS BUYING & SELLING
+      - generic [ref=f55e36]: RAARYA GROUPS
+      - generic [ref=f55e38]:
+        - generic [ref=f55e39]: ❯
+        - generic [ref=f55e40]: ACCESSING PREMIUM PLOT DATABASE...
+  - banner [ref=f55e41]:
+    - navigation "Primary" [ref=f55e44]:
+      - link "Home" [ref=f55e45] [cursor=pointer]:
+        - /url: "#/"
+        - img "RAARYA" [ref=f55e46]
+      - button "Toggle menu" [ref=f55e47] [cursor=pointer]
+  - main [ref=f55e50]:
+    - main [ref=f55e51]:
+      - generic [ref=f55e52]:
+        - generic [ref=f55e53]:
+          - heading "Guides & Insights" [level=1] [ref=f55e54]
+          - paragraph [ref=f55e55]: Comprehensive articles, legal checklists, and real estate market updates for property buyers in Coimbatore.
+        - textbox "Search articles, topics or checklists..." [ref=f55e61]
+        - generic [ref=f55e62]:
+          - generic [ref=f55e63] [cursor=pointer]:
+            - img "Why Karamadai Is Emerging as a Prime Real Estate Investment Location in Coimbatore" [ref=f55e65]
+            - generic [ref=f55e66]:
+              - generic [ref=f55e67]:
+                - generic [ref=f55e68]: Real Estate Guide
+                - heading "Why Karamadai Is Emerging as a Prime Real Estate Investment Location in Coimbatore" [level=2] [ref=f55e70]
+                - paragraph [ref=f55e71]: Coimbatore has long been recognized as one of Tamil Nadu's most stable and fast-growing real estate markets. Over the past decade, rapid urban expansion and increasing demand have pushed property prices higher in core city areas. As a result, investors are now turning their attention toward emerging locations that offer better long-term value.
+              - generic [ref=f55e72]:
+                - generic [ref=f55e73]:
+                  - generic [ref=f55e74]: July 14, 2026
+                  - generic [ref=f55e77]: 5 Min Read
+                - generic [ref=f55e81]: Read Article
+          - generic [ref=f55e84] [cursor=pointer]:
+            - img "How to List Your Property for Free in Coimbatore" [ref=f55e86]
+            - generic [ref=f55e87]:
+              - generic [ref=f55e88]:
+                - generic [ref=f55e89]: Real Estate Guide
+                - heading "How to List Your Property for Free in Coimbatore" [level=2] [ref=f55e91]
+                - paragraph [ref=f55e92]: You can list your property for free in Coimbatore by registering on RAARYA, adding property details, uploading photos, and publishing your listing. This allows you to connect directly with genuine buyers without paying any broker commission. Listing your property online is one of the fastest and most effective ways to find buyers or tenants in Coimbatore. Traditional methods such as brokers often involve high commissions and slower processes. With RAARYA, you can list your property for free and connect directly with buyers without any middleman.
+              - generic [ref=f55e93]:
+                - generic [ref=f55e94]:
+                  - generic [ref=f55e95]: June 13, 2026
+                  - generic [ref=f55e98]: 5 Min Read
+                - generic [ref=f55e102]: Read Article
+          - generic [ref=f55e105] [cursor=pointer]:
+            - 'img "Real Estate Listing Platforms in Coimbatore: The Smart Way to Buy Property" [ref=f55e107]'
+            - generic [ref=f55e108]:
+              - generic [ref=f55e109]:
+                - generic [ref=f55e110]: Real Estate Guide
+                - 'heading "Real Estate Listing Platforms in Coimbatore: The Smart Way to Buy Property" [level=2] [ref=f55e112]'
+                - paragraph [ref=f55e113]: In today's digital world, property buyers are no longer dependent on traditional brokers or time-consuming site visits. Real estate listing platforms in Coimbatore have completely transformed the way people search, compare, and invest in properties.
+              - generic [ref=f55e114]:
+                - generic [ref=f55e115]:
+                  - generic [ref=f55e116]: April 25, 2026
+                  - generic [ref=f55e119]: 5 Min Read
+                - generic [ref=f55e123]: Read Article
+          - generic [ref=f55e126] [cursor=pointer]:
+            - img "Things to Check Before Buying a Plot in Coimbatore" [ref=f55e128]
+            - generic [ref=f55e129]:
+              - generic [ref=f55e130]:
+                - generic [ref=f55e131]: Real Estate Guide
+                - heading "Things to Check Before Buying a Plot in Coimbatore" [level=2] [ref=f55e133]
+                - paragraph [ref=f55e134]: Buying a plot is one of the most important financial decisions, especially in a growing city like Coimbatore. With rapid development and increasing demand for land, it is essential to verify key factors before making a purchase. A careful approach can help you avoid risks and ensure a safe, profitable investment.
+              - generic [ref=f55e135]:
+                - generic [ref=f55e136]:
+                  - generic [ref=f55e137]: April 15, 2026
+                  - generic [ref=f55e140]: 5 Min Read
+                - generic [ref=f55e144]: Read Article
+          - generic [ref=f55e147] [cursor=pointer]:
+            - img "DTCP Approved Plots in Coimbatore – Why It Matters Before Buying Land" [ref=f55e149]
+            - generic [ref=f55e150]:
+              - generic [ref=f55e151]:
+                - generic [ref=f55e152]: Real Estate Guide
+                - heading "DTCP Approved Plots in Coimbatore – Why It Matters Before Buying Land" [level=2] [ref=f55e154]
+                - paragraph [ref=f55e155]: Buying land is one of the most important financial decisions in life. Whether you are planning to build your dream home or looking for a long-term investment, choosing the right plot is very important. In a growing city like Coimbatore, many buyers are now becoming more aware of legal factors before purchasing land. One of the most important things to check is whether the plot is DTCP approved.
+              - generic [ref=f55e156]:
+                - generic [ref=f55e157]:
+                  - generic [ref=f55e158]: April 09, 2026
+                  - generic [ref=f55e161]: 5 Min Read
+                - generic [ref=f55e165]: Read Article
+  - contentinfo [ref=f55e168]:
+    - generic [ref=f55e169]:
+      - link "RAARYA Logo RAARYA" [ref=f55e170] [cursor=pointer]:
+        - /url: "#"
+        - img "RAARYA Logo" [ref=f55e172]
+        - generic [ref=f55e173]: RAARYA
+      - generic [ref=f55e174]:
+        - generic [ref=f55e175]: "Follow Us:"
+        - link "Facebook" [ref=f55e176] [cursor=pointer]:
+          - /url: https://www.facebook.com/RaaryaGroups
+        - link "Instagram" [ref=f55e179] [cursor=pointer]:
+          - /url: https://www.instagram.com/raaryagroups/
+        - link "LinkedIn" [ref=f55e183] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+        - link "YouTube" [ref=f55e188] [cursor=pointer]:
+          - /url: https://www.youtube.com/@RaaryaGroups
+        - link "Pinterest" [ref=f55e192] [cursor=pointer]:
+          - /url: https://in.pinterest.com/raaryagroups/
+    - generic [ref=f55e195]:
+      - generic [ref=f55e196]:
+        - heading "Contact Us" [level=3] [ref=f55e197]
+        - list [ref=f55e198]:
+          - listitem [ref=f55e199]:
+            - link "2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037" [ref=f55e200] [cursor=pointer]:
+              - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+          - listitem [ref=f55e206]:
+            - link "+91 90872 40400" [ref=f55e207] [cursor=pointer]:
+              - /url: tel:+919087240400
+          - listitem [ref=f55e212]:
+            - link "raaryagroupsinfo@gmail.com" [ref=f55e213] [cursor=pointer]:
+              - /url: mailto:raaryagroupsinfo@gmail.com
+      - generic [ref=f55e219]:
+        - heading "Quick links" [level=3] [ref=f55e220]
+        - list [ref=f55e221]:
+          - listitem [ref=f55e222]:
+            - link "▸ Home" [ref=f55e223] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f55e224]: ▸
+              - generic [ref=f55e226]: Home
+          - listitem [ref=f55e227]:
+            - link "▸ About Us" [ref=f55e228] [cursor=pointer]:
+              - /url: "#about"
+              - generic [ref=f55e229]: ▸
+              - generic [ref=f55e231]: About Us
+          - listitem [ref=f55e232]:
+            - link "▸ Contact Us" [ref=f55e233] [cursor=pointer]:
+              - /url: "#contact"
+              - generic [ref=f55e234]: ▸
+              - generic [ref=f55e236]: Contact Us
+          - listitem [ref=f55e237]:
+            - link "▸ EMI Calculator" [ref=f55e238] [cursor=pointer]:
+              - /url: "#emi-calculator"
+              - generic [ref=f55e239]: ▸
+              - generic [ref=f55e241]: EMI Calculator
+          - listitem [ref=f55e242]:
+            - link "▸ Eligibility Check" [ref=f55e243] [cursor=pointer]:
+              - /url: "#eligibility-check"
+              - generic [ref=f55e244]: ▸
+              - generic [ref=f55e246]: Eligibility Check
+      - generic [ref=f55e247]:
+        - heading "Other Links" [level=3] [ref=f55e248]
+        - list [ref=f55e249]:
+          - listitem [ref=f55e250]:
+            - link "▸ Blog" [ref=f55e251] [cursor=pointer]:
+              - /url: "#blog"
+              - generic [ref=f55e252]: ▸
+              - generic [ref=f55e254]: Blog
+          - listitem [ref=f55e255]:
+            - link "▸ Post Your Property" [ref=f55e256] [cursor=pointer]:
+              - /url: "#post-property"
+              - generic [ref=f55e257]: ▸
+              - generic [ref=f55e259]: Post Your Property
+      - generic [ref=f55e260]:
+        - heading "Location" [level=3] [ref=f55e261]
+        - generic [ref=f55e262]:
+          - iframe [ref=f55e263]
+          - link "View Office Location" [ref=f55e264] [cursor=pointer]:
+            - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+    - paragraph [ref=f55e274]: Copyright © 2026 Raarya. All Rights Reserved
+  - generic [ref=f55e277]:
+    - generic [ref=f55e278]:
+      - generic: Call Direct
+      - link "Call Direct" [ref=f55e279] [cursor=pointer]:
+        - /url: tel:9087240400
+    - generic [ref=f55e285]:
+      - generic: WhatsApp Chat
+      - link "WhatsApp Chat" [ref=f55e286] [cursor=pointer]:
+        - /url: https://wa.me/919087240400
+    - generic [ref=f55e290]:
+      - generic: AI Concierge
+      - button "AI Concierge" [ref=f55e291] [cursor=pointer]

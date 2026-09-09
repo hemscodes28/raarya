@@ -64,7 +64,7 @@ export default function App() {
         if (storedUser) {
           try {
             setCurrentUser(JSON.parse(storedUser));
-          } catch {}
+          } catch { }
         }
         if (window.location.hash.includes('access_token')) {
           window.location.hash = '';

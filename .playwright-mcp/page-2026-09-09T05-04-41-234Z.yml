@@ -1,0 +1,304 @@
+- generic [ref=f5e3]:
+  - banner [ref=f5e4]:
+    - navigation "Primary" [ref=f5e7]:
+      - link "Home" [ref=f5e8] [cursor=pointer]:
+        - /url: "#/"
+        - img "RAARYA" [ref=f5e9]
+      - button "Toggle menu" [ref=f5e10] [cursor=pointer]
+  - main [ref=f5e13]:
+    - generic [ref=f5e14]:
+      - generic [ref=f5e15]:
+        - generic [ref=f5e16]: "\"The best investment on Earth is Earth.\""
+        - generic [ref=f5e17]: — RAARYA GROUPS
+      - generic [ref=f5e19]:
+        - img "Banner 3" [ref=f5e21]
+        - button "Previous banner" [ref=f5e22] [cursor=pointer]:
+          - generic [ref=f5e23]: <
+        - button "Next banner" [ref=f5e24] [cursor=pointer]:
+          - generic [ref=f5e25]: ">"
+        - generic [ref=f5e26]:
+          - button "Go to banner 1" [ref=f5e27] [cursor=pointer]
+          - button "Go to banner 2" [ref=f5e28] [cursor=pointer]
+          - button "Go to banner 3" [ref=f5e29] [cursor=pointer]
+    - generic [ref=f5e32]:
+      - paragraph [ref=f5e34]: "\"Don't wait to buy land. Buy land and wait.\"— Will Rogers"
+      - generic [ref=f5e35]:
+        - generic [ref=f5e36]:
+          - generic [ref=f5e37]:
+            - button "BUY" [ref=f5e38] [cursor=pointer]
+            - button "RENT" [ref=f5e39] [cursor=pointer]
+            - button "PG / HOSTEL" [ref=f5e40] [cursor=pointer]
+          - button "POST YOUR PROPERTY FREE" [ref=f5e41] [cursor=pointer]:
+            - generic [ref=f5e45]: POST YOUR PROPERTY
+            - generic: FREE
+        - generic [ref=f5e46]:
+          - generic [ref=f5e47]:
+            - generic [ref=f5e48]: STATE
+            - button "Tamil Nadu" [ref=f5e49] [cursor=pointer]
+          - generic [ref=f5e53]:
+            - generic [ref=f5e54]: DISTRICT
+            - button "Coimbatore" [ref=f5e55] [cursor=pointer]
+          - generic [ref=f5e59]:
+            - generic [ref=f5e60]: CITY / TOWN
+            - button "Select City" [ref=f5e61] [cursor=pointer]
+          - generic [ref=f5e65]:
+            - generic [ref=f5e66]: PROPERTY TYPE
+            - button "Select Property Type" [ref=f5e67] [cursor=pointer]
+          - generic [ref=f5e71]:
+            - generic [ref=f5e72]: BUDGET
+            - button "Select Budget" [ref=f5e73] [cursor=pointer]
+          - button "Search" [ref=f5e78] [cursor=pointer]
+    - generic [ref=f5e84]:
+      - generic [ref=f5e85]:
+        - generic [ref=f5e86]:
+          - generic [ref=f5e87]:
+            - generic [ref=f5e88]: HANDPICKED PREMIUM LISTINGS
+            - heading "Recommended for You" [level=2] [ref=f5e90]
+            - paragraph [ref=f5e91]: Top-tier investment layout plots with verified titles and premium infrastructure.
+          - link "EXPLORE BUY CATALOG" [ref=f5e93] [cursor=pointer]:
+            - /url: "#buy"
+        - generic [ref=f5e97]:
+          - article [ref=f5e99] [cursor=pointer]:
+            - generic [ref=f5e100]:
+              - img "Residential Plots in Kinathukadavu – Golden Vista" [ref=f5e101]
+              - generic [ref=f5e104]:
+                - generic [ref=f5e105]: For Sale
+                - generic [ref=f5e106]: Plot
+              - generic [ref=f5e107]: Quick Overview
+            - generic [ref=f5e112]:
+              - generic [ref=f5e113]:
+                - generic [ref=f5e114]:
+                  - heading "Residential Plots in Kinathukadavu – Golden Vista" [level=3] [ref=f5e115]
+                  - generic [ref=f5e116]: ₹ 5,90,000 Per Cent
+                - generic [ref=f5e118]: Kinathukadavu - 642109, Coimbatore, Tamil Nadu
+                - generic [ref=f5e123]: 2 cent
+              - button "Enquire Now" [ref=f5e128]
+          - article [ref=f5e134] [cursor=pointer]:
+            - generic [ref=f5e135]:
+              - img "Residential DTCP Approved Plots in Annur | Brahma Park" [ref=f5e136]
+              - generic [ref=f5e139]:
+                - generic [ref=f5e140]: For Sale
+                - generic [ref=f5e141]: Plot
+              - generic [ref=f5e142]: Quick Overview
+            - generic [ref=f5e147]:
+              - generic [ref=f5e148]:
+                - generic [ref=f5e149]:
+                  - heading "Residential DTCP Approved Plots in Annur | Brahma Park" [level=3] [ref=f5e150]
+                  - generic [ref=f5e151]: ₹ 3,90,000 Total Price
+                - generic [ref=f5e153]: Sirumugai - 641302, Coimbatore, Tamil Nadu
+                - generic [ref=f5e158]: 1200 sqft
+              - button "Enquire Now" [ref=f5e163]
+          - article [ref=f5e169] [cursor=pointer]:
+            - generic [ref=f5e170]:
+              - img "Residential land in Kurumbapalayam - Avanta" [ref=f5e171]
+              - generic [ref=f5e174]:
+                - generic [ref=f5e175]: For Sale
+                - generic [ref=f5e176]: Plot
+              - generic [ref=f5e177]: Quick Overview
+            - generic [ref=f5e182]:
+              - generic [ref=f5e183]:
+                - generic [ref=f5e184]:
+                  - heading "Residential land in Kurumbapalayam - Avanta" [level=3] [ref=f5e185]
+                  - generic [ref=f5e186]: ₹ 14,50,000 Total Price
+                - generic [ref=f5e188]: Saravanampatti - 641035, Coimbatore, Tamil Nadu
+                - generic [ref=f5e193]: 436 sqft
+              - button "Enquire Now" [ref=f5e198]
+      - generic [ref=f5e203]:
+        - generic [ref=f5e204]:
+          - generic [ref=f5e205]:
+            - generic [ref=f5e206]: HIGH GROWTH POTENTIALS
+            - heading "Demanded Projects" [level=2] [ref=f5e208]
+            - paragraph [ref=f5e209]: Highly sought-after layout plots located within prime developmental corridors.
+          - link "EXPLORE DEMANDED LAYOUTS" [ref=f5e211] [cursor=pointer]:
+            - /url: "#buy"
+        - generic [ref=f5e215]:
+          - article [ref=f5e217] [cursor=pointer]:
+            - generic [ref=f5e218]:
+              - img "SK Garden - Avinashi Road, Near Kaniyur Toll Gate" [ref=f5e219]
+              - generic [ref=f5e222]:
+                - generic [ref=f5e223]: For Sale
+                - generic [ref=f5e224]: Plot
+              - generic [ref=f5e225]: Quick Overview
+            - generic [ref=f5e230]:
+              - generic [ref=f5e231]:
+                - generic [ref=f5e232]:
+                  - heading "SK Garden - Avinashi Road, Near Kaniyur Toll Gate" [level=3] [ref=f5e233]
+                  - generic [ref=f5e234]: ₹ 9,00,000 Total Price
+                - generic [ref=f5e236]: Karumathampatti - 641659, Coimbatore, Tamil Nadu
+                - generic [ref=f5e241]: 1 cent
+              - button "Enquire Now" [ref=f5e246]
+          - article [ref=f5e252] [cursor=pointer]:
+            - generic [ref=f5e253]:
+              - img "Residential Plots in Kinathukadavu – Golden Vista" [ref=f5e254]
+              - generic [ref=f5e257]:
+                - generic [ref=f5e258]: For Sale
+                - generic [ref=f5e259]: Plot
+              - generic [ref=f5e260]: Quick Overview
+            - generic [ref=f5e265]:
+              - generic [ref=f5e266]:
+                - generic [ref=f5e267]:
+                  - heading "Residential Plots in Kinathukadavu – Golden Vista" [level=3] [ref=f5e268]
+                  - generic [ref=f5e269]: ₹ 5,90,000 Per Cent
+                - generic [ref=f5e271]: Kinathukadavu - 642109, Coimbatore, Tamil Nadu
+                - generic [ref=f5e276]: 2 cent
+              - button "Enquire Now" [ref=f5e281]
+          - article [ref=f5e287] [cursor=pointer]:
+            - generic [ref=f5e288]:
+              - img "Residential DTCP Approved Plots in Annur | Brahma Park" [ref=f5e289]
+              - generic [ref=f5e292]:
+                - generic [ref=f5e293]: For Sale
+                - generic [ref=f5e294]: Plot
+              - generic [ref=f5e295]: Quick Overview
+            - generic [ref=f5e300]:
+              - generic [ref=f5e301]:
+                - generic [ref=f5e302]:
+                  - heading "Residential DTCP Approved Plots in Annur | Brahma Park" [level=3] [ref=f5e303]
+                  - generic [ref=f5e304]: ₹ 3,90,000 Total Price
+                - generic [ref=f5e306]: Sirumugai - 641302, Coimbatore, Tamil Nadu
+                - generic [ref=f5e311]: 1200 sqft
+              - button "Enquire Now" [ref=f5e316]
+      - generic [ref=f5e321]:
+        - generic [ref=f5e322]:
+          - generic [ref=f5e323]:
+            - generic [ref=f5e324]: LATEST ADDITIONS
+            - heading "New Properties" [level=2] [ref=f5e326]
+            - paragraph [ref=f5e327]: Freshly listed plots uploaded directly by owners and verified agents.
+          - link "EXPLORE NEW ARRIVALS" [ref=f5e329] [cursor=pointer]:
+            - /url: "#buy"
+        - generic [ref=f5e333]:
+          - article [ref=f5e335] [cursor=pointer]:
+            - generic [ref=f5e336]:
+              - img "Thangam | Thekkalur, Avinashi Road" [ref=f5e337]
+              - generic [ref=f5e340]:
+                - generic [ref=f5e341]: For Sale
+                - generic [ref=f5e342]: Plot
+              - generic [ref=f5e343]: Quick Overview
+            - generic [ref=f5e348]:
+              - generic [ref=f5e349]:
+                - generic [ref=f5e350]:
+                  - heading "Thangam | Thekkalur, Avinashi Road" [level=3] [ref=f5e351]
+                  - generic [ref=f5e352]: ₹ 5,50,000 Per Cent
+                - generic [ref=f5e354]: Karumathampatti - 641659, Coimbatore, Tamil Nadu
+                - generic [ref=f5e359]: 1200 sqft
+              - button "Enquire Now" [ref=f5e364]
+          - article [ref=f5e370] [cursor=pointer]:
+            - generic [ref=f5e371]:
+              - img "SK Garden - Avinashi Road, Near Kaniyur Toll Gate" [ref=f5e372]
+              - generic [ref=f5e375]:
+                - generic [ref=f5e376]: For Sale
+                - generic [ref=f5e377]: Plot
+              - generic [ref=f5e378]: Quick Overview
+            - generic [ref=f5e383]:
+              - generic [ref=f5e384]:
+                - generic [ref=f5e385]:
+                  - heading "SK Garden - Avinashi Road, Near Kaniyur Toll Gate" [level=3] [ref=f5e386]
+                  - generic [ref=f5e387]: ₹ 9,00,000 Total Price
+                - generic [ref=f5e389]: Karumathampatti - 641659, Coimbatore, Tamil Nadu
+                - generic [ref=f5e394]: 1 cent
+              - button "Enquire Now" [ref=f5e399]
+          - article [ref=f5e405] [cursor=pointer]:
+            - generic [ref=f5e406]:
+              - img "Thulir Nagar - Kittampalayam, Avinashi Road" [ref=f5e407]
+              - generic [ref=f5e410]:
+                - generic [ref=f5e411]: For Sale
+                - generic [ref=f5e412]: Plot
+              - generic [ref=f5e413]: Quick Overview
+            - generic [ref=f5e418]:
+              - generic [ref=f5e419]:
+                - generic [ref=f5e420]:
+                  - heading "Thulir Nagar - Kittampalayam, Avinashi Road" [level=3] [ref=f5e421]
+                  - generic [ref=f5e422]: ₹ 7,55,000 Total Price
+                - generic [ref=f5e424]: Karumathampatti - 641659, Coimbatore, Tamil Nadu
+                - generic [ref=f5e429]: 1208 sqft
+              - button "Enquire Now" [ref=f5e434]
+  - contentinfo [ref=f5e439]:
+    - generic [ref=f5e440]:
+      - link "RAARYA Logo RAARYA" [ref=f5e441] [cursor=pointer]:
+        - /url: "#"
+        - img "RAARYA Logo" [ref=f5e443]
+        - generic [ref=f5e444]: RAARYA
+      - generic [ref=f5e445]:
+        - generic [ref=f5e446]: "Follow Us:"
+        - link "Facebook" [ref=f5e447] [cursor=pointer]:
+          - /url: https://www.facebook.com/RaaryaGroups
+        - link "Instagram" [ref=f5e450] [cursor=pointer]:
+          - /url: https://www.instagram.com/raaryagroups/
+        - link "LinkedIn" [ref=f5e454] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+        - link "YouTube" [ref=f5e459] [cursor=pointer]:
+          - /url: https://www.youtube.com/@RaaryaGroups
+        - link "Pinterest" [ref=f5e463] [cursor=pointer]:
+          - /url: https://in.pinterest.com/raaryagroups/
+    - generic [ref=f5e466]:
+      - generic [ref=f5e467]:
+        - heading "Contact Us" [level=3] [ref=f5e468]
+        - list [ref=f5e469]:
+          - listitem [ref=f5e470]:
+            - link "2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037" [ref=f5e471] [cursor=pointer]:
+              - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+          - listitem [ref=f5e477]:
+            - link "+91 90872 40400" [ref=f5e478] [cursor=pointer]:
+              - /url: tel:+919087240400
+          - listitem [ref=f5e483]:
+            - link "raaryagroupsinfo@gmail.com" [ref=f5e484] [cursor=pointer]:
+              - /url: mailto:raaryagroupsinfo@gmail.com
+      - generic [ref=f5e490]:
+        - heading "Quick links" [level=3] [ref=f5e491]
+        - list [ref=f5e492]:
+          - listitem [ref=f5e493]:
+            - link "▸ Home" [ref=f5e494] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f5e495]: ▸
+              - generic [ref=f5e497]: Home
+          - listitem [ref=f5e498]:
+            - link "▸ About Us" [ref=f5e499] [cursor=pointer]:
+              - /url: "#about"
+              - generic [ref=f5e500]: ▸
+              - generic [ref=f5e502]: About Us
+          - listitem [ref=f5e503]:
+            - link "▸ Contact Us" [ref=f5e504] [cursor=pointer]:
+              - /url: "#contact"
+              - generic [ref=f5e505]: ▸
+              - generic [ref=f5e507]: Contact Us
+          - listitem [ref=f5e508]:
+            - link "▸ EMI Calculator" [ref=f5e509] [cursor=pointer]:
+              - /url: "#emi-calculator"
+              - generic [ref=f5e510]: ▸
+              - generic [ref=f5e512]: EMI Calculator
+          - listitem [ref=f5e513]:
+            - link "▸ Eligibility Check" [ref=f5e514] [cursor=pointer]:
+              - /url: "#eligibility-check"
+              - generic [ref=f5e515]: ▸
+              - generic [ref=f5e517]: Eligibility Check
+      - generic [ref=f5e518]:
+        - heading "Other Links" [level=3] [ref=f5e519]
+        - list [ref=f5e520]:
+          - listitem [ref=f5e521]:
+            - link "▸ Blog" [ref=f5e522] [cursor=pointer]:
+              - /url: "#blog"
+              - generic [ref=f5e523]: ▸
+              - generic [ref=f5e525]: Blog
+          - listitem [ref=f5e526]:
+            - link "▸ Post Your Property" [ref=f5e527] [cursor=pointer]:
+              - /url: "#post-property"
+              - generic [ref=f5e528]: ▸
+              - generic [ref=f5e530]: Post Your Property
+      - generic [ref=f5e531]:
+        - heading "Location" [level=3] [ref=f5e532]
+        - generic [ref=f5e533]:
+          - iframe [ref=f5e534]
+          - link "View Office Location" [ref=f5e535] [cursor=pointer]:
+            - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+    - paragraph [ref=f5e545]: Copyright © 2026 Raarya. All Rights Reserved
+  - generic [ref=f5e548]:
+    - generic [ref=f5e549]:
+      - generic: Call Direct
+      - link "Call Direct" [ref=f5e550] [cursor=pointer]:
+        - /url: tel:9087240400
+    - generic [ref=f5e556]:
+      - generic: WhatsApp Chat
+      - link "WhatsApp Chat" [ref=f5e557] [cursor=pointer]:
+        - /url: https://wa.me/919087240400
+    - generic [ref=f5e561]:
+      - generic: AI Concierge
+      - button "AI Concierge" [ref=f5e562] [cursor=pointer]

@@ -28,7 +28,7 @@ body {
 /* Signature Loading Screen Blueprint Background */
 .bg-blueprint-pattern {
   background-color: #FAF7F2;
-  background-image: 
+  background-image:
     linear-gradient(rgba(184, 144, 71, 0.05) 1px, transparent 1px),
     linear-gradient(90deg, rgba(184, 144, 71, 0.05) 1px, transparent 1px);
   background-size: 24px 24px;
@@ -42,6 +42,7 @@ body {
     filter: blur(20px);
     transform: translateY(40px);
   }
+
   to {
     opacity: 1;
     filter: blur(0);
@@ -72,7 +73,7 @@ body {
   inset: 0;
   border-radius: inherit;
   padding: 1.4px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 20%, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0) 60%, rgba(255, 255, 255, 0.15) 80%, rgba(255, 255, 255, 0.45) 100%);
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -83,16 +84,20 @@ body {
 .custom-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb {
   background: rgba(255, 255, 255, 0.1);
   border-radius: 99px;
 }
+
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
@@ -102,16 +107,20 @@ body {
 .custom-scrollbar-light::-webkit-scrollbar {
   width: 5px;
 }
+
 .custom-scrollbar-light::-webkit-scrollbar-track {
   background: transparent;
 }
+
 .custom-scrollbar-light::-webkit-scrollbar-thumb {
   background: rgba(197, 168, 128, 0.35);
   border-radius: 99px;
 }
+
 .custom-scrollbar-light::-webkit-scrollbar-thumb:hover {
   background: rgba(197, 168, 128, 0.65);
 }
+
 .custom-scrollbar-light {
   scrollbar-width: thin;
   scrollbar-color: rgba(197, 168, 128, 0.35) transparent;
@@ -122,7 +131,36 @@ body {
   0% {
     transform: translateX(-100%);
   }
+
   100% {
     transform: translateX(100%);
   }
 }
+
+/* Luxury Property Image Border Glow and Corner Blend Utilities */
+.luxury-image-frame {
+  position: relative;
+  background: linear-gradient(145deg, rgba(217, 167, 74, 0.25) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(217, 167, 74, 0.15) 100%);
+  border: 1.5px solid rgba(217, 167, 74, 0.45);
+  box-shadow: 0 0 30px rgba(217, 167, 74, 0.18), inset 0 0 15px rgba(217, 167, 74, 0.08);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.luxury-image-frame:hover {
+  border-color: rgba(245, 158, 11, 0.85);
+  box-shadow: 0 0 45px rgba(245, 158, 11, 0.35), inset 0 0 25px rgba(245, 158, 11, 0.15);
+}
+
+/* Corner Blend Glow Masks */
+.corner-glow-tl {
+  background: radial-gradient(circle at top left, rgba(245, 158, 11, 0.5) 0%, rgba(217, 167, 74, 0.15) 35%, transparent 70%);
+}
+.corner-glow-tr {
+  background: radial-gradient(circle at top right, rgba(245, 158, 11, 0.5) 0%, rgba(217, 167, 74, 0.15) 35%, transparent 70%);
+}
+.corner-glow-bl {
+  background: radial-gradient(circle at bottom left, rgba(245, 158, 11, 0.5) 0%, rgba(217, 167, 74, 0.15) 35%, transparent 70%);
+}
+.corner-glow-br {
+  background: radial-gradient(circle at bottom right, rgba(245, 158, 11, 0.5) 0%, rgba(217, 167, 74, 0.15) 35%, transparent 70%);
+}

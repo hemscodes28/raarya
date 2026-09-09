@@ -1,0 +1,120 @@
+- generic [ref=f50e3]:
+  - generic [ref=f50e6]:
+    - img [ref=f50e7]:
+      - generic [ref=f50e8]:
+        - generic [ref=f50e12]: BUY
+        - generic [ref=f50e14]: RENT
+        - generic [ref=f50e16]: PG / HOSTEL
+    - generic [ref=f50e34]:
+      - generic [ref=f50e35]: PREMIUM PLOTS BUYING & SELLING
+      - generic [ref=f50e36]: RAARYA GROUPS
+      - generic [ref=f50e38]:
+        - generic [ref=f50e39]: ❯
+        - generic [ref=f50e40]: ACCESSING PREMIUM PLOT DATABASE...
+  - banner [ref=f50e41]:
+    - navigation "Primary" [ref=f50e44]:
+      - link "Home" [ref=f50e45] [cursor=pointer]:
+        - /url: "#/"
+        - img "RAARYA" [ref=f50e46]
+      - button "Toggle menu" [ref=f50e47] [cursor=pointer]
+  - main [ref=f50e50]:
+    - main [ref=f50e51]:
+      - generic [ref=f50e52]:
+        - generic [ref=f50e53]:
+          - heading "Careers" [level=1] [ref=f50e54]
+          - paragraph [ref=f50e55]: Join a team building the next standard for luxury real estate discovery and client care.
+        - list [ref=f50e56]:
+          - listitem [ref=f50e57]:
+            - generic [ref=f50e58]:
+              - paragraph [ref=f50e59]: Senior Property Advisor
+              - paragraph [ref=f50e60]: Los Angeles, CA
+            - button "Apply" [ref=f50e61] [cursor=pointer]
+          - listitem [ref=f50e62]:
+            - generic [ref=f50e63]:
+              - paragraph [ref=f50e64]: VR Experience Producer
+              - paragraph [ref=f50e65]: Remote
+            - button "Apply" [ref=f50e66] [cursor=pointer]
+          - listitem [ref=f50e67]:
+            - generic [ref=f50e68]:
+              - paragraph [ref=f50e69]: Investment Analyst
+              - paragraph [ref=f50e70]: New York, NY
+            - button "Apply" [ref=f50e71] [cursor=pointer]
+  - contentinfo [ref=f50e72]:
+    - generic [ref=f50e73]:
+      - link "RAARYA Logo RAARYA" [ref=f50e74] [cursor=pointer]:
+        - /url: "#"
+        - img "RAARYA Logo" [ref=f50e76]
+        - generic [ref=f50e77]: RAARYA
+      - generic [ref=f50e78]:
+        - generic [ref=f50e79]: "Follow Us:"
+        - link "Facebook" [ref=f50e80] [cursor=pointer]:
+          - /url: https://www.facebook.com/RaaryaGroups
+        - link "Instagram" [ref=f50e83] [cursor=pointer]:
+          - /url: https://www.instagram.com/raaryagroups/
+        - link "LinkedIn" [ref=f50e87] [cursor=pointer]:
+          - /url: https://www.linkedin.com/in/raarya-groups-332753283/
+        - link "YouTube" [ref=f50e92] [cursor=pointer]:
+          - /url: https://www.youtube.com/@RaaryaGroups
+        - link "Pinterest" [ref=f50e96] [cursor=pointer]:
+          - /url: https://in.pinterest.com/raaryagroups/
+    - generic [ref=f50e99]:
+      - generic [ref=f50e100]:
+        - heading "Contact Us" [level=3] [ref=f50e101]
+        - list [ref=f50e102]:
+          - listitem [ref=f50e103]:
+            - link "2D, A-Block, Ram Apartment 642FF4, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037" [ref=f50e104] [cursor=pointer]:
+              - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+          - listitem [ref=f50e110]:
+            - link "+91 90872 40400" [ref=f50e111] [cursor=pointer]:
+              - /url: tel:+919087240400
+          - listitem [ref=f50e116]:
+            - link "raaryagroupsinfo@gmail.com" [ref=f50e117] [cursor=pointer]:
+              - /url: mailto:raaryagroupsinfo@gmail.com
+      - generic [ref=f50e123]:
+        - heading "Quick links" [level=3] [ref=f50e124]
+        - list [ref=f50e125]:
+          - listitem [ref=f50e126]:
+            - link "▸ Home" [ref=f50e127] [cursor=pointer]:
+              - /url: "#"
+              - generic [ref=f50e128]: ▸
+              - generic [ref=f50e130]: Home
+          - listitem [ref=f50e131]:
+            - link "▸ About Us" [ref=f50e132] [cursor=pointer]:
+              - /url: "#about"
+              - generic [ref=f50e133]: ▸
+              - generic [ref=f50e135]: About Us
+          - listitem [ref=f50e136]:
+            - link "▸ Contact Us" [ref=f50e137] [cursor=pointer]:
+              - /url: "#contact"
+              - generic [ref=f50e138]: ▸
+              - generic [ref=f50e140]: Contact Us
+          - listitem [ref=f50e141]:
+            - link "▸ EMI Calculator" [ref=f50e142] [cursor=pointer]:
+              - /url: "#emi-calculator"
+              - generic [ref=f50e143]: ▸
+              - generic [ref=f50e145]: EMI Calculator
+          - listitem [ref=f50e146]:
+            - link "▸ Eligibility Check" [ref=f50e147] [cursor=pointer]:
+              - /url: "#eligibility-check"
+              - generic [ref=f50e148]: ▸
+              - generic [ref=f50e150]: Eligibility Check
+      - generic [ref=f50e151]:
+        - heading "Other Links" [level=3] [ref=f50e152]
+        - list [ref=f50e153]:
+          - listitem [ref=f50e154]:
+            - link "▸ Blog" [ref=f50e155] [cursor=pointer]:
+              - /url: "#blog"
+              - generic [ref=f50e156]: ▸
+              - generic [ref=f50e158]: Blog
+          - listitem [ref=f50e159]:
+            - link "▸ Post Your Property" [ref=f50e160] [cursor=pointer]:
+              - /url: "#post-property"
+              - generic [ref=f50e161]: ▸
+              - generic [ref=f50e163]: Post Your Property
+      - generic [ref=f50e164]:
+        - heading "Location" [level=3] [ref=f50e165]
+        - generic [ref=f50e166]:
+          - iframe [ref=f50e167]
+          - link "View Office Location" [ref=f50e168] [cursor=pointer]:
+            - /url: https://www.google.com/maps/place/11%C2%B000'44.0%22N+76%C2%B059'10.9%22E/@11.0123357,76.9865158,431a,75y,233.35h,90t/data=!3m7!1e1!3m5!1sAZ5WvLi8tkuBzrEnHlaP0A!2e0!6shttps:%2F%2Fstreetviewpixels-pa.googleapis.com%2Fv1%2Fthumbnail%3Fcb_client%3Dmaps_sv.tactile%26w%3D900%26h%3D600%26pitch%3D0%26panoid%3DAZ5WvLi8tkuBzrEnHlaP0A%26yaw%3D233.35289!7i16384!8i8192!4m4!3m3!8m2!3d11.0122222!4d76.9863611?hl=en&entry=ttu&g_ep=EgoyMDI2MDkwMi4wIKXMDSoASAFQAw%3D%3D
+    - paragraph [ref=f50e178]: Copyright © 2026 Raarya. All Rights Reserved

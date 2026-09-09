@@ -206,256 +206,272 @@ export function PropertyFilterPanel({
   const areaOptions = PROPERTY_AREAS_MAPPING[filters.state]?.[filters.district] || [];
 
   return (
-    <div className="bg-white border border-zinc-200/90 rounded-[28px] p-5 sm:p-6 shadow-[0_10px_35px_rgba(0,0,0,0.05)] text-[#141414] select-none flex flex-col gap-5 max-h-[85vh] md:max-h-[calc(100vh-140px)] overflow-y-auto custom-scrollbar-light font-outfit group">
+    <div className="w-full h-full bg-white text-[#141414] select-none flex flex-col justify-between md:border md:border-zinc-200/90 md:rounded-[28px] md:shadow-[0_10px_35px_rgba(0,0,0,0.05)] md:max-h-[calc(100vh-140px)] font-outfit group overflow-hidden">
       
-      {/* Header */}
-      <div className="flex items-center justify-between border-b border-zinc-150 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-2xl bg-[#141414] text-[#c5a880] flex items-center justify-center shadow-sm shrink-0">
-            <SlidersHorizontal className="w-4 h-4 text-[#c5a880]" />
+      {/* Scrollable Filter Body */}
+      <div className="flex-1 overflow-y-auto p-5 sm:p-6 flex flex-col gap-5 custom-scrollbar-light">
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-zinc-150 pb-4">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-2xl bg-[#141414] text-[#c5a880] flex items-center justify-center shadow-sm shrink-0">
+              <SlidersHorizontal className="w-4 h-4 text-[#c5a880]" />
+            </div>
+            <div>
+              <h2 className="text-base sm:text-lg font-extrabold tracking-tight text-[#141414] font-outfit">
+                Filter Properties
+              </h2>
+              <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#a3865e] font-outfit">
+                RAARYA SELECTION
+              </p>
+            </div>
           </div>
-          <div>
-            <h2 className="text-base sm:text-lg font-extrabold tracking-tight text-[#141414] font-outfit">
-              Filter Properties
-            </h2>
-            <p className="text-[10px] font-extrabold uppercase tracking-[0.14em] text-[#a3865e] font-outfit">
-              RAARYA SELECTION
-            </p>
-          </div>
-        </div>
-        
-        <div className="flex items-center gap-2.5">
-          <button
-            type="button"
-            onClick={onClearAll}
-            className="flex items-center gap-1 text-xs font-bold text-rose-500 hover:text-rose-700 transition-colors cursor-pointer font-outfit"
-          >
-            <span>✕ Clear All</span>
-          </button>
           
-          {onCloseMobile && (
+          <div className="flex items-center gap-2.5">
             <button
               type="button"
-              onClick={onCloseMobile}
-              className="md:hidden p-1.5 rounded-full bg-zinc-100 hover:bg-zinc-200 text-slate-600"
+              onClick={onClearAll}
+              className="flex items-center gap-1 text-xs font-bold text-rose-500 hover:text-rose-700 transition-colors cursor-pointer font-outfit"
             >
-              <X className="w-4 h-4" />
+              <span>✕ Clear All</span>
             </button>
+            
+            {onCloseMobile && (
+              <button
+                type="button"
+                onClick={onCloseMobile}
+                className="md:hidden p-1.5 rounded-full bg-zinc-100 hover:bg-zinc-200 text-slate-600 cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 1. LOOKING TO */}
+        <div className="flex flex-col gap-2">
+          <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400 font-outfit">
+            LOOKING TO
+          </label>
+          <div className="grid grid-cols-3 p-1 bg-zinc-100/90 rounded-full border border-zinc-200/60 font-outfit">
+            {(["buy", "rent", "pg-hostel"] as const).map((tab) => {
+              const isActive = filters.tab === tab;
+              return (
+                <button
+                  key={tab}
+                  type="button"
+                  onClick={() => handleTabChange(tab)}
+                  className={`py-2 text-xs font-bold tracking-wide rounded-full transition-all duration-200 cursor-pointer ${
+                    isActive
+                      ? "bg-[#141414] text-white shadow-xs"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
+                  }`}
+                >
+                  {tab === "buy" ? "Buy" : tab === "rent" ? "Rent" : "PG / Hostel"}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* 2. PROPERTY TYPE */}
+        <div className="flex flex-col gap-4 border-t border-zinc-100 pt-4">
+          <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400 font-outfit">
+            PROPERTY TYPE
+          </label>
+
+          {/* Residential */}
+          <div className="flex flex-col gap-2 font-outfit">
+            <span className="text-xs font-bold text-slate-500">Residential</span>
+            <div className="flex flex-wrap gap-2">
+              {visibleResidential.map((type) => {
+                const isSelected = filters.propertyType === type;
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => handlePropertyTypeToggle(type)}
+                    className={`px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-[#141414] text-white border-[#141414] shadow-xs"
+                        : "bg-white text-slate-700 border-zinc-200 hover:border-zinc-400"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                );
+              })}
+              {!showMoreResidential && hiddenResidentialCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowMoreResidential(true)}
+                  className="px-3.5 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 border border-dashed border-blue-300 rounded-full hover:bg-blue-100 transition-colors cursor-pointer"
+                >
+                  +{hiddenResidentialCount} more
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Commercial */}
+          <div className="flex flex-col gap-2 font-outfit">
+            <span className="text-xs font-bold text-slate-500">Commercial</span>
+            <div className="flex flex-wrap gap-2">
+              {visibleCommercial.map((type) => {
+                const isSelected = filters.propertyType === type;
+                return (
+                  <button
+                    key={type}
+                    type="button"
+                    onClick={() => handlePropertyTypeToggle(type)}
+                    className={`px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
+                      isSelected
+                        ? "bg-[#141414] text-white border-[#141414] shadow-xs"
+                        : "bg-white text-slate-700 border-zinc-200 hover:border-zinc-400"
+                    }`}
+                  >
+                    {type}
+                  </button>
+                );
+              })}
+              {!showMoreCommercial && hiddenCommercialCount > 0 && (
+                <button
+                  type="button"
+                  onClick={() => setShowMoreCommercial(true)}
+                  className="px-3.5 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 border border-dashed border-blue-300 rounded-full hover:bg-blue-100 transition-colors cursor-pointer"
+                >
+                  +{hiddenCommercialCount} more
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* 3. LOCATION */}
+        <div className="flex flex-col gap-3 border-t border-zinc-100 pt-4 font-outfit">
+          <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+            LOCATION
+          </label>
+          
+          {/* State */}
+          <LuxuryDropdown
+            placeholder="Select State"
+            value={filters.state}
+            options={["Select State", ...Object.keys(INDIA_STATES_AND_DISTRICTS).sort()]}
+            onChange={(val) => handleStateChange(val === "Select State" ? "" : val)}
+            enableSearch
+          />
+
+          {/* District */}
+          {filters.state && (
+            <LuxuryDropdown
+              placeholder="Select District"
+              value={filters.district}
+              options={["Select District", ...(INDIA_STATES_AND_DISTRICTS[filters.state] || [])]}
+              onChange={(val) => handleDistrictChange(val === "Select District" ? "" : val)}
+              enableSearch
+            />
+          )}
+
+          {/* City / Area */}
+          {filters.district && areaOptions.length > 0 && (
+            <LuxuryDropdown
+              placeholder="Any Area / Locality"
+              value={filters.city}
+              options={["Any Area / Locality", ...areaOptions]}
+              onChange={(val) => onFilterChange({ ...filters, city: val === "Any Area / Locality" ? "" : val })}
+              enableSearch
+            />
           )}
         </div>
-      </div>
 
-      {/* 1. LOOKING TO */}
-      <div className="flex flex-col gap-2">
-        <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400 font-outfit">
-          LOOKING TO
-        </label>
-        <div className="grid grid-cols-3 p-1 bg-zinc-100/90 rounded-full border border-zinc-200/60 font-outfit">
-          {(["buy", "rent", "pg-hostel"] as const).map((tab) => {
-            const isActive = filters.tab === tab;
-            return (
-              <button
-                key={tab}
-                type="button"
-                onClick={() => handleTabChange(tab)}
-                className={`py-2 text-xs font-bold tracking-wide rounded-full transition-all duration-200 cursor-pointer ${
-                  isActive
-                    ? "bg-[#141414] text-white shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
-                }`}
-              >
-                {tab === "buy" ? "Buy" : tab === "rent" ? "Rent" : "PG / Hostel"}
-              </button>
-            );
-          })}
+        {/* 4. BUDGET */}
+        <div className="flex flex-col gap-2 border-t border-zinc-100 pt-4 font-outfit">
+          <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+            BUDGET
+          </label>
+          <LuxuryDropdown
+            placeholder="Any Budget"
+            value={filters.budget || "Any Budget"}
+            options={getBudgetOptions()}
+            onChange={(val) => onFilterChange({ ...filters, budget: val })}
+          />
         </div>
-      </div>
 
-      {/* 2. PROPERTY TYPE */}
-      <div className="flex flex-col gap-4 border-t border-zinc-100 pt-4">
-        <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400 font-outfit">
-          PROPERTY TYPE
-        </label>
-
-        {/* Residential */}
-        <div className="flex flex-col gap-2 font-outfit">
-          <span className="text-xs font-bold text-slate-500">Residential</span>
+        {/* 5. AREA */}
+        <div className="flex flex-col gap-3 border-t border-zinc-100 pt-4 font-outfit">
+          <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+            AREA
+          </label>
+          
+          {/* Units Selector */}
           <div className="flex flex-wrap gap-2">
-            {visibleResidential.map((type) => {
-              const isSelected = filters.propertyType === type;
+            {AREA_UNITS.map((unit) => {
+              const isSelected = (filters.areaUnit || "Sq.Ft") === unit;
               return (
                 <button
-                  key={type}
+                  key={unit}
                   type="button"
-                  onClick={() => handlePropertyTypeToggle(type)}
+                  onClick={() => onFilterChange({ ...filters, areaUnit: unit, areaSize: "Any size" })}
                   className={`px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
                     isSelected
                       ? "bg-[#141414] text-white border-[#141414] shadow-xs"
                       : "bg-white text-slate-700 border-zinc-200 hover:border-zinc-400"
                   }`}
                 >
-                  {type}
+                  {unit}
                 </button>
               );
             })}
-            {!showMoreResidential && hiddenResidentialCount > 0 && (
-              <button
-                type="button"
-                onClick={() => setShowMoreResidential(true)}
-                className="px-3.5 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 border border-dashed border-blue-300 rounded-full hover:bg-blue-100 transition-colors cursor-pointer"
-              >
-                +{hiddenResidentialCount} more
-              </button>
-            )}
           </div>
+
+          {/* Area Size Dropdown */}
+          <LuxuryDropdown
+            placeholder="Any size"
+            value={filters.areaSize || "Any size"}
+            options={getAreaSizeOptions()}
+            onChange={(val) => onFilterChange({ ...filters, areaSize: val })}
+          />
         </div>
 
-        {/* Commercial */}
-        <div className="flex flex-col gap-2 font-outfit">
-          <span className="text-xs font-bold text-slate-500">Commercial</span>
+        {/* 6. CONSTRUCTION STATUS */}
+        <div className="flex flex-col gap-2.5 border-t border-zinc-100 pt-4 pb-2 font-outfit">
+          <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
+            CONSTRUCTION STATUS
+          </label>
           <div className="flex flex-wrap gap-2">
-            {visibleCommercial.map((type) => {
-              const isSelected = filters.propertyType === type;
+            {CONSTRUCTION_STATUSES.map((status) => {
+              const isSelected = (filters.constructionStatus || "Any") === status;
               return (
                 <button
-                  key={type}
+                  key={status}
                   type="button"
-                  onClick={() => handlePropertyTypeToggle(type)}
+                  onClick={() => onFilterChange({ ...filters, constructionStatus: status })}
                   className={`px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
                     isSelected
                       ? "bg-[#141414] text-white border-[#141414] shadow-xs"
                       : "bg-white text-slate-700 border-zinc-200 hover:border-zinc-400"
                   }`}
                 >
-                  {type}
+                  {status}
                 </button>
               );
             })}
-            {!showMoreCommercial && hiddenCommercialCount > 0 && (
-              <button
-                type="button"
-                onClick={() => setShowMoreCommercial(true)}
-                className="px-3.5 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 border border-dashed border-blue-300 rounded-full hover:bg-blue-100 transition-colors cursor-pointer"
-              >
-                +{hiddenCommercialCount} more
-              </button>
-            )}
           </div>
         </div>
       </div>
 
-      {/* 3. LOCATION */}
-      <div className="flex flex-col gap-3 border-t border-zinc-100 pt-4 font-outfit">
-        <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
-          LOCATION
-        </label>
-        
-        {/* State */}
-        <LuxuryDropdown
-          placeholder="Select State"
-          value={filters.state}
-          options={["Select State", ...Object.keys(INDIA_STATES_AND_DISTRICTS).sort()]}
-          onChange={(val) => handleStateChange(val === "Select State" ? "" : val)}
-          enableSearch
-        />
-
-        {/* District */}
-        {filters.state && (
-          <LuxuryDropdown
-            placeholder="Select District"
-            value={filters.district}
-            options={["Select District", ...(INDIA_STATES_AND_DISTRICTS[filters.state] || [])]}
-            onChange={(val) => handleDistrictChange(val === "Select District" ? "" : val)}
-            enableSearch
-          />
-        )}
-
-        {/* City / Area */}
-        {filters.district && areaOptions.length > 0 && (
-          <LuxuryDropdown
-            placeholder="Any Area / Locality"
-            value={filters.city}
-            options={["Any Area / Locality", ...areaOptions]}
-            onChange={(val) => onFilterChange({ ...filters, city: val === "Any Area / Locality" ? "" : val })}
-            enableSearch
-          />
-        )}
-      </div>
-
-      {/* 4. BUDGET */}
-      <div className="flex flex-col gap-2 border-t border-zinc-100 pt-4 font-outfit">
-        <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
-          BUDGET
-        </label>
-        <LuxuryDropdown
-          placeholder="Any Budget"
-          value={filters.budget || "Any Budget"}
-          options={getBudgetOptions()}
-          onChange={(val) => onFilterChange({ ...filters, budget: val })}
-        />
-      </div>
-
-      {/* 5. AREA */}
-      <div className="flex flex-col gap-3 border-t border-zinc-100 pt-4 font-outfit">
-        <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
-          AREA
-        </label>
-        
-        {/* Units Selector */}
-        <div className="flex flex-wrap gap-2">
-          {AREA_UNITS.map((unit) => {
-            const isSelected = (filters.areaUnit || "Sq.Ft") === unit;
-            return (
-              <button
-                key={unit}
-                type="button"
-                onClick={() => onFilterChange({ ...filters, areaUnit: unit, areaSize: "Any size" })}
-                className={`px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
-                  isSelected
-                    ? "bg-[#141414] text-white border-[#141414] shadow-xs"
-                    : "bg-white text-slate-700 border-zinc-200 hover:border-zinc-400"
-                }`}
-              >
-                {unit}
-              </button>
-            );
-          })}
+      {/* Sticky Mobile Apply Button */}
+      {onCloseMobile && (
+        <div className="p-4 border-t border-zinc-100 bg-white sticky bottom-0 z-20 shadow-[0_-10px_25px_rgba(0,0,0,0.05)] md:hidden">
+          <button
+            type="button"
+            onClick={onCloseMobile}
+            className="w-full py-3.5 px-6 bg-[#141414] hover:bg-black text-[#e8d5b7] font-extrabold text-xs tracking-wider uppercase rounded-2xl shadow-lg flex items-center justify-center gap-2 active:scale-98 transition-all cursor-pointer"
+          >
+            <span>Apply Filters & View Properties</span>
+          </button>
         </div>
-
-        {/* Area Size Dropdown */}
-        <LuxuryDropdown
-          placeholder="Any size"
-          value={filters.areaSize || "Any size"}
-          options={getAreaSizeOptions()}
-          onChange={(val) => onFilterChange({ ...filters, areaSize: val })}
-        />
-      </div>
-
-      {/* 6. CONSTRUCTION STATUS */}
-      <div className="flex flex-col gap-2.5 border-t border-zinc-100 pt-4 pb-2 font-outfit">
-        <label className="text-[11px] font-extrabold uppercase tracking-[0.14em] text-slate-400">
-          CONSTRUCTION STATUS
-        </label>
-        <div className="flex flex-wrap gap-2">
-          {CONSTRUCTION_STATUSES.map((status) => {
-            const isSelected = (filters.constructionStatus || "Any") === status;
-            return (
-              <button
-                key={status}
-                type="button"
-                onClick={() => onFilterChange({ ...filters, constructionStatus: status })}
-                className={`px-3.5 py-1.5 text-xs font-semibold tracking-wide rounded-full border transition-all cursor-pointer ${
-                  isSelected
-                    ? "bg-[#141414] text-white border-[#141414] shadow-xs"
-                    : "bg-white text-slate-700 border-zinc-200 hover:border-zinc-400"
-                }`}
-              >
-                {status}
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      )}
 
     </div>
   );
