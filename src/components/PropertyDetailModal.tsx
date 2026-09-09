@@ -88,27 +88,24 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
     setActiveImageIndex(idx);
   };
 
-  // Gallery 3D Aperture Slide Transition Variants
+  // Gallery 3D Aperture Slide Transition Variants (Hardware Accelerated)
   const galleryVariants = {
     enter: (dir: number) => ({
       x: dir > 0 ? '100%' : '-100%',
-      scale: 0.93,
+      scale: 0.96,
       opacity: 0,
-      filter: 'blur(10px) brightness(1.2)',
     }),
     center: {
       zIndex: 1,
       x: '0%',
       scale: 1,
       opacity: 1,
-      filter: 'blur(0px) brightness(1)',
     },
     exit: (dir: number) => ({
       zIndex: 0,
       x: dir < 0 ? '100%' : '-100%',
-      scale: 1.07,
+      scale: 1.04,
       opacity: 0,
-      filter: 'blur(10px) brightness(0.8)',
     }),
   };
 
@@ -128,22 +125,22 @@ export function PropertyDetailModal({ property, onClose }: PropertyDetailModalPr
   return (
     <AnimatePresence>
       <div className="fixed inset-0 z-[100] flex items-center justify-center p-3 sm:p-6 md:p-8 overflow-y-auto">
-        {/* Glassmorphism Dark Backdrop */}
+        {/* Dark Backdrop (Fast GPU Render) */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/85 backdrop-blur-xl transition-all duration-300"
+          className="fixed inset-0 bg-black/90 sm:backdrop-blur-xl transition-opacity duration-200"
         />
 
         {/* Main Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 24 }}
+          initial={{ opacity: 0, scale: 0.96, y: 16 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 24 }}
-          transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-          className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto bg-[#0d0d10]/95 text-white border border-white/15 rounded-3xl shadow-2xl backdrop-blur-2xl scrollbar-thin scrollbar-thumb-white/20 my-auto"
+          exit={{ opacity: 0, scale: 0.96, y: 16 }}
+          transition={{ type: 'spring', damping: 30, stiffness: 350 }}
+          className="relative w-full max-w-5xl max-h-[92vh] overflow-y-auto bg-[#0d0d10] text-white border border-white/15 rounded-3xl shadow-2xl sm:backdrop-blur-2xl scrollbar-thin scrollbar-thumb-white/20 my-auto transform-gpu"
         >
           {/* Close Button */}
           <button

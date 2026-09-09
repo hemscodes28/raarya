@@ -216,13 +216,9 @@ export function LoginPage({ onBack, onSuccess }: AuthPageProps) {
         className="absolute inset-0 w-full h-full object-cover z-0"
       />
 
-      {/* Bottom Blur Overlay */}
+      {/* Bottom Gradient Overlay (Fast GPU Render) */}
       <div 
-        className="absolute inset-0 z-1 pointer-events-none backdrop-blur-xl"
-        style={{
-          WebkitMaskImage: 'linear-gradient(to top, black 0%, transparent 45%)',
-          maskImage: 'linear-gradient(to top, black 0%, transparent 45%)'
-        }}
+        className="absolute inset-0 z-1 pointer-events-none bg-gradient-to-t from-black via-black/50 to-transparent opacity-90"
       />
 
       {/* Dark Vignette Overlay for Depth */}

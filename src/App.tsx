@@ -47,10 +47,11 @@ export default function App() {
   }, [currentUser, postPropertyPending]);
 
   // Initial mount load/reload transition
+  // Initial mount load/reload transition - ultra-fast 1.2s for snappy experience
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsTransitioning(false);
-    }, 5700);
+    }, 1200);
     return () => clearTimeout(timer);
   }, []);
 
@@ -74,28 +75,11 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Scroll to starting top of page whenever currentRoute changes
+  // Instant scroll to top whenever currentRoute changes
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
-
-    const t1 = setTimeout(() => {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    }, 50);
-
-    const t2 = setTimeout(() => {
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    }, 150);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
   }, [currentRoute]);
 
   useEffect(() => {

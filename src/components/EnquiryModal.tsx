@@ -304,13 +304,13 @@ export function EnquiryModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md animate-fade-in font-sans overflow-y-auto">
+      <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/85 sm:backdrop-blur-md font-sans overflow-y-auto">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 15 }}
+          initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 15 }}
-          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full max-w-4xl bg-white border border-slate-200/80 rounded-3xl shadow-2xl overflow-hidden my-8 text-slate-900"
+          exit={{ opacity: 0, scale: 0.96, y: 12 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-full max-w-4xl bg-white border border-slate-200/80 rounded-3xl shadow-2xl overflow-hidden my-8 text-slate-900 transform-gpu"
         >
           {/* HEADER BANNER WITH LUXURY INDIGO/GOLD THEME */}
           <div className="relative bg-gradient-to-r from-[#0F172A] via-[#1E1B4B] to-[#0F172A] p-6 sm:p-7 text-white flex items-center justify-between border-b border-white/10">

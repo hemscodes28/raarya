@@ -44,6 +44,8 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
           <img
             src={getImageUrl(property.image)}
             alt={property.title}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
           />
           {/* Subtle gradient vignette */}

@@ -56,16 +56,16 @@ export function BlogDetailModal({ post, onClose }: BlogDetailModalProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/80 backdrop-blur-md transition-all duration-300"
+          className="fixed inset-0 bg-black/85 sm:backdrop-blur-md transition-opacity duration-200"
         />
 
         {/* Modal Window */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.95, y: 20 }}
+          initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
-          exit={{ opacity: 0, scale: 0.95, y: 20 }}
-          transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-neutral-800 border border-neutral-200/50 rounded-3xl shadow-2xl my-auto scrollbar-thin scrollbar-thumb-neutral-200"
+          exit={{ opacity: 0, scale: 0.96, y: 12 }}
+          transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
+          className="relative w-full max-w-4xl max-h-[90vh] overflow-y-auto bg-white text-neutral-800 border border-neutral-200/50 rounded-3xl shadow-2xl my-auto scrollbar-thin scrollbar-thumb-neutral-200 transform-gpu"
         >
           {/* Back/Close header bar */}
           <div className="sticky top-0 bg-white/95 backdrop-blur-md z-30 px-6 py-4 border-b border-neutral-100 flex items-center justify-between">
