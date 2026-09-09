@@ -279,58 +279,68 @@ export function PillNav({
     });
   };
 
-  const toggleMobileMenu = () => {
-    const newState = !isMobileMenuOpen;
-    setIsMobileMenuOpen(newState);
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+    document.body.style.overflow = '';
+    document.documentElement.style.overflow = '';
 
     const hamburger = hamburgerRef.current;
     const menu = mobileMenuRef.current;
 
     if (hamburger) {
       const lines = hamburger.querySelectorAll('.hamburger-line');
-      if (newState) {
-        gsap.to(lines[0], { rotation: 45, y: 3, duration: 0.3, ease });
-        gsap.to(lines[1], { rotation: -45, y: -3, duration: 0.3, ease });
-      } else {
-        gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.3, ease });
-        gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.3, ease });
-      }
+      gsap.to(lines[0], { rotation: 0, y: 0, duration: 0.2, ease });
+      gsap.to(lines[1], { rotation: 0, y: 0, duration: 0.2, ease });
     }
 
     if (menu) {
-      if (newState) {
-        gsap.set(menu, { visibility: 'visible', left: '50%', top: '50%', x: '-50%', y: '-50%' });
-        gsap.fromTo(
-          menu,
-          { opacity: 0, scale: 0.9, left: '50%', top: '50%', x: '-50%', y: '-50%' },
-          {
-            opacity: 1,
-            scale: 1,
-            left: '50%',
-            top: '50%',
-            x: '-50%',
-            y: '-50%',
-            duration: 0.35,
-            ease: 'back.out(1.4)',
-            transformOrigin: 'center center'
-          }
-        );
-      } else {
-        gsap.to(menu, {
-          opacity: 0,
-          scale: 0.9,
+      gsap.to(menu, {
+        opacity: 0,
+        scale: 0.95,
+        duration: 0.15,
+        ease: 'power2.in',
+        onComplete: () => {
+          gsap.set(menu, { visibility: 'hidden' });
+        }
+      });
+    }
+  };
+
+  const toggleMobileMenu = () => {
+    if (isMobileMenuOpen) {
+      closeMobileMenu();
+      onMobileMenuClick?.();
+      return;
+    }
+
+    setIsMobileMenuOpen(true);
+
+    const hamburger = hamburgerRef.current;
+    const menu = mobileMenuRef.current;
+
+    if (hamburger) {
+      const lines = hamburger.querySelectorAll('.hamburger-line');
+      gsap.to(lines[0], { rotation: 45, y: 3, duration: 0.25, ease });
+      gsap.to(lines[1], { rotation: -45, y: -3, duration: 0.25, ease });
+    }
+
+    if (menu) {
+      gsap.set(menu, { visibility: 'visible', left: '50%', top: '50%', x: '-50%', y: '-50%' });
+      gsap.fromTo(
+        menu,
+        { opacity: 0, scale: 0.95, left: '50%', top: '50%', x: '-50%', y: '-50%' },
+        {
+          opacity: 1,
+          scale: 1,
           left: '50%',
           top: '50%',
           x: '-50%',
           y: '-50%',
-          duration: 0.2,
-          ease: 'power2.in',
-          transformOrigin: 'center center',
-          onComplete: () => {
-            gsap.set(menu, { visibility: 'hidden' });
-          }
-        });
-      }
+          duration: 0.25,
+          ease: 'power2.out',
+          transformOrigin: 'center center'
+        }
+      );
     }
 
     onMobileMenuClick?.();
@@ -633,10 +643,7 @@ export function PillNav({
             />
             <button
               type="button"
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                toggleMobileMenu();
-              }}
+              onClick={closeMobileMenu}
               className="w-10 h-10 rounded-full bg-[#141414] hover:bg-black text-white flex items-center justify-center active:scale-90 transition-all z-20 cursor-pointer shadow-md"
               aria-label="Close menu"
             >
@@ -652,8 +659,7 @@ export function PillNav({
                     href={item.href}
                     className={`mobile-menu-link flex-grow flex items-center gap-2.5 ${activeHref === item.href ? ' is-active' : ''}`}
                     onClick={(e) => {
-                      setIsMobileMenuOpen(false);
-                      toggleMobileMenu();
+                      closeMobileMenu();
                       if (onItemClick) onItemClick(e, item.href);
                     }}
                     whileTap={{ scale: 0.96, backgroundColor: '#c5a880', color: '#141414' }}
@@ -686,8 +692,7 @@ export function PillNav({
                         key={subItem.label}
                         href={subItem.route}
                         onClick={(e) => {
-                          setIsMobileMenuOpen(false);
-                          toggleMobileMenu();
+                          closeMobileMenu();
                           if (onItemClick) onItemClick(e, subItem.route);
                         }}
                         className="flex flex-col py-2.5 px-4 rounded-xl bg-[#181818] border border-white/10 text-left text-white hover:bg-amber-500 hover:text-black transition-all"
@@ -707,8 +712,7 @@ export function PillNav({
               {currentUser ? (
                 <motion.button
                   onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    toggleMobileMenu();
+                    closeMobileMenu();
                     if (onAvatarClick) onAvatarClick();
                   }}
                   className="flex items-center gap-3 border border-black/10 bg-white px-4 py-2 rounded-full text-left cursor-pointer"
@@ -732,8 +736,7 @@ export function PillNav({
                   className="flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-amber-500 to-amber-400 text-black px-6 py-3 text-xs font-black tracking-widest uppercase rounded-2xl cursor-pointer shadow-lg shadow-amber-500/25 border border-amber-300/50 hover:brightness-110 active:scale-95 transition-all duration-300"
                   onClick={(e) => {
                     e.preventDefault();
-                    setIsMobileMenuOpen(false);
-                    toggleMobileMenu();
+                    closeMobileMenu();
                     if (onLoginClick) onLoginClick();
                   }}
                   whileTap={{ scale: 0.95 }}

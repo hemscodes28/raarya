@@ -74,11 +74,16 @@ export default function App() {
     return () => unsubscribe();
   }, []);
 
-  // Instant scroll to top whenever currentRoute changes
+  // Zero-lag instant scroll restoration when changing routes on mobile/desktop
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'instant' as ScrollBehavior });
+    window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;
     document.body.scrollTop = 0;
+    requestAnimationFrame(() => {
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    });
   }, [currentRoute]);
 
   useEffect(() => {
@@ -99,9 +104,6 @@ export default function App() {
         setShowChatbot(true);
       } else {
         setCurrentRoute(hash);
-        window.scrollTo(0, 0);
-        document.documentElement.scrollTop = 0;
-        document.body.scrollTop = 0;
       }
     };
     handleHash();
