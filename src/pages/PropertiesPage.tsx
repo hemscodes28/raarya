@@ -6,6 +6,7 @@ import { PropertyCard } from '../components/PropertyCard';
 import { PropertyDetailModal } from '../components/PropertyDetailModal';
 import { PropertyFilterPanel, type FilterState } from '../components/PropertyFilterPanel';
 import { PROPERTIES, type PropertyListing } from '../constants';
+import { isFuzzyMatch } from '../utils/fuzzyMatcher';
 
 interface PropertiesPageProps {
   initialTab?: 'all' | 'buy' | 'rent' | 'pg-hostel';
@@ -55,12 +56,6 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
     const hashTerm = getHashSearchTerm();
     if (hashTerm) {
       setSearchTerm(hashTerm);
-      setFilters({
-        ...DEFAULT_FILTERS,
-        tab: initialTab,
-      });
-      sessionStorage.removeItem('raarya_search_filters');
-      return;
     }
 
     // Read stored filters from session storage if available
@@ -89,17 +84,12 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
       const hashTerm = getHashSearchTerm();
       if (hashTerm) {
         setSearchTerm(hashTerm);
-        setFilters({
-          ...DEFAULT_FILTERS,
-          tab: initialTab,
-        });
-        sessionStorage.removeItem('raarya_search_filters');
         setVisibleCount(18);
       }
     };
     window.addEventListener('hashchange', handleHashSync);
     return () => window.removeEventListener('hashchange', handleHashSync);
-  }, [initialTab]);
+  }, []);
 
   // Persist filter changes to sessionStorage
   const handleFilterChange = (newFilters: FilterState) => {
@@ -141,13 +131,14 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
         return false;
       }
 
-      // 2. Search Term Match
+      // 2. Search Term Match with Fuzzy Typo Tolerance
       if (searchTerm) {
         const term = searchTerm.toLowerCase();
-        const matchesTitle = p.title.toLowerCase().includes(term);
-        const matchesLoc = p.location.toLowerCase().includes(term);
-        const matchesSubType = p.subType ? p.subType.toLowerCase().includes(term) : false;
-        if (!matchesTitle && !matchesLoc && !matchesSubType) return false;
+        const matchesTitle = isFuzzyMatch(p.title, term);
+        const matchesLoc = isFuzzyMatch(p.location, term);
+        const matchesSubType = p.subType ? isFuzzyMatch(p.subType, term) : false;
+        const matchesDesc = p.description ? isFuzzyMatch(p.description, term) : false;
+        if (!matchesTitle && !matchesLoc && !matchesSubType && !matchesDesc) return false;
       }
 
       // 3. Location Parse (State, District, City)

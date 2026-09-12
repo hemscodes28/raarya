@@ -1,4 +1,5 @@
 import { PROPERTIES } from '../constants';
+import { matchLocationFuzzy, isFuzzyMatch } from './fuzzyMatcher';
 
 export function generateAiResponse(userQuery: string): string {
   const query = userQuery.toLowerCase().trim();
@@ -192,14 +193,8 @@ Need help listing? Call **+91 90872 40400** to speak with our listing manager.`;
   }
 
   // 5. Property Search & Recommendations by Location, Type, or Keyword
-  const knownLocations = [
-    'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai',
-    'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti',
-    'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur', 'coimbatore',
-    'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kittampalayam'
-  ];
-
-  const matchedLocations = knownLocations.filter(loc => query.includes(loc));
+  // 5. Property Search & Recommendations with Fuzzy Matcher
+  const fuzzyLoc = matchLocationFuzzy(query);
 
   const cleanWords = query
     .replace(/[^\w\s]/g, ' ')
@@ -211,15 +206,13 @@ Need help listing? Call **+91 90872 40400** to speak with our listing manager.`;
       p.overviewDetails || {}
     )}`.toLowerCase();
 
-    // Check keyword matches in text
-    const hasWordMatch = cleanWords.some(kw => text.includes(kw));
-
-    if (matchedLocations.length > 0) {
-      const specificLocations = matchedLocations.filter(l => l !== 'coimbatore');
-      const targetLocs = specificLocations.length > 0 ? specificLocations : matchedLocations;
-      const locationMatches = targetLocs.some(loc => text.includes(loc));
-      return locationMatches || hasWordMatch;
+    if (fuzzyLoc) {
+      if (isFuzzyMatch(text, fuzzyLoc) || isFuzzyMatch(p.location, fuzzyLoc)) {
+        return true;
+      }
     }
+
+    const hasWordMatch = cleanWords.some(kw => isFuzzyMatch(text, kw));
 
     if (query.includes('buy') && p.type === 'buy') return true;
     if (query.includes('rent') && p.type === 'rent') return true;
@@ -228,41 +221,30 @@ Need help listing? Call **+91 90872 40400** to speak with our listing manager.`;
     return hasWordMatch;
   });
 
-  // Sort by relevance (number of matching words)
-  matchedProps.sort((a, b) => {
-    const textA = `${a.title} ${a.location} ${a.description}`.toLowerCase();
-    const textB = `${b.title} ${b.location} ${b.description}`.toLowerCase();
-    const countA = cleanWords.filter(w => textA.includes(w)).length;
-    const countB = cleanWords.filter(w => textB.includes(w)).length;
-    return countB - countA;
-  });
+  // Filter by transaction type if specified
+  if (query.includes('rent')) {
+    matchedProps = matchedProps.filter(p => p.type === 'rent');
+  } else if (query.includes('pg') || query.includes('hostel')) {
+    matchedProps = matchedProps.filter(p => p.type === 'pg-hostel');
+  }
 
   if (matchedProps.length === 0) {
-    if (matchedLocations.length > 0) {
-      const locName = matchedLocations[0].charAt(0).toUpperCase() + matchedLocations[0].slice(1);
-      return `📍 **No verified properties found in ${locName} right now.**
+    const locName = fuzzyLoc || 'your requested area';
+    return `📍 **No verified properties found in ${locName} right now.**
 
 We currently do not have active property listings in **${locName}** in our database. We specialize in high-growth corridors across Coimbatore (including Saravanampatti, Annur, Kittampalayam, Singanallur, Karumathampatti, Mettupalayam, and Avinashi Road).
 
-📞 **Looking for off-market options in ${locName}?** Contact our customer support team at **+91 90872 40400** or [Send an Enquiry](#contact).`;
-    }
-    return `📍 **No verified properties found matching your requested area or criteria.**
-
-We currently do not have property listings matching your request in our active portfolio. We specialize in high-growth corridors across Coimbatore (including Saravanampatti, Annur, Kittampalayam, Singanallur, Karumathampatti, Mettupalayam, and Avinashi Road).
-
-📞 **Looking for custom property sourcing?** Contact our support team at **+91 90872 40400** or [Send an Enquiry](#contact).`;
+📞 **Looking for custom options in ${locName}?** Contact our customer support team at **+91 90872 40400** or [Send an Enquiry](#contact).`;
   }
 
   const totalCount = matchedProps.length;
   const displayedProps = matchedProps.slice(0, 8);
 
-  const specificLocs = matchedLocations.filter(l => l.toLowerCase() !== 'coimbatore');
-  const targetLoc = specificLocs.length > 0
-    ? specificLocs[0].charAt(0).toUpperCase() + specificLocs[0].slice(1)
-    : (cleanWords.length > 0 && cleanWords[0].toLowerCase() !== 'coimbatore' ? cleanWords[0].charAt(0).toUpperCase() + cleanWords[0].slice(1) : '');
+  const targetLoc = fuzzyLoc || (cleanWords.length > 0 && cleanWords[0].toLowerCase() !== 'coimbatore' ? cleanWords[0].charAt(0).toUpperCase() + cleanWords[0].slice(1) : '');
 
   const searchParam = targetLoc ? `?search=${encodeURIComponent(targetLoc)}` : '';
-  const navTab = query.includes('rent') ? 'rent' : 'buy';
+  const navTab = query.includes('pg') || query.includes('hostel') ? 'pg-hostel' : query.includes('rent') ? 'rent' : 'buy';
+  const sectionName = navTab === 'pg-hostel' ? 'PG & Hostel' : navTab === 'rent' ? 'Rent' : 'Buy';
 
   const propListFormatted = displayedProps
     .map(
@@ -276,8 +258,8 @@ We currently do not have property listings matching your request in our active p
     .join('\n\n');
 
   const viewAllMsg = totalCount > 8
-    ? `\n\n🔍 **I found ${totalCount} matching properties.** Here are 8 to get you started. [View all ${totalCount} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`
-    : `\n\n🔍 **I found ${totalCount} matching properties.** [View all ${totalCount} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`;
+    ? `\n\n🔍 **I found ${totalCount} matching properties.** Here are 8 to get you started. [View all ${totalCount} matching properties in our ${sectionName} section →](#${navTab}${searchParam})`
+    : `\n\n🔍 **I found ${totalCount} matching properties.** [View all ${totalCount} matching properties in our ${sectionName} section →](#${navTab}${searchParam})`;
 
   return `Here are verified properties matching your criteria:\n\n${propListFormatted}\n\nReview the interactive property cards below to explore images, specifications, and book a free site visit.${viewAllMsg}`;
 }

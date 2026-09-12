@@ -343,11 +343,12 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
     // 2. Bold tags: **text** -> <strong class="font-semibold">$1</strong> (Inherits container text color)
     formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>');
 
-    // 3. Handle unclosed bracket links like "[View all X matching properties in our Buy section →"
+    // 3. Handle unclosed bracket links like "[View all X matching properties in our Buy/Rent/PG section →"
     formatted = formatted.replace(
-      /\[(View all \d+ matching properties in our (Buy|Rent) section\s*→?)(?!\()/gi,
+      /\[(View all \d+ matching properties in our (Buy|Rent|PG & Hostel|PG\/Hostel|PG) section\s*→?)(?!\()/gi,
       (_, label, section) => {
-        const route = section.toLowerCase() === 'rent' ? '#rent' : '#buy';
+        const secLower = section.toLowerCase();
+        const route = secLower.includes('pg') ? '#pg-hostel' : secLower === 'rent' ? '#rent' : '#buy';
         return `[${label}](${route})`;
       }
     );

@@ -4,6 +4,7 @@ import { detectIntentAndExtractFilters, extractEligibilityParamsFromText } from 
 import { conversationManager } from '../conversationManager.js';
 import { geminiService } from '../geminiService.js';
 import { jsonSchemaValidator } from '../validators/jsonSchemaValidator.js';
+import { matchLocationFuzzy } from '../fuzzyMatcher.js';
 
 function calculateEmiDetails({ loanAmount, interestRate = 8.5, tenureYears = 20 }) {
   const P = loanAmount;
@@ -599,33 +600,26 @@ export class ChatOrchestrator {
     resolvedProperties = deduplicateProperties(resolvedProperties);
 
     const totalMatches = searchResult.total;
-    const navTab = propertyStateAfter.transactionType === 'RENT' ? 'rent' : 'buy';
+    const lowerQuery = (latestUserMessage || '').toLowerCase();
     
-    // Extract target locality or area keyword for Buy/Rent page search filter
-    let searchLocality = '';
+    // Determine section tab (buy, rent, pg-hostel)
+    let navTab = 'buy';
+    let sectionName = 'Buy';
+    if (lowerQuery.includes('pg') || lowerQuery.includes('hostel') || propertyStateAfter.transactionType === 'PG_HOSTEL') {
+      navTab = 'pg-hostel';
+      sectionName = 'PG & Hostel';
+    } else if (lowerQuery.includes('rent') || propertyStateAfter.transactionType === 'RENT') {
+      navTab = 'rent';
+      sectionName = 'Rent';
+    }
 
-    // 1. Check if propertyStateAfter has a specific locality (not equal to 'Coimbatore')
-    if (propertyStateAfter.locality && propertyStateAfter.locality.toLowerCase() !== 'coimbatore') {
+    // Extract target locality using fuzzy matcher & fallback logic
+    let searchLocality = matchLocationFuzzy(latestUserMessage) || '';
+
+    if (!searchLocality && propertyStateAfter.locality && propertyStateAfter.locality.toLowerCase() !== 'coimbatore') {
       searchLocality = propertyStateAfter.locality;
     }
 
-    // 2. Check latestUserMessage for specific location names (excluding 'coimbatore')
-    if (!searchLocality && latestUserMessage) {
-      const knownLocations = [
-        'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai',
-        'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti',
-        'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur',
-        'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kittampalayam', 'vadavalli',
-        'mettupalayam', 'karanampettai', 'arasur', 'tiruppur', 'erode', 'karamadai', 'sevur'
-      ];
-      const lowerMsg = latestUserMessage.toLowerCase();
-      const foundLoc = knownLocations.find(l => lowerMsg.includes(l));
-      if (foundLoc) {
-        searchLocality = foundLoc.charAt(0).toUpperCase() + foundLoc.slice(1);
-      }
-    }
-
-    // 3. Fallback: extract specific locality from first resolved property's location string
     if (!searchLocality && resolvedProperties.length > 0 && resolvedProperties[0].location) {
       const locStr = resolvedProperties[0].location;
       const firstPart = locStr.split(',')[0].trim();
@@ -638,9 +632,9 @@ export class ChatOrchestrator {
     const searchParam = searchLocality ? `?search=${encodeURIComponent(searchLocality)}` : '';
 
     if (totalMatches > 8) {
-      validated.message += `\n\n🔍 **I found ${totalMatches} matching properties.** Here are 8 to get you started. [View all ${totalMatches} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`;
-    } else if (totalMatches > 0 && searchLocality) {
-      validated.message += `\n\n🔍 **I found ${totalMatches} matching properties.** [View all ${totalMatches} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`;
+      validated.message += `\n\n🔍 **I found ${totalMatches} matching properties.** Here are 8 to get you started. [View all ${totalMatches} matching properties in our ${sectionName} section →](#${navTab}${searchParam})`;
+    } else if (totalMatches > 0) {
+      validated.message += `\n\n🔍 **I found ${totalMatches} matching properties.** [View all ${totalMatches} matching properties in our ${sectionName} section →](#${navTab}${searchParam})`;
     }
 
     // Append EMI calculation for mixed queries

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { matchLocationFuzzy, isFuzzyMatch } from './fuzzyMatcher.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -131,20 +132,18 @@ export class LocalPropertyRepository {
   // Extract property subType / category
   parsePropertyType(p) {
     const titleLower = (p.title || '').toLowerCase();
-    if (titleLower.includes('plot') || titleLower.includes('land') || titleLower.includes('layout')) return 'Plot';
-    if (titleLower.includes('villa')) return 'Villa';
-    if (titleLower.includes('apartment') || titleLower.includes('flat')) return 'Apartment';
-    if (titleLower.includes('house') || titleLower.includes('independent house') || titleLower.includes('home')) return 'House';
-    if (titleLower.includes('commercial') || titleLower.includes('office') || titleLower.includes('shop')) return 'Commercial';
-    if (titleLower.includes('pg') || titleLower.includes('hostel')) return 'PG/Hostel';
+    const subTypeLower = (p.subType || '').toLowerCase();
+    const descLower = (p.description || '').toLowerCase();
+    const fullText = `${titleLower} ${subTypeLower} ${descLower}`.toLowerCase();
 
-    const text = `${p.subType || ''} ${p.description || ''} ${p.overviewDetails?.['Property Type'] || ''}`.toLowerCase();
-    if (text.includes('villa')) return 'Villa';
-    if (text.includes('apartment') || text.includes('flat')) return 'Apartment';
-    if (text.includes('plot') || text.includes('land') || text.includes('layout')) return 'Plot';
-    if (text.includes('house') || text.includes('independent house')) return 'House';
-    if (text.includes('commercial') || text.includes('office') || text.includes('shop')) return 'Commercial';
-    if (text.includes('pg') || text.includes('hostel')) return 'PG/Hostel';
+    if (titleLower.includes('apartment') || titleLower.includes('flat') || subTypeLower.includes('apartment') || subTypeLower.includes('flat')) return 'Apartment';
+    if (titleLower.includes('villa') || subTypeLower.includes('villa')) return 'Villa';
+    if (titleLower.includes('house') || subTypeLower.includes('house')) return 'House';
+    if (titleLower.includes('pg') || titleLower.includes('hostel') || subTypeLower.includes('pg') || subTypeLower.includes('hostel')) return 'PG/Hostel';
+    if (fullText.includes('plot') || fullText.includes('land') || fullText.includes('layout') || fullText.includes('cents') || fullText.includes('cent plot')) {
+      return 'Plot';
+    }
+    if (fullText.includes('commercial') || fullText.includes('office') || fullText.includes('shop')) return 'Commercial';
     return p.subType || 'Residential';
   }
 
@@ -220,9 +219,21 @@ export class LocalPropertyRepository {
     // 4. Hard Property SubType Check
     if (filters.propertyType && filters.propertyType !== 'All') {
       const targetType = String(filters.propertyType).toLowerCase();
-      if (!p.subType.toLowerCase().includes(targetType) && !targetType.includes(p.subType.toLowerCase())) {
-        return false;
+      const sub = p.subType.toLowerCase();
+      const title = p.title.toLowerCase();
+      let match = sub.includes(targetType) || targetType.includes(sub);
+      if (targetType.includes('pg') || targetType.includes('hostel')) {
+        match = sub.includes('pg') || sub.includes('hostel') || title.includes('pg') || title.includes('hostel');
+      } else if (targetType === 'plot' || targetType === 'land') {
+        match = sub.includes('plot') || sub.includes('land') || title.includes('plot') || title.includes('land') || title.includes('layout') || title.includes('cent');
+      } else if (targetType === 'villa') {
+        match = sub.includes('villa') || title.includes('villa');
+      } else if (targetType === 'apartment' || targetType === 'flat') {
+        match = sub.includes('apartment') || sub.includes('flat') || title.includes('apartment') || title.includes('flat');
+      } else if (targetType === 'house' || targetType === 'independent house' || targetType === 'home') {
+        match = sub.includes('house') || sub.includes('villa') || title.includes('house') || title.includes('villa');
       }
+      if (!match) return false;
     }
 
     // 5. Hard Locality Check
@@ -241,15 +252,40 @@ export class LocalPropertyRepository {
     let candidates = [...this.normalizedProperties];
 
     // 1. Transaction Type filter (buy, rent, pg-hostel)
-    if (filters.type) {
-      const t = String(filters.type).toLowerCase();
-      candidates = candidates.filter(p => p.type === t || (t === 'rent' && p.type === 'rent') || (t === 'buy' && p.type === 'buy'));
+    if (filters.type || filters.transactionType) {
+      const t = String(filters.type || filters.transactionType).toLowerCase().replace('_', '-');
+      candidates = candidates.filter(p => {
+        const pt = (p.type || '').toLowerCase().replace('_', '-');
+        if (t.includes('pg') || t.includes('hostel')) return pt.includes('pg') || pt.includes('hostel');
+        if (t === 'rent') return pt === 'rent';
+        if (t === 'buy' || t === 'sale') return pt === 'buy';
+        return pt === t;
+      });
     }
 
-    // 2. Property SubType filter (Apartment, Villa, Plot, House, Commercial)
+    // 2. Property SubType filter (Apartment, Villa, Plot, House, Commercial, PG/Hostel)
     if (filters.propertyType && filters.propertyType !== 'All') {
       const targetType = String(filters.propertyType).toLowerCase();
-      candidates = candidates.filter(p => p.subType.toLowerCase().includes(targetType) || targetType.includes(p.subType.toLowerCase()));
+      candidates = candidates.filter(p => {
+        const sub = p.subType.toLowerCase();
+        const title = p.title.toLowerCase();
+        if (targetType === 'plot' || targetType === 'land') {
+          return sub.includes('plot') || sub.includes('land') || title.includes('plot') || title.includes('land') || title.includes('layout') || title.includes('cent');
+        }
+        if (targetType === 'villa') {
+          return sub.includes('villa') || title.includes('villa');
+        }
+        if (targetType === 'apartment' || targetType === 'flat') {
+          return sub.includes('apartment') || sub.includes('flat') || title.includes('apartment') || title.includes('flat');
+        }
+        if (targetType === 'house' || targetType === 'independent house' || targetType === 'home') {
+          return sub.includes('house') || sub.includes('villa') || title.includes('house') || title.includes('villa');
+        }
+        if (targetType.includes('pg') || targetType.includes('hostel')) {
+          return sub.includes('pg') || sub.includes('hostel') || title.includes('pg') || title.includes('hostel');
+        }
+        return sub.includes(targetType) || targetType.includes(sub);
+      });
     }
 
     // 3. Bedrooms filter (BHK)
@@ -273,12 +309,13 @@ export class LocalPropertyRepository {
       });
     }
 
-    // 6. Location filter
-    if (filters.city || filters.locality || filters.location) {
-      const locTarget = String(filters.locality || filters.city || filters.location).toLowerCase().trim();
-      if (locTarget && locTarget !== 'coimbatore') {
-        candidates = candidates.filter(p => p.location.toLowerCase().includes(locTarget) || p.title.toLowerCase().includes(locTarget));
-      }
+    // 6. Fuzzy Location filter
+    const locInput = String(filters.locality || filters.city || filters.location || '').toLowerCase().trim();
+    const fuzzyTarget = matchLocationFuzzy(locInput || queryText);
+    if (fuzzyTarget) {
+      candidates = candidates.filter(p => isFuzzyMatch(p.fullText, fuzzyTarget) || isFuzzyMatch(p.location, fuzzyTarget));
+    } else if (locInput && locInput !== 'coimbatore') {
+      candidates = candidates.filter(p => isFuzzyMatch(p.fullText, locInput) || isFuzzyMatch(p.location, locInput));
     }
 
     // 7. Amenities filter
@@ -293,7 +330,13 @@ export class LocalPropertyRepository {
     candidates = candidates.filter(p => this.verifyHardFilters(p, filters));
 
     // 8. Keyword / Text Relevance Scoring
-    const cleanQuery = (queryText || '').toLowerCase().replace(/[^\w\s]/g, ' ').trim();
+    let cleanQueryStr = (queryText || '').toLowerCase();
+    const fuzzyCanonical = matchLocationFuzzy(cleanQueryStr);
+    if (fuzzyCanonical) {
+      cleanQueryStr += ` ${fuzzyCanonical.toLowerCase()}`;
+    }
+
+    const cleanQuery = cleanQueryStr.replace(/[^\w\s]/g, ' ').trim();
     const words = cleanQuery.split(/\s+/).filter(w => w.length > 2 && !['the', 'and', 'for', 'are', 'you', 'with', 'in', 'property', 'properties', 'plots', 'plot', 'show', 'give', 'need', 'want', 'list', 'details', 'looking', 'how', 'what', 'who', 'where', 'when', 'why', 'villa', 'villas', 'apartment', 'apartments', 'house', 'houses', 'land', 'lands', 'home', 'homes'].includes(w));
 
     const hasStructuredFilter = Boolean(

@@ -1,3 +1,5 @@
+import { matchLocationFuzzy } from './fuzzyMatcher.js';
+
 export function extractEligibilityParamsFromText(text) {
   if (!text || typeof text !== 'string') return {};
 
@@ -577,31 +579,36 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
     }
   }
 
-  // Property Type
-  if (q.includes('apartment') || q.includes('flat')) propertyType = 'APARTMENT';
-  else if (q.includes('villa')) propertyType = 'VILLA';
-  else if (q.includes('plot') || q.includes('land') || q.includes('layout')) propertyType = 'PLOT';
-  else if ((q.includes('house') || q.includes('independent house') || (q.includes('home') && !q.includes('home loan')))) propertyType = 'HOUSE';
-  else if (q.includes('commercial property') || q.includes('office space') || q.includes('commercial building') || q.includes('shop for sale') || q.includes('shop for rent')) propertyType = 'COMMERCIAL';
-  else if (q.includes('pg') || q.includes('hostel')) propertyType = 'PG/HOSTEL';
+  // Property Type (Typo-Tolerant)
+  if (/app?art?ment?s?|flats?/i.test(q)) propertyType = 'APARTMENT';
+  else if (/vil+as?/i.test(q)) propertyType = 'VILLA';
+  else if (/plots?|lands?|layouts?|cents?/i.test(q)) propertyType = 'PLOT';
+  else if (/house?s?|homes?/i.test(q) && !q.includes('home loan')) propertyType = 'HOUSE';
+  else if (/com+er+cial|office|shops?|showrooms?/i.test(q)) propertyType = 'COMMERCIAL';
+  else if (/\bpg\b|hostels?/i.test(q)) propertyType = 'PG/HOSTEL';
 
   // Transaction Type
   if (q.includes('rent') || q.includes('lease') || q.includes('rental')) type = 'RENT';
   else if (q.includes('pg') || q.includes('hostel')) type = 'PG-HOSTEL';
   else if (q.includes('buy') || q.includes('sale') || q.includes('purchase') || (maxPrice && maxPrice >= 100000)) type = 'SALE';
 
-  // Localities
-  const knownLocalities = [
-    'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai', 
-    'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti', 
-    'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur', 'coimbatore', 
-    'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kalapatti', 'tidel park', 'chennai'
-  ];
+  // Localities with Fuzzy Matcher Integration
+  const matchedFuzzyLoc = matchLocationFuzzy(q);
+  if (matchedFuzzyLoc && matchedFuzzyLoc.toLowerCase() !== 'coimbatore') {
+    locality = matchedFuzzyLoc;
+  } else {
+    const knownLocalities = [
+      'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai', 
+      'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti', 
+      'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur', 'coimbatore', 
+      'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kalapatti', 'tidel park', 'karanampettai', 'arasur', 'tiruppur', 'karamadai', 'sevur'
+    ];
 
-  for (const loc of knownLocalities) {
-    if (q.includes(loc)) {
-      locality = loc.charAt(0).toUpperCase() + loc.slice(1);
-      break;
+    for (const loc of knownLocalities) {
+      if (q.includes(loc)) {
+        locality = loc.charAt(0).toUpperCase() + loc.slice(1);
+        break;
+      }
     }
   }
 
