@@ -23,21 +23,45 @@ const DEFAULT_FILTERS: FilterState = {
   constructionStatus: 'Any',
 };
 
+const getHashSearchTerm = () => {
+  try {
+    const hash = window.location.hash;
+    if (hash.includes('?')) {
+      const queryStr = hash.split('?')[1];
+      const params = new URLSearchParams(queryStr);
+      const q = params.get('search') || params.get('q') || params.get('location') || '';
+      if (q) return decodeURIComponent(q).trim();
+    }
+  } catch { }
+  return '';
+};
+
 export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
   const [filters, setFilters] = useState<FilterState>(() => ({
     ...DEFAULT_FILTERS,
     tab: initialTab,
   }));
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(getHashSearchTerm);
   const [visibleCount, setVisibleCount] = useState(18);
   const [selectedProperty, setSelectedProperty] = useState<PropertyListing | null>(null);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
-  // Sync initial tab from URL hash / prop changes
+  // Sync initial tab and search term from URL hash / prop changes
   useEffect(() => {
     setFilters((prev) => ({ ...prev, tab: initialTab }));
     setVisibleCount(18);
+
+    const hashTerm = getHashSearchTerm();
+    if (hashTerm) {
+      setSearchTerm(hashTerm);
+      setFilters({
+        ...DEFAULT_FILTERS,
+        tab: initialTab,
+      });
+      sessionStorage.removeItem('raarya_search_filters');
+      return;
+    }
 
     // Read stored filters from session storage if available
     const stored = sessionStorage.getItem('raarya_search_filters');
@@ -57,6 +81,24 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
         console.error('Failed to parse search filters', e);
       }
     }
+  }, [initialTab]);
+
+  // Sync search term on hashchange events
+  useEffect(() => {
+    const handleHashSync = () => {
+      const hashTerm = getHashSearchTerm();
+      if (hashTerm) {
+        setSearchTerm(hashTerm);
+        setFilters({
+          ...DEFAULT_FILTERS,
+          tab: initialTab,
+        });
+        sessionStorage.removeItem('raarya_search_filters');
+        setVisibleCount(18);
+      }
+    };
+    window.addEventListener('hashchange', handleHashSync);
+    return () => window.removeEventListener('hashchange', handleHashSync);
   }, [initialTab]);
 
   // Persist filter changes to sessionStorage
@@ -110,23 +152,14 @@ export function PropertiesPage({ initialTab = 'all' }: PropertiesPageProps) {
 
       // 3. Location Parse (State, District, City)
       if (p.location) {
-        const parts = p.location.split(',').map((s) => s.trim());
-        const st = parts.length > 0 ? parts[parts.length - 1] : '';
-        const dt = parts.length > 1 ? parts[parts.length - 2] : '';
-        let ct = parts.length > 2 ? parts.slice(0, parts.length - 2).join(', ').trim() : '';
-        if (ct.includes('-')) {
-          const dashParts = ct.split('-');
-          const potentialCity = dashParts[0].trim();
-          if (potentialCity) ct = potentialCity;
-        }
-
-        if (filters.state && st.toLowerCase() !== filters.state.toLowerCase()) {
+        const fullLocLower = p.location.toLowerCase();
+        if (filters.state && !fullLocLower.includes(filters.state.toLowerCase())) {
           return false;
         }
-        if (filters.district && dt.toLowerCase() !== filters.district.toLowerCase()) {
+        if (filters.district && !fullLocLower.includes(filters.district.toLowerCase())) {
           return false;
         }
-        if (filters.city && !ct.toLowerCase().includes(filters.city.toLowerCase())) {
+        if (filters.city && !fullLocLower.includes(filters.city.toLowerCase())) {
           return false;
         }
       }

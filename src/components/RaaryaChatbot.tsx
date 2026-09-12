@@ -398,6 +398,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
     const finalHash = cleanRoute ? `#${cleanRoute}` : '#';
 
     window.location.hash = finalHash;
+    window.dispatchEvent(new HashChangeEvent('hashchange'));
 
     window.scrollTo(0, 0);
     document.documentElement.scrollTop = 0;

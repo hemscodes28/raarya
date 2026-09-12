@@ -253,26 +253,31 @@ We currently do not have property listings matching your request in our active p
 📞 **Looking for custom property sourcing?** Contact our support team at **+91 90872 40400** or [Send an Enquiry](#contact).`;
   }
 
-  matchedProps = matchedProps.slice(0, 12);
+  const totalCount = matchedProps.length;
+  const displayedProps = matchedProps.slice(0, 8);
 
-  const propListFormatted = matchedProps
+  const specificLocs = matchedLocations.filter(l => l.toLowerCase() !== 'coimbatore');
+  const targetLoc = specificLocs.length > 0
+    ? specificLocs[0].charAt(0).toUpperCase() + specificLocs[0].slice(1)
+    : (cleanWords.length > 0 && cleanWords[0].toLowerCase() !== 'coimbatore' ? cleanWords[0].charAt(0).toUpperCase() + cleanWords[0].slice(1) : '');
+
+  const searchParam = targetLoc ? `?search=${encodeURIComponent(targetLoc)}` : '';
+  const navTab = query.includes('rent') ? 'rent' : 'buy';
+
+  const propListFormatted = displayedProps
     .map(
       (p, i) =>
         `${i + 1}. **${p.title}**
    - **Price**: ${p.price} | **Type**: ${p.type === 'buy' ? 'For Sale' : p.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
    - **Location**: ${p.location}
    - **Extent**: ${p.areaDisplay || (p.area ? `${p.area} sq.ft` : 'Verified Extent')}
-   - [Click to View Details](#buy)`
+   - [Click to View Details](#${p.type || 'buy'}${searchParam})`
     )
     .join('\n\n');
 
-  return `🔍 **Verified Properties Matching Your Query**
+  const viewAllMsg = totalCount > 8
+    ? `\n\n🔍 **I found ${totalCount} matching properties.** Here are 8 to get you started. [View all ${totalCount} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`
+    : `\n\n🔍 **I found ${totalCount} matching properties.** [View all ${totalCount} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`;
 
-Here are curated property listings from **Raarya Properties**:
-
-${propListFormatted}
-
-✅ **All Raarya layout plots are 100% DTCP & RERA approved with clear legal titles.**
-
-📞 **Book a Free Site Visit**: Call **+91 90872 40400** or [Send an Enquiry](#contact).`;
+  return `Here are verified properties matching your criteria:\n\n${propListFormatted}\n\nReview the interactive property cards below to explore images, specifications, and book a free site visit.${viewAllMsg}`;
 }

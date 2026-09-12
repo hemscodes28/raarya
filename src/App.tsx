@@ -88,8 +88,9 @@ export default function App() {
 
   useEffect(() => {
     const handleHash = () => {
-      const hash = window.location.hash.replace(/^#\/?/, '');
-      if (hash === 'post-property' || hash === 'post') {
+      const rawHash = window.location.hash.replace(/^#\/?/, '');
+      const baseRoute = rawHash.split('?')[0];
+      if (baseRoute === 'post-property' || baseRoute === 'post') {
         const storedUser = localStorage.getItem('currentUser');
         if (storedUser) {
           setDashboardTab('Add Property');
@@ -98,12 +99,12 @@ export default function App() {
           setPostPropertyPending(true);
           setShowLogin(true);
         }
-      } else if (hash === 'login') {
+      } else if (baseRoute === 'login') {
         setShowLogin(true);
-      } else if (hash === 'ai-assistant' || hash === 'advisor' || hash === 'chatbot') {
+      } else if (baseRoute === 'ai-assistant' || baseRoute === 'advisor' || baseRoute === 'chatbot') {
         setShowChatbot(true);
       } else {
-        setCurrentRoute(hash);
+        setCurrentRoute(rawHash);
       }
     };
     handleHash();
@@ -128,12 +129,13 @@ export default function App() {
   };
 
   const renderActivePage = () => {
-    if (currentRoute.startsWith('blog-view/')) {
-      const slug = currentRoute.replace('blog-view/', '');
+    const routeBase = currentRoute.split('?')[0];
+    if (routeBase.startsWith('blog-view/')) {
+      const slug = routeBase.replace('blog-view/', '');
       return <BlogDetailPage slug={slug} />;
     }
 
-    switch (currentRoute) {
+    switch (routeBase) {
       case 'buy':
         return <PropertiesPage initialTab="buy" />;
       case 'rent':

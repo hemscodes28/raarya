@@ -601,8 +601,46 @@ export class ChatOrchestrator {
     const totalMatches = searchResult.total;
     const navTab = propertyStateAfter.transactionType === 'RENT' ? 'rent' : 'buy';
     
+    // Extract target locality or area keyword for Buy/Rent page search filter
+    let searchLocality = '';
+
+    // 1. Check if propertyStateAfter has a specific locality (not equal to 'Coimbatore')
+    if (propertyStateAfter.locality && propertyStateAfter.locality.toLowerCase() !== 'coimbatore') {
+      searchLocality = propertyStateAfter.locality;
+    }
+
+    // 2. Check latestUserMessage for specific location names (excluding 'coimbatore')
+    if (!searchLocality && latestUserMessage) {
+      const knownLocations = [
+        'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai',
+        'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti',
+        'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur',
+        'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kittampalayam', 'vadavalli',
+        'mettupalayam', 'karanampettai', 'arasur', 'tiruppur', 'erode', 'karamadai', 'sevur'
+      ];
+      const lowerMsg = latestUserMessage.toLowerCase();
+      const foundLoc = knownLocations.find(l => lowerMsg.includes(l));
+      if (foundLoc) {
+        searchLocality = foundLoc.charAt(0).toUpperCase() + foundLoc.slice(1);
+      }
+    }
+
+    // 3. Fallback: extract specific locality from first resolved property's location string
+    if (!searchLocality && resolvedProperties.length > 0 && resolvedProperties[0].location) {
+      const locStr = resolvedProperties[0].location;
+      const firstPart = locStr.split(',')[0].trim();
+      const cleanLoc = firstPart.split('-')[0].trim();
+      if (cleanLoc && cleanLoc.toLowerCase() !== 'coimbatore') {
+        searchLocality = cleanLoc;
+      }
+    }
+
+    const searchParam = searchLocality ? `?search=${encodeURIComponent(searchLocality)}` : '';
+
     if (totalMatches > 8) {
-      validated.message += `\n\n🔍 **I found ${totalMatches} matching properties.** Here are 8 to get you started. [View all ${totalMatches} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab})`;
+      validated.message += `\n\n🔍 **I found ${totalMatches} matching properties.** Here are 8 to get you started. [View all ${totalMatches} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`;
+    } else if (totalMatches > 0 && searchLocality) {
+      validated.message += `\n\n🔍 **I found ${totalMatches} matching properties.** [View all ${totalMatches} matching properties in our ${navTab === 'rent' ? 'Rent' : 'Buy'} section →](#${navTab}${searchParam})`;
     }
 
     // Append EMI calculation for mixed queries
