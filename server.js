@@ -5,6 +5,12 @@ import fs from 'fs';
 import path from 'path';
 import nodemailer from 'nodemailer';
 import { fileURLToPath } from 'url';
+import { propertyRepo } from './server/propertyRepository.js';
+import { websiteSearchService } from './server/websiteSearch.js';
+import { detectIntentAndExtractFilters } from './server/intentDetector.js';
+import { conversationManager } from './server/conversationManager.js';
+import { geminiService } from './server/geminiService.js';
+import { chatController } from './server/controllers/chatController.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -114,16 +120,26 @@ loadAllProperties();
 
 function searchProperties(query) {
   if (!query) return [];
-  const q = query.toLowerCase();
+  const q = query.toLowerCase().trim();
   
+  // Return empty if it's a simple greeting so Gemini gives a warm welcome without irrelevant property list
+  if (/^(hi+|hello|hey|namaste|good\s*(morning|afternoon|evening)|greetings|howdy)[\s!.]*$/i.test(q)) {
+    return [];
+  }
+
   // Try to find if user is looking for rent vs buy vs pg
   let targetType = null;
   if (q.includes('rent') || q.includes('lease') || q.includes('for rent') || q.includes('rental')) targetType = 'rent';
   else if (q.includes('pg') || q.includes('hostel') || q.includes('paying guest') || q.includes('room')) targetType = 'pg-hostel';
   else if (q.includes('buy') || q.includes('sell') || q.includes('sale') || q.includes('plot') || q.includes('villa') || q.includes('land') || q.includes('purchase')) targetType = 'buy';
 
-  // Extract location terms
-  const locations = ['saravanampatti', 'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur', 'coimbatore', 'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam'];
+  // Comprehensive Coimbatore & Western TN locations
+  const locations = [
+    'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai', 
+    'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti', 
+    'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur', 'coimbatore', 
+    'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kalapatti', 'tidel park'
+  ];
   let matchedLocations = locations.filter(loc => q.includes(loc));
 
   // Extract price conditions (e.g. "under 10 lakhs" -> maxPrice = 1000000)
@@ -142,8 +158,14 @@ function searchProperties(query) {
   if (targetType) {
     results = results.filter(p => p.type === targetType);
   }
+
+  // Strict location filtering if user specifically mentioned a location like Singanallur
   if (matchedLocations.length > 0) {
-    results = results.filter(p => matchedLocations.some(loc => {
+    // Exclude general "coimbatore" if more specific location like "singanallur" is present
+    const specificLocations = matchedLocations.filter(l => l !== 'coimbatore');
+    const targetLocs = specificLocations.length > 0 ? specificLocations : matchedLocations;
+    
+    results = results.filter(p => targetLocs.some(loc => {
       const locationMatch = p.location?.toLowerCase().includes(loc);
       const titleMatch = p.title?.toLowerCase().includes(loc);
       return locationMatch || titleMatch;
@@ -157,13 +179,21 @@ function searchProperties(query) {
     const loc = p.location?.toLowerCase() || '';
     const desc = p.description?.toLowerCase() || '';
     
-    // Match exact query words
-    const queryWords = q.split(/\s+/).filter(w => w.length > 2);
-    queryWords.forEach(word => {
-      if (title.includes(word)) score += 5;
-      if (loc.includes(word)) score += 3;
-      if (desc.includes(word)) score += 1;
+    // Match exact query words (removing hyphens, commas, symbols)
+    const cleanWords = q.replace(/[^\w\s]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !['the', 'and', 'for', 'are', 'you', 'with', 'in', 'property', 'properties', 'plots', 'plot', 'show', 'give', 'need', 'want', 'list', 'details'].includes(w));
+    
+    cleanWords.forEach(word => {
+      if (title.includes(word)) score += 8;
+      if (loc.includes(word)) score += 5;
+      if (desc.includes(word)) score += 2;
     });
+    
+    // Extra boost if full clean phrase is in title or location
+    const cleanPhrase = cleanWords.join(' ');
+    if (cleanPhrase.length > 3) {
+      if (title.includes(cleanPhrase)) score += 20;
+      if (loc.includes(cleanPhrase)) score += 15;
+    }
     
     // Filter by price if requested
     if (maxPrice) {
@@ -180,12 +210,12 @@ function searchProperties(query) {
     return { property: p, score };
   });
 
-  // Sort by score descending and take top 5
+  // Sort by score descending and return up to 15 properties
   return scored
     .filter(item => item.score > 0)
     .sort((a, b) => b.score - a.score)
     .map(item => item.property)
-    .slice(0, 5);
+    .slice(0, 15);
 }
 
 
@@ -697,248 +727,162 @@ app.post('/api/contact', (req, res) => {
 });
 
 // ─── AI CHATBOT API ENDPOINT ──────────────────────────────────────────────────
-app.post('/api/chat', async (req, res) => {
-  const { messages } = req.body;
-  if (!messages || !Array.isArray(messages)) {
-    return res.status(400).json({ success: false, message: 'Messages array is required.' });
-  }
-
-  // Get the latest user message
-  const userMessage = messages[messages.length - 1]?.content || '';
-  
-  // Perform RAG search for relevant properties
-  const matchedProps = searchProperties(userMessage);
-  
-  // Format the properties for system context
-  let propertiesContext = "";
-  if (matchedProps.length > 0) {
-    propertiesContext = "\nHere are some relevant property listings found in our database that match the user's query:\n" + 
-      matchedProps.map((p, idx) => {
-        return `${idx + 1}. Title: ${p.title}\n   Price: ${p.price}\n   Location: ${p.location}\n   Type: ${p.type} (${p.subType || 'Plot/Villa'})\n   Area: ${p.area || p.overviewDetails?.Area || 'N/A'}\n   Description: ${p.description || 'N/A'}\n   Agent: ${p.agentName || 'Rajkumar'} (Phone: ${p.agentPhone || '7845806061'})\n   Link: ${p.link || '#'}`;
-      }).join('\n\n') + "\n\n";
-  } else {
-    propertiesContext = "\nNo specific properties matched the user's keywords directly. Encourage them to specify a location (like Saravanampatti, Annur, Kovaipudur, Kinathukadavu) or category (buy, rent, pg) to see listings.\n";
-  }
-
-  const systemInstructions = `You are the premium, friendly AI Assistant for Raarya Properties (also known as Raarya Groups), a leading luxury real estate company based in Coimbatore, Tamil Nadu.
-Your goal is to assist website visitors by answering queries about properties for sale/rent, calculate home loans, share company vision and careers, and direct them to relevant sections of the website.
-
-COMPANY DETAILS:
-- Name: Raarya Properties / Raarya Groups
-- Approach: We pair local market intelligence with digital walkthroughs.
-- Reach: Portfolios across premier destinations in Coimbatore (Tamil Nadu), with services expanding globally.
-- Contact Phone: 9087240400
-- Contact Email: raaryagroupsinfo@gmail.com
-- Working Hours: Mon-Sat, 9:00 AM - 7:00 PM
-
-NAVIGATION HASH LINKS (use these in markdown to guide users):
-- To buy properties (villas & plots): [#buy](#buy) or [#properties](#properties)
-- To rent houses/apartments: [#rent](#rent)
-- For Student PG / Hostels: [#pg-hostel](#pg-hostel)
-- For Home Loan eligibility & EMI Calculator: [#home-loan](#home-loan)
-- Careers / Job vacancies: [#careers](#careers) (We are hiring for: Senior Property Advisor, VR Experience Producer, Investment Analyst)
-- About company and vision: [#company](#company)
-- Post a property for sale/rent: [#post-property](#post-property) (directs to user dashboard after login)
-- Contact form / general query: [#contact](#contact)
-
-${propertiesContext}
-GUIDELINES:
-- Be extremely polite, professional, and helpful.
-- Keep responses relatively concise, focused, and well-structured. Use lists or bold text where appropriate.
-- When recommending properties, ALWAYS mention their price, location, agent, and link so they can click and check them.
-- If you don't know the answer, politely offer the customer support phone number (9087240400) or email (raaryagroupsinfo@gmail.com).
-- ONLY discuss real estate, properties, home loans, careers at Raarya, and website services. Keep conversation strictly related to Raarya Properties.`;
-
-  const apiKey = process.env.GEMINI_API_KEY;
-  
-  if (apiKey) {
-    try {
-      console.log("[AI Chatbot] Using Gemini Generative API...");
-      
-      // Construct contents format for Gemini API
-      // Translate messages array: roles 'user' -> 'user', 'model' -> 'model'
-      const contents = messages.map(msg => ({
-        role: msg.role === 'model' ? 'model' : 'user',
-        parts: [{ text: msg.content }]
-      }));
-      
-      // Native fetch call to Gemini 1.5 Flash API
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 8000); // 8 second timeout
-      
-      const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          contents: contents,
-          systemInstruction: {
-            parts: [{ text: systemInstructions }]
-          },
-          generationConfig: {
-            maxOutputTokens: 800,
-            temperature: 0.7
-          }
-        }),
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("[Gemini API Error Response]:", errorText);
-        throw new Error(`Gemini API returned status ${response.status}`);
-      }
-      
-      const data = await response.json();
-      const reply = data.candidates?.[0]?.content?.parts?.[0]?.text || "I apologize, I didn't receive a response from my system. How else may I assist you?";
-      
-      return res.json({ success: true, content: reply });
-      
-    } catch (err) {
-      console.error("[Gemini API Integration Error]:", err);
-      // Fallback to local rule-based response in case of API failure
-    }
-  }
-
-  // FALLBACK: Rule-based / Keyword matcher if API Key is missing or failed
-  console.log("[AI Chatbot] Using local smart offline fallback...");
-  const reply = getSmartFallbackResponse(userMessage, matchedProps);
-  const disclaimerNote = "\n\n*(Note: To activate full conversational AI, please set your `GEMINI_API_KEY` in the `.env` file.)*";
-  res.json({ success: true, content: reply + disclaimerNote });
-});
+app.post('/api/chat', (req, res) => chatController.handleChatRequest(req, res));
 
 // Helper function to generate high-fidelity responses in local offline mode
 function getSmartFallbackResponse(userMessage, matchedProps) {
   const q = userMessage.toLowerCase().trim();
-  
-  // 1. Check for specific property names in the query
-  const knownProperties = [
-    { name: 'avanta', title: 'Residential land in Kurumbapalayam - Avanta', detail: 'Avanta plots in Kurumbapalayam, Saravanampatti. Price: ₹ 14,50,000. Features wide access roads, clear DTCP approval, and excellent connectivity to the IT Corridor. Agent: Rajkumar (7845806061).' },
-    { name: 'brahma', title: 'Residential DTCP Approved Plots in Annur | Brahma Park', detail: 'Premium Residential DTCP Approved Plots in Annur at Brahma Park. Price: ₹ 3,90,000. Superb location with rapid growth potential and gated security. Agent: Rajkumar (7845806061).' },
-    { name: 'golden vista', title: 'Residential Plots in Kinathukadavu – Golden Vista', detail: 'Beautiful residential plots in Kinathukadavu at Golden Vista. Price: ₹ 5,90,000 Per Cent. Excellent environmental surroundings and clear title approvals. Agent: Rajkumar (7845806061).' },
-    { name: 'vista', title: 'Residential Plots in Kinathukadavu – Golden Vista', detail: 'Beautiful residential plots in Kinathukadavu at Golden Vista. Price: ₹ 5,90,000 Per Cent. Excellent environmental surroundings and clear title approvals. Agent: Rajkumar (7845806061).' },
-    { name: 'sk garden', title: 'SK Garden - Avinashi Road, Near Kaniyur Toll Gate', detail: 'SK Garden plots located on Avinashi Road near the Kaniyur Toll Gate. Price: ₹ 9,00,000. Perfect for commercial or residential builds with high appreciation rates. Agent: Rajkumar (7845806061).' },
-    { name: 'thangam', title: 'Thangam | Thekkalur, Avinashi Road', detail: 'Thangam Residential Layout in Thekkalur, Avinashi Road. Price: ₹ 5,50,000 Per Cent. Highly developed neighborhood, direct road access, and clear paperwork. Agent: Ranjini (7845806061).' },
-    { name: 'elite', title: 'Raarya Elite Villa Plots', detail: 'Raarya Elite Villa Plots located in Saravanampatti, Coimbatore. Price: ₹ 45,00,000. DTCP approved, ready to construct. Agent: Rajkumar (7845806061).' },
-    { name: 'meadows', title: 'Raarya Green Meadows', detail: 'Raarya Green Meadows Luxury Villa located in Kovaipudur, Coimbatore. Price: ₹ 1,20,00,000. 3 BHK, fully furnished premium villa. Agent: Rajkumar (7845806061).' }
-  ];
 
-  for (const prop of knownProperties) {
-    if (q.includes(prop.name)) {
-      return `### Property Detail: ${prop.title}
-      
-${prop.detail}
+  // 0. Greeting check
+  if (/^(hi+|hello|hey|namaste|good\s*(morning|afternoon|evening)|greetings|howdy)[\s!.]*$/i.test(q)) {
+    return `### Hello! Welcome to Raarya Properties 👋
+I am your AI Property Assistant. How can I help you find your dream plot, villa, or property in Coimbatore today?
 
-Would you like me to schedule a visit or help you contact the agent? You can view all property details on the [#properties](#properties) search page.`;
-    }
+**You can ask me:**
+- "Plots in Thulir Nagar - Kittampalayam"
+- "Properties in Saravanampatti under 45 Lakhs"
+- "Calculate home loan EMI"
+- "How to list my property"`;
   }
 
-  // 2. Location Queries
-  const locations = [
-    { name: 'saravanampatti', display: 'Saravanampatti' },
-    { name: 'annur', display: 'Annur' },
-    { name: 'kinathukadavu', display: 'Kinathukadavu' },
-    { name: 'karumathampatti', display: 'Karumathampatti' },
-    { name: 'thekkalur', display: 'Thekkalur' },
-    { name: 'kovaipudur', display: 'Kovaipudur' },
-    { name: 'kurumbapalayam', display: 'Kurumbapalayam' },
-    { name: 'coimbatore', display: 'Coimbatore' }
-  ];
+  // 0.5. About Company & Raarya Properties (Flexible Semantic & Pattern Matching)
+  const isCompanyQuery = Boolean(
+    ((q.includes('raar') || q.includes('rarya') || q.includes('raarya') || q.includes('company') || q.includes('business') || q.includes('organization') || q.includes('firm') || q.includes('platform') || q.includes('agency')) &&
+     (q.includes('about') || q.includes('know') || q.includes('tell') || q.includes('info') || q.includes('detail') || q.includes('service') || q.includes('what is') || q.includes('who is') || q.includes('what does') || q.includes('what do') || q.includes('explain') || q.includes('describe') || q.includes('overview') || q.includes('summary') || q.includes('background') || q.includes('history') || q.includes('kind') || q.includes('type') || q.includes('nature') || q.includes('profile') || q.includes('mission') || q.includes('vision')) &&
+     !(q.includes('bhk') || q.includes('bedroom') || q.includes('lakh') || q.includes('lac') || q.includes('crore') || q.includes('under') || q.includes('below') || q.includes('cheap') || q.includes('villa') || q.includes('apartment') || q.includes('plot') || q.includes('land') || q.includes('house'))) ||
+    q.includes('about us') ||
+    q.includes('about company') ||
+    q.includes('about the company') ||
+    q.includes('about this company') ||
+    q.includes('about raarya') ||
+    q.includes('know about') ||
+    q.includes('tell about') ||
+    q.includes('info about') ||
+    q.includes('information about') ||
+    q.includes('details of company') ||
+    q.includes('details about') ||
+    q.includes('what is raarya') ||
+    q.includes('who is raarya') ||
+    q.includes('what does raarya') ||
+    q.includes('what do you do') ||
+    q.includes('what is this company') ||
+    q.includes('what kind of company') ||
+    q.includes('what type of company') ||
+    q.includes('company info') ||
+    q.includes('company details') ||
+    q.includes('company profile') ||
+    q.includes('company overview')
+  );
 
-  const matchedLoc = locations.find(loc => q.includes(loc.name));
-  if (matchedLoc) {
-    const locProps = allProperties.filter(p => p.location?.toLowerCase().includes(matchedLoc.name) || p.title?.toLowerCase().includes(matchedLoc.name));
-    if (locProps.length > 0) {
-      return `### Properties in ${matchedLoc.display}
-We have ${locProps.length} premium listings available in **${matchedLoc.display}**:
+  if (isCompanyQuery) {
+    return `### 🏠 About Raarya Properties
 
-` + locProps.slice(0, 3).map((p, i) => `${i + 1}. **${p.title}**
-   - Price: ${p.price}
-   - Type: ${p.subType || p.propertyType || 'Plot'}
-   - Agent: ${p.agentName || 'Rajkumar'} (${p.agentPhone || '7845806061'})
-   - View details: [#properties](#properties)`).join('\n\n') + `
+Raarya Properties is a premier real estate platform based in Coimbatore, Tamil Nadu. We specialize in verified DTCP & RERA approved layout plots, luxury villas, independent houses, commercial land, and student PG/hostels.
 
-You can see all of them in the [#buy](#buy) or [#properties](#properties) section.`;
-    }
+**Services Offered by Raarya:**
+- **Plot & Villa Sales**: DTCP & RERA approved layout plots and luxury villas across key Coimbatore corridors.
+- **Free Property Listing**: List your land, house, or commercial space for free to reach thousands of active buyers.
+- **Home Loan Assistance**: Up to 90% bank funding with partner banks (HDFC, SBI, ICICI, Axis Bank) starting from 8.5% interest rate.
+- **Interactive Tools**: Online EMI Calculator and Home Loan Eligibility Checker.
+- **Assisted Site Visits**: Free accompanied site visits with complete legal title inspection.
+
+📍 **Head Office Address**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037, Tamil Nadu, India.
+📞 **Phone**: **+91 90872 40400**
+✉️ **Email**: **raaryagroupsinfo@gmail.com**
+⏰ **Working Hours**: Monday to Saturday, 9:00 AM to 7:00 PM.`;
   }
 
-  // 3. General Budget query
-  if (q.includes('price') || q.includes('budget') || q.includes('cost') || q.includes('lakh') || q.includes('crore')) {
-    if (matchedProps.length > 0) {
-      return `### Filtered Properties by Budget/Cost
-Based on your budget, here are the top matching listings:
+  // 1. If property search produced matches from database, return them immediately!
+  if (matchedProps && matchedProps.length > 0) {
+    const list = matchedProps.slice(0, 12).map((p, i) => {
+      return `${i + 1}. **${p.title}**
+   - **Price**: ${p.price} | **Type**: ${p.type === 'buy' ? 'For Sale' : p.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
+   - **Location**: ${p.location}
+   - **Extent**: ${p.areaDisplay || p.overviewDetails?.Area || (p.area ? p.area + ' sq.ft' : 'Verified Extent')}
+   - **Agent**: ${p.agentName || 'Rajkumar'} (${p.agentPhone || '9087240400'})
+   - [Click to View Details](#buy)`;
+    }).join('\n\n');
 
-` + matchedProps.map((p, i) => `${i + 1}. **${p.title}**
-   - Price: ${p.price}
-   - Location: ${p.location}
-   - Type: ${p.type === 'buy' ? 'For Sale' : 'For Rent'}
-   - Agent: ${p.agentName || 'Rajkumar'} (${p.agentPhone || '7845806061'})`).join('\n\n') + `
+    return `🔍 **Verified Properties Matching Your Query**
 
-View the full list matching your budget criteria in the [#properties](#properties) search tab.`;
-    }
+Here are curated property listings from **Raarya Properties**:
+
+${list}
+
+✅ **All Raarya layout plots are 100% DTCP & RERA approved with clear legal titles.**
+
+📞 **Book a Free Site Visit**: Call **+91 90872 40400** or [Send an Enquiry](#contact).`;
   }
 
-  // 4. Home Loan / Financial Queries
-  if (q.includes('loan') || q.includes('emi') || q.includes('calculator') || q.includes('interest') || q.includes('mortgage') || q.includes('bank')) {
-    return `### Home Loan & EMI Calculator
+  // 2. Home Loan / Financial / Eligibility Queries
+  if (
+    q.includes('loan') ||
+    q.includes('emi') ||
+    q.includes('calculator') ||
+    q.includes('interest') ||
+    q.includes('mortgage') ||
+    q.includes('bank') ||
+    q.includes('eligibility') ||
+    q.includes('eligible') ||
+    q.includes('finance')
+  ) {
+    return `### Home Loan Eligibility & EMI Calculator
 Raarya Properties helps secure home loans through partnered top banks. 
 
 **What we offer:**
-- Interest rates starting from **8.4% p.a.**
-- Fast processing and minimal documentation.
-- Up to **90% funding** of the property value.
-- Flexible tenure options up to **30 years**.
+- **Interest Rates**: Starting from **8.5% p.a.**
+- **Funding Limit**: Up to **90% bank funding** on DTCP/RERA layout plots & villas
+- **Eligible Profiles**: Salaried professionals & Self-employed business owners (Age 21-65)
+- **Partner Banks**: HDFC Bank, SBI, ICICI Bank, Axis Bank
 
-You can check your eligibility and calculate your monthly EMI directly on our [#home-loan](#home-loan) page. Let me know if you would like an advisor to call you back for a loan query!`;
+You can check your eligibility and calculate your monthly EMI directly on our [#home-loan](#home-loan) section. Call **+91 90872 40400** for immediate bank assistance!`;
   }
 
-  // 5. Careers & Openings
+  // 3. Careers & Openings
   if (q.includes('career') || q.includes('job') || q.includes('hiring') || q.includes('vacancy') || q.includes('work') || q.includes('apply')) {
     return `### Careers at Raarya Properties
-Join a team building the next standard for luxury real estate discovery! We are hiring for:
+Join a team building the next standard for luxury real estate discovery in Coimbatore! We are hiring for:
 
-1. **Senior Property Advisor**
-   - Location: Los Angeles, CA
-   - Requirement: 5+ years in high-end residential sales.
-2. **VR Experience Producer**
-   - Location: Remote
-   - Requirement: Experienced in 3D walkthrough rendering.
-3. **Investment Analyst**
-   - Location: New York, NY
-   - Requirement: Financial modeling and market analytics.
+1. **Senior Real Estate Advisor** (High-end plot & villa sales)
+2. **Site Marketing Executive** (Lead generation & site visits)
+3. **Property Verification Executive** (DTCP & legal paperwork)
 
-You can read role descriptions and apply directly on our [#careers](#careers) page.`;
+Email your resume to **raaryagroupsinfo@gmail.com** or read more on our [#careers](#careers) page.`;
   }
 
-  // 6. List/Post Property
-  if (q.includes('sell') || q.includes('list') || q.includes('post') || q.includes('add') || q.includes('advertise')) {
+  // 4. List/Post Property (Strict check so "list the properties in annur" is NOT hijacked)
+  if (
+    q.includes('how to list') ||
+    q.includes('post my property') ||
+    q.includes('add my property') ||
+    q.includes('sell my property') ||
+    q.includes('register my property') ||
+    q.includes('list my property')
+  ) {
     return `### List Your Property on Raarya
 You can advertise your villa, apartment, or residential plot on our platform to reach thousands of buyers:
 
 **How to get started:**
 1. Click [#login](#login) to create or log in to your account.
 2. Verify your phone number with our secure OTP verification.
-3. Navigate to your dashboard space and select the **Add Property** tab.
+3. Navigate to your user profile dashboard and select **Add Property**.
 4. Input details (photos, amenities, location) and submit!
 
-Your listing will go live after a quick validation. Go to [#post-property](#post-property) to start.`;
+Go to [#post-property](#post-property) to start.`;
   }
 
-  // 7. Contact Details
+  // 5. Contact Details
   if (q.includes('contact') || q.includes('phone') || q.includes('mobile') || q.includes('email') || q.includes('address') || q.includes('call') || q.includes('number') || q.includes('office') || q.includes('support')) {
     return `### Contact Raarya Properties
-Feel free to reach out to our team directly:
+Feel free to reach out to our official team directly:
 
-- 📞 **Phone**: +91 9087240400 (Available Mon-Sat, 9:00 AM - 7:00 PM)
-- ✉️ **Email**: raaryagroupsinfo@gmail.com / raaryagroups@gmail.com
-- 📍 **Head Office**: Coimbatore, Tamil Nadu, India.
-- 💬 **Inquiry Form**: You can submit a message on our [#contact](#contact) page, and our relationship manager will call you back within 2 hours.`;
+- 📞 **Phone**: +91 90872 40400 (Mon-Sat, 9:00 AM - 7:00 PM)
+- ✉️ **Email**: raaryagroupsinfo@gmail.com
+- 📍 **Head Office**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037, Tamil Nadu, India.
+- 💬 **Inquiry Form**: You can submit a message on our [#contact](#contact) page.`;
   }
 
-  // 8. About Company / Vision
+  // 6. About Company / Vision
   if (q.includes('about') || q.includes('company') || q.includes('who') || q.includes('raarya') || q.includes('vision') || q.includes('approach') || q.includes('services')) {
     return `### About Raarya Properties
 Raarya Properties connects buyers and investors with prime residential plots, villas, and hostels in Coimbatore. 
@@ -948,45 +892,19 @@ Raarya Properties connects buyers and investors with prime residential plots, vi
 - **Digital Walk-throughs**: Clear digital walkthroughs and verified papers before site visits.
 - **Investment Discipline**: Helping you find lands with clear DTCP/RERA approvals for high appreciation.
 
-Read more about our approach on the [#company](#company) page.`;
+📍 **Head Office**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037, Tamil Nadu
+📞 **Phone**: +91 90872 40400
+⏰ **Working Hours**: Monday to Saturday, 9:00 AM to 7:00 PM`;
   }
 
-  // 9. Blog / Trends
-  if (q.includes('blog') || q.includes('article') || q.includes('trend') || q.includes('news')) {
-    return `### Real Estate Insights & News
-We publish regular articles on market trends, property pricing indexes, and smart investment strategies. 
-
-**Popular Articles:**
-- *Coimbatore's IT Corridor expansion and its impact on Saravanampatti land value.*
-- *Why DTCP approved plots in Annur are the best long-term investment.*
-
-Read all articles on the [#blog](#blog) section.`;
-  }
-
-  // 10. Greeting
-  if (q.includes('hi') || q.includes('hello') || q.includes('hey') || q.includes('greetings') || q.includes('welcome')) {
-    return `### Hello! Welcome to Raarya Properties
-I am your virtual real estate advisor. I can help you search properties, check home loans, or connect with our support agents.
-
-**Things you can ask me:**
-- "Show me plots for sale in Annur"
-- "What properties do you have under 15 lakhs?"
-- "How do I calculate home loan EMI?"
-- "How do I list my own villa?"
-- "Office phone number and email"`;
-  }
-
-  // Default response
+  // Default response when 0 properties or general query
   return `### Raarya Properties Support
-Thank you for your message! I can help you find properties, calculate home loans, or connect with our support team.
+We currently do not have verified property listings matching your exact request in our active portfolio. We specialize in high-growth corridors across Coimbatore (Saravanampatti, Annur, Kittampalayam, Singanallur, Karumathampatti, Mettupalayam, Avinashi Road).
 
-**Try asking me:**
-- "Show me properties in Saravanampatti"
-- "What is the agent number for Brahma Park?"
-- "Careers at Raarya"
-- "Home loan eligibility"
-
-Or visit our [#contact](#contact) page to send a direct message to our customer care team.`;
+**Need help?**
+- Call our team at **+91 90872 40400** (Mon-Sat, 9:00 AM - 7:00 PM)
+- Email us at **raaryagroupsinfo@gmail.com**
+- Visit our office at **2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037**`;
 }
 
 app.listen(PORT, () => {

@@ -19,7 +19,9 @@ const formatINR = (value: number) => {
 };
 
 export function MortgagePage() {
-  const [activeTab, setActiveTab] = useState<'emi' | 'eligibility'>('emi');
+  const [activeTab, setActiveTab] = useState<'emi' | 'eligibility'>(() => {
+    return window.location.hash === '#eligibility-check' ? 'eligibility' : 'emi';
+  });
 
   // Sync tab with URL hash
   useEffect(() => {

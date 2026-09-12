@@ -3,13 +3,77 @@ import { PROPERTIES } from '../constants';
 export function generateAiResponse(userQuery: string): string {
   const query = userQuery.toLowerCase().trim();
 
-  // 1. EMI Calculation & Loan Query
+  // 0. Greetings & Welcome
+  if (/^(hi+|hello|hey|namaste|good\s*(morning|afternoon|evening)|greetings|howdy)[\s!.]*$/i.test(query)) {
+    return `👋 **Hello! Welcome to Raarya Properties!**
+
+I am your AI Property Assistant. How can I assist you with your real estate search today?
+
+Here are a few quick things you can ask me:
+- 🏡 **Find Plots & Villas**: Ask for *"Properties in Singanallur"* or *"Plots in Saravanampatti"*
+- 📊 **Calculate Home Loans**: Ask *"Calculate EMI for 35 Lakhs"*
+- 🏡 **Post Your Listing**: Ask *"How to list my property"*
+- 📞 **Contact Us**: Ask for contact numbers or office location`;
+  }
+
+  // 0.5. About Company & Raarya Properties (Flexible Semantic & Pattern Matching)
+  const isCompanyQuery = Boolean(
+    ((query.includes('raar') || query.includes('rarya') || query.includes('raarya') || query.includes('company') || query.includes('business') || query.includes('organization') || query.includes('firm') || query.includes('platform') || query.includes('agency')) &&
+     (query.includes('about') || query.includes('know') || query.includes('tell') || query.includes('info') || query.includes('detail') || query.includes('service') || query.includes('what is') || query.includes('who is') || query.includes('what does') || query.includes('what do') || query.includes('explain') || query.includes('describe') || query.includes('overview') || query.includes('summary') || query.includes('background') || query.includes('history') || query.includes('kind') || query.includes('type') || query.includes('nature') || query.includes('profile') || query.includes('mission') || query.includes('vision')) &&
+     !(query.includes('bhk') || query.includes('bedroom') || query.includes('lakh') || query.includes('lac') || query.includes('crore') || query.includes('under') || query.includes('below') || query.includes('cheap') || query.includes('villa') || query.includes('apartment') || query.includes('plot') || query.includes('land') || query.includes('house'))) ||
+    query.includes('about us') ||
+    query.includes('about company') ||
+    query.includes('about the company') ||
+    query.includes('about this company') ||
+    query.includes('about raarya') ||
+    query.includes('know about') ||
+    query.includes('tell about') ||
+    query.includes('info about') ||
+    query.includes('information about') ||
+    query.includes('details of company') ||
+    query.includes('details about') ||
+    query.includes('what is raarya') ||
+    query.includes('who is raarya') ||
+    query.includes('what does raarya') ||
+    query.includes('what do you do') ||
+    query.includes('what is this company') ||
+    query.includes('what kind of company') ||
+    query.includes('what type of company') ||
+    query.includes('company info') ||
+    query.includes('company details') ||
+    query.includes('company profile') ||
+    query.includes('company overview')
+  );
+
+  if (isCompanyQuery) {
+    return `### 🏠 About Raarya Properties
+
+Raarya Properties is a premier real estate platform based in Coimbatore, Tamil Nadu. We specialize in verified DTCP & RERA approved layout plots, luxury villas, independent houses, commercial land, and student PG/hostels.
+
+**Services Offered by Raarya:**
+- **Plot & Villa Sales**: High appreciation DTCP & RERA approved layout plots and luxury villas across key Coimbatore corridors.
+- **Free Property Listing**: List your land, house, or commercial space for free to reach thousands of active buyers.
+- **Home Loan Assistance**: Up to 90% bank funding with partner banks (HDFC, SBI, ICICI, Axis Bank) starting from 8.5% interest rate.
+- **Interactive Tools**: Online EMI Calculator and Home Loan Eligibility Checker.
+- **Assisted Site Visits**: Free accompanied site visits with complete legal title inspection.
+
+📍 **Head Office Address**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037, Tamil Nadu, India.
+📞 **Phone**: **+91 90872 40400**
+✉️ **Email**: **raaryagroupsinfo@gmail.com**
+⏰ **Working Hours**: Monday to Saturday, 9:00 AM to 7:00 PM.`;
+  }
+
+  // 1. EMI Calculation & Loan / Eligibility Query
   if (
     query.includes('emi') ||
     query.includes('loan') ||
-    query.includes('interest rate') ||
+    query.includes('interest') ||
     query.includes('calculate') ||
-    query.includes('finance')
+    query.includes('finance') ||
+    query.includes('eligibility') ||
+    query.includes('eligible') ||
+    query.includes('bank') ||
+    query.includes('mortgage')
   ) {
     let amount = 3500000; // default 35 Lakhs
     const lakhMatch = query.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac|lakhs|l)/i);
@@ -40,7 +104,7 @@ export function generateAiResponse(userQuery: string): string {
     const formattedEmi = emi.toLocaleString('en-IN');
     const formattedInterest = Math.round(totalInterest / 100000).toLocaleString('en-IN') + ' Lakhs';
 
-    return `📊 **Home Loan EMI Calculator & Financial Breakdown**
+    return `📊 **Home Loan Eligibility & EMI Calculator**
 
 Here is the estimated loan calculation for **₹${formattedAmount}**:
 
@@ -50,9 +114,12 @@ Here is the estimated loan calculation for **₹${formattedAmount}**:
 - **Monthly EMI**: **₹${formattedEmi} / month**
 - **Total Interest Payable**: ₹${formattedInterest}
 
-💡 Our financial advisors at Raarya Groups can help you secure pre-approved bank loans from HDFC, SBI, and ICICI with minimum paperwork.
+💡 **Eligibility Criteria**:
+- Salaried & Self-Employed individuals (Age 21-65)
+- Up to **90% bank funding** available for DTCP & RERA approved plots/villas
+- Partnered with HDFC Bank, SBI, ICICI, and Axis Bank.
 
-📞 **Need direct loan help?** Call our financial manager at **+91 9787255522** or [Send an Enquiry](#contact).`;
+📞 **Need direct loan eligibility verification?** Call our financial manager at **+91 90872 40400** or [Send an Enquiry](#contact).`;
   }
 
   // 2. Careers & Job Opportunities
@@ -76,7 +143,7 @@ Raarya Groups is expanding across Coimbatore & Western Tamil Nadu! We are hiring
 - Competitive salary + highest industry sales incentives
 - Career growth & professional training
 
-📧 **How to Apply**: Email your resume/CV to **raaryagroups@gmail.com** or call HR directly at **+91 9787255522**.`;
+📧 **How to Apply**: Email your resume/CV to **raaryagroupsinfo@gmail.com** or call HR directly at **+91 90872 40400**.`;
   }
 
   // 3. Direct Contact & Customer Support
@@ -95,21 +162,22 @@ Raarya Groups is expanding across Coimbatore & Western Tamil Nadu! We are hiring
 You can reach our official team directly:
 
 - **Representative**: Mr. Rajkumar
-- **Direct Phone**: **+91 9787255522**
-- **Alternate Phone**: **+91 9876543210**
-- **Official Email**: **raaryagroups@gmail.com**
-- **Office Location**: Saravanampatti Main Road, Annur Corridor, Coimbatore, Tamil Nadu
+- **Direct Phone**: **+91 90872 40400**
+- **Official Email**: **raaryagroupsinfo@gmail.com**
+- **Office Location**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037, Tamil Nadu, India
+- **Working Hours**: Monday to Saturday, 9:00 AM to 7:00 PM
 
-💬 **Instant Assistance**: [Chat on WhatsApp](https://api.whatsapp.com/send?phone=+919787255522&text=Hi%20Rajkumar,%20I%20have%20an%20enquiry%20regarding%20Raarya%20Properties) or [Submit an Enquiry Form](#contact).`;
+💬 **Instant Assistance**: [Chat on WhatsApp](https://wa.me/919087240400) or [Submit an Enquiry Form](#contact).`;
   }
 
   // 4. Listing a Property / Adding Property
   if (
-    query.includes('list') ||
-    query.includes('sell') ||
-    query.includes('add property') ||
-    query.includes('post') ||
-    query.includes('register property')
+    query.includes('how to list') ||
+    query.includes('post my property') ||
+    query.includes('add my property') ||
+    query.includes('sell my property') ||
+    query.includes('register my property') ||
+    query.includes('list my property')
   ) {
     return `🏡 **How to List Your Property on Raarya**
 
@@ -120,37 +188,72 @@ Want to sell or rent your plot, house, villa, or commercial property?
 3. **Enter Details**: Provide location, area extent, pricing, and photos.
 4. **Verification**: Our team will verify legal approvals (DTCP/RERA) and make your listing live within 2 hours!
 
-Need help listing? Call **+91 9787255522** to speak with our listing manager.`;
+Need help listing? Call **+91 90872 40400** to speak with our listing manager.`;
   }
 
   // 5. Property Search & Recommendations by Location, Type, or Keyword
-  const searchKeywords = query
-    .replace(/[^\w\s]/gi, '')
+  const knownLocations = [
+    'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai',
+    'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti',
+    'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur', 'coimbatore',
+    'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kittampalayam'
+  ];
+
+  const matchedLocations = knownLocations.filter(loc => query.includes(loc));
+
+  const cleanWords = query
+    .replace(/[^\w\s]/g, ' ')
     .split(/\s+/)
-    .filter((w) => w.length > 2 && !['the', 'and', 'for', 'are', 'you', 'with', 'in', 'property', 'properties', 'plots', 'plot'].includes(w));
+    .filter((w) => w.length > 2 && !['the', 'and', 'for', 'are', 'you', 'with', 'in', 'property', 'properties', 'plots', 'plot', 'show', 'give', 'need', 'want', 'about', 'company', 'raarya', 'tell', 'what', 'does', 'who', 'services', 'provide'].includes(w));
 
   let matchedProps = PROPERTIES.filter((p) => {
     const text = `${p.title} ${p.location} ${p.type} ${p.subType || ''} ${p.description || ''} ${JSON.stringify(
       p.overviewDetails || {}
     )}`.toLowerCase();
 
-    if (query.includes('saravanampatti') && text.includes('saravanampatti')) return true;
-    if (query.includes('annur') && text.includes('annur')) return true;
-    if (query.includes('kovaipudur') && text.includes('kovaipudur')) return true;
-    if (query.includes('vadamadurai') && text.includes('vadamadurai')) return true;
-    if (query.includes('thudiyalur') && text.includes('thudiyalur')) return true;
+    // Check keyword matches in text
+    const hasWordMatch = cleanWords.some(kw => text.includes(kw));
+
+    if (matchedLocations.length > 0) {
+      const specificLocations = matchedLocations.filter(l => l !== 'coimbatore');
+      const targetLocs = specificLocations.length > 0 ? specificLocations : matchedLocations;
+      const locationMatches = targetLocs.some(loc => text.includes(loc));
+      return locationMatches || hasWordMatch;
+    }
+
     if (query.includes('buy') && p.type === 'buy') return true;
     if (query.includes('rent') && p.type === 'rent') return true;
     if ((query.includes('pg') || query.includes('hostel')) && p.type === 'pg-hostel') return true;
 
-    return searchKeywords.some((kw) => text.includes(kw));
+    return hasWordMatch;
+  });
+
+  // Sort by relevance (number of matching words)
+  matchedProps.sort((a, b) => {
+    const textA = `${a.title} ${a.location} ${a.description}`.toLowerCase();
+    const textB = `${b.title} ${b.location} ${b.description}`.toLowerCase();
+    const countA = cleanWords.filter(w => textA.includes(w)).length;
+    const countB = cleanWords.filter(w => textB.includes(w)).length;
+    return countB - countA;
   });
 
   if (matchedProps.length === 0) {
-    matchedProps = PROPERTIES.slice(0, 4);
-  } else {
-    matchedProps = matchedProps.slice(0, 4);
+    if (matchedLocations.length > 0) {
+      const locName = matchedLocations[0].charAt(0).toUpperCase() + matchedLocations[0].slice(1);
+      return `📍 **No verified properties found in ${locName} right now.**
+
+We currently do not have active property listings in **${locName}** in our database. We specialize in high-growth corridors across Coimbatore (including Saravanampatti, Annur, Kittampalayam, Singanallur, Karumathampatti, Mettupalayam, and Avinashi Road).
+
+📞 **Looking for off-market options in ${locName}?** Contact our customer support team at **+91 90872 40400** or [Send an Enquiry](#contact).`;
+    }
+    return `📍 **No verified properties found matching your requested area or criteria.**
+
+We currently do not have property listings matching your request in our active portfolio. We specialize in high-growth corridors across Coimbatore (including Saravanampatti, Annur, Kittampalayam, Singanallur, Karumathampatti, Mettupalayam, and Avinashi Road).
+
+📞 **Looking for custom property sourcing?** Contact our support team at **+91 90872 40400** or [Send an Enquiry](#contact).`;
   }
+
+  matchedProps = matchedProps.slice(0, 12);
 
   const propListFormatted = matchedProps
     .map(
@@ -171,5 +274,5 @@ ${propListFormatted}
 
 ✅ **All Raarya layout plots are 100% DTCP & RERA approved with clear legal titles.**
 
-📞 **Book a Free Site Visit**: Call **+91 9787255522** or [Send an Enquiry](#contact).`;
+📞 **Book a Free Site Visit**: Call **+91 90872 40400** or [Send an Enquiry](#contact).`;
 }

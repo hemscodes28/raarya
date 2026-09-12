@@ -427,17 +427,17 @@ import { generateAiResponse } from './aiEngine';
 
 // ─── AI CHATBOT ───────────────────────────────────────────────────────────────
 
-export async function apiChat(messages: ChatMessagePayload[]): Promise<ApiResponse> {
+export async function apiChat(messages: ChatMessagePayload[], sessionId?: string): Promise<ApiResponse> {
   const lastUserMsg = messages.filter((m) => m.role === 'user').pop()?.content || '';
 
   try {
     const response = await fetchWithTimeout(`${BASE_URL}/chat`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ messages }),
-    }, 4000);
+      body: JSON.stringify({ messages, sessionId }),
+    }, 15000);
     const data = await response.json();
-    if (data && data.success && data.content) {
+    if (data && data.success) {
       return data;
     }
   } catch (err) {
@@ -448,6 +448,7 @@ export async function apiChat(messages: ChatMessagePayload[]): Promise<ApiRespon
   const aiContent = generateAiResponse(lastUserMsg);
   return {
     success: true,
-    content: aiContent
+    content: aiContent,
+    message: aiContent
   };
 }

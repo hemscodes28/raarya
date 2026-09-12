@@ -304,7 +304,7 @@ export function EnquiryModal({
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm font-sans overflow-hidden">
+      <div className="fixed inset-0 z-[25000] flex items-center justify-center p-3 sm:p-6 bg-black/80 backdrop-blur-sm font-sans overflow-hidden">
         <motion.div
           initial={{ opacity: 0, scale: 0.96, y: 12 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}

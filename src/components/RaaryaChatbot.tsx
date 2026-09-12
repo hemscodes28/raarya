@@ -17,6 +17,9 @@ import {
   RotateCw
 } from 'lucide-react';
 import { apiChat } from '../utils/api';
+import { PROPERTIES, PropertyListing } from '../constants';
+import { PropertyCard } from './PropertyCard';
+import { PropertyDetailModal } from './PropertyDetailModal';
 
 interface RaaryaChatbotProps {
   isOpen: boolean;
@@ -26,6 +29,11 @@ interface RaaryaChatbotProps {
 interface Message {
   role: 'user' | 'model';
   content: string;
+  type?: string;
+  properties?: PropertyListing[];
+  propertyIds?: string[];
+  sources?: string[];
+  intent?: string;
 }
 
 const PROMPT_CARDS = [
@@ -164,10 +172,13 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [feedbackState, setFeedbackState] = useState<Record<number, 'up' | 'down'>>({});
+  const [selectedPropertyModal, setSelectedPropertyModal] = useState<PropertyListing | null>(null);
+  const sessionIdRef = useRef<string>('sess_' + Math.random().toString(36).substring(2, 10));
   const [currentQuote, setCurrentQuote] = useState(() => 
     CRISPY_QUOTES[Math.floor(Math.random() * CRISPY_QUOTES.length)]
   );
 
+  const isSendingRef = useRef<boolean>(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const freshTextareaRef = useRef<HTMLTextAreaElement>(null);
   const activeTextareaRef = useRef<HTMLTextAreaElement>(null);
@@ -230,8 +241,9 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
 
   const handleSendMessage = async (textToSend?: string) => {
     const text = (textToSend || inputValue).trim();
-    if (!text || isLoading) return;
+    if (!text || isLoading || isSendingRef.current) return;
 
+    isSendingRef.current = true;
     if (!textToSend) setInputValue('');
 
     const newMessages: Message[] = [...messages, { role: 'user', content: text }];
@@ -239,9 +251,30 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
     setIsLoading(true);
 
     try {
-      const response = await apiChat(newMessages);
-      if (response.success && response.content) {
-        setMessages(prev => [...prev, { role: 'model', content: response.content || '' }]);
+      const response = await apiChat(newMessages, sessionIdRef.current);
+      if (response.success) {
+        let matchedProps: PropertyListing[] = [];
+        if (response.type === 'property_results' || response.intent === 'property_search' || response.intent === 'property_followup') {
+          if (Array.isArray(response.properties) && response.properties.length > 0) {
+            matchedProps = response.properties;
+          } else if (Array.isArray(response.propertyIds) && response.propertyIds.length > 0) {
+            matchedProps = response.propertyIds
+              .map(id => PROPERTIES.find(p => p.id === id))
+              .filter(Boolean) as PropertyListing[];
+          }
+        }
+
+        setMessages(prev => [
+          ...prev,
+          {
+            role: 'model',
+            content: response.message || response.content || 'I found matching information for your request.',
+            properties: matchedProps,
+            propertyIds: response.propertyIds,
+            sources: response.sources,
+            intent: response.intent
+          }
+        ]);
       } else {
         setMessages(prev => [
           ...prev,
@@ -261,6 +294,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       ]);
     } finally {
       setIsLoading(false);
+      isSendingRef.current = false;
     }
   };
 
@@ -274,6 +308,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
   const handleNewChat = () => {
     setMessages([]);
     setInputValue('');
+    sessionIdRef.current = 'sess_' + Math.random().toString(36).substring(2, 10);
     setCurrentQuote(CRISPY_QUOTES[Math.floor(Math.random() * CRISPY_QUOTES.length)]);
   };
 
@@ -287,30 +322,44 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
     setFeedbackState(prev => ({ ...prev, [index]: type }));
   };
 
-  // Claude-Style Markdown text formatter (using Newsreader / Lora Claude Serif Font)
+  // Claude-Style Markdown text formatter
   const formatMarkdown = (text: string) => {
-    // 1. Strip raw Markdown header hashes (#, ##, ###, ####)
+    if (!text) return '';
+
+    // 0. Cleanly remove any leaked hex attribute artifacts like 22211F]">, 22211F], 22211F">, or raw HTML tags
     let cleanedText = text
+      .replace(/\[?#?[A-Fa-f0-9]{6}\]?"?>*/g, '')
+      .replace(/\b[A-Fa-f0-9]{6}\]?"?>*/g, '')
+      .replace(/<[^>]*>/g, '')
       .replace(/^#{1,6}\s*(.*)$/gm, '**$1**')
       .replace(/#+/g, '');
 
-    // 2. Safe escaping of HTML characters to prevent XSS
+    // 1. Safe escaping of HTML characters to prevent XSS
     let formatted = cleanedText
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;');
 
-    // 3. Bold tags: **text** -> <strong class="font-claude-serif font-extrabold text-[#C8654B] text-[16px] block mt-3 mb-1">$1</strong>
-    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-[#22211F]">$1</strong>');
+    // 2. Bold tags: **text** -> <strong class="font-semibold">$1</strong> (Inherits container text color)
+    formatted = formatted.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>');
 
-    // 4. Markdown links: [label](url) -> <a href="url" class="...">label</a>
+    // 3. Handle unclosed bracket links like "[View all X matching properties in our Buy section →"
+    formatted = formatted.replace(
+      /\[(View all \d+ matching properties in our (Buy|Rent) section\s*→?)(?!\()/gi,
+      (_, label, section) => {
+        const route = section.toLowerCase() === 'rent' ? '#rent' : '#buy';
+        return `[${label}](${route})`;
+      }
+    );
+
+    // 4. Markdown links: [label](url) -> <a href="javascript:void(0)" data-target-route="url" class="...">label</a>
     formatted = formatted.replace(
       /\[(.*?)\]\((.*?)\)/g,
       (_, label, url) => {
-        const cleanLabel = label.replace(/^#/, '');
-        const isHash = url.startsWith('#');
-        const clickAttr = isHash ? 'onclick="window.dispatchEvent(new CustomEvent(\'close-chatbot\'))"' : '';
-        return `<a href="${url}" ${clickAttr} class="font-semibold text-[#D97757] hover:text-[#C8654B] underline underline-offset-2 decoration-[#D97757]/40 cursor-pointer inline-flex items-center gap-1">${cleanLabel} →</a>`;
+        const cleanLabel = label.replace(/^#/, '').trim();
+        const targetUrl = url.includes('preset-sites') ? '#buy' : (url.startsWith('#') ? url : `#${url}`);
+        const arrow = cleanLabel.includes('→') ? '' : ' →';
+        return `<a href="javascript:void(0)" data-target-route="${targetUrl}" class="font-bold text-[#D97757] hover:text-[#C8654B] underline underline-offset-4 decoration-[#D97757]/50 hover:decoration-[#C8654B] cursor-pointer inline-flex items-center gap-1 transition-colors px-1 py-0.5 rounded hover:bg-[#D97757]/10">${cleanLabel}${arrow}</a>`;
       }
     );
 
@@ -330,6 +379,29 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
     });
 
     return processedLines.join('');
+  };
+
+  const handleChatCanvasClick = (e: React.MouseEvent<HTMLElement>) => {
+    const target = e.target as HTMLElement;
+    const anchor = target.closest('a');
+    if (!anchor) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    const targetRoute = anchor.getAttribute('data-target-route') || anchor.getAttribute('href') || '';
+    if (!targetRoute || targetRoute === 'javascript:void(0)') return;
+
+    onClose();
+
+    const cleanRoute = targetRoute.replace(/^#\/?/, '');
+    const finalHash = cleanRoute ? `#${cleanRoute}` : '#';
+
+    window.location.hash = finalHash;
+
+    window.scrollTo(0, 0);
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   };
 
   const isFreshChat = messages.length === 0;
@@ -397,7 +469,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
           </header>
 
           {/* MAIN CLAUDE CHAT CANVAS VIEWPORT */}
-          <main className="flex-1 overflow-y-auto custom-scrollbar-claude px-4 sm:px-6 py-6 flex flex-col items-center">
+          <main onClick={handleChatCanvasClick} className="flex-1 overflow-y-auto custom-scrollbar-claude px-4 sm:px-6 py-6 flex flex-col items-center">
             <div className="max-w-3xl w-full flex flex-col gap-6 my-auto min-h-[calc(100vh-140px)] justify-between">
               
               {/* Fresh Chat Centered View (Screenshot 2 Template Alignment) */}
@@ -502,6 +574,31 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                             className="text-[#22211F] font-claude-serif text-[15.5px] sm:text-[16px] leading-[1.7] select-text px-1"
                             dangerouslySetInnerHTML={{ __html: formatMarkdown(msg.content) }}
                           />
+
+                          {/* Inline Property Cards Showcase if properties are returned */}
+                          {Boolean(
+                            (msg.type === 'property_results' || msg.type === 'PROPERTY_RESULTS' || ['NEW_PROPERTY_SEARCH', 'PROPERTY_FOLLOWUP', 'PROPERTY_SHOW_MORE', 'PROPERTY_DETAIL'].includes(msg.intent || '')) &&
+                            ((msg.properties && msg.properties.length > 0) || (msg.propertyIds && msg.propertyIds.length > 0))
+                          ) && (
+                            <div className="w-full mt-3 pt-2 pb-1 flex flex-col gap-3">
+                              <div className="flex items-center justify-between px-1">
+                                <span className="text-xs font-bold text-[#6E6A63] uppercase tracking-wider">
+                                  Matching Properties ({ (msg.properties || []).length || (msg.propertyIds || []).length })
+                                </span>
+                              </div>
+
+                              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+                                {(msg.properties || (msg.propertyIds || []).map(id => PROPERTIES.find(p => p.id === id)).filter(Boolean) as PropertyListing[]).slice(0, 6).map((prop) => (
+                                  <div key={prop.id} className="w-full">
+                                    <PropertyCard
+                                      property={prop}
+                                      onClick={() => setSelectedPropertyModal(prop)}
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
 
                           {/* Claude Action Toolbar (Copy, Like, Dislike, Retry, Timestamp - Screenshot 4 Template) */}
                           <div className="flex items-center gap-3 pt-2 text-[#4A463F] text-xs select-none px-1">
@@ -614,6 +711,13 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
             </div>
           </main>
         </div>
+      )}
+
+      {selectedPropertyModal && (
+        <PropertyDetailModal
+          property={selectedPropertyModal}
+          onClose={() => setSelectedPropertyModal(null)}
+        />
       )}
     </AnimatePresence>
   );

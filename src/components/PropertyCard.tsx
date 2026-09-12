@@ -19,7 +19,7 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
     property.area > 0 ? `${property.area} sq.ft` : null
   );
 
-  const propType = property.overviewDetails?.['Property Type'] || property.subType || 'Residential';
+  const propType = property.subType || property.overviewDetails?.['Property Type'] || 'Residential';
 
   const stats = [
     areaLabel && { icon: Square, label: areaLabel },
@@ -65,10 +65,17 @@ export function PropertyCard({ property, onClick }: PropertyCardProps) {
           </div>
 
           {/* QUICK OVERVIEW HOVER BADGE */}
-          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center">
-            <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-white text-black font-extrabold text-[12.5px] rounded-full shadow-2xl transform translate-y-3 group-hover:translate-y-0 transition-transform duration-300 border border-white/40">
+          <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center p-2">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (onClick) onClick();
+              }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-white hover:bg-neutral-100 text-black font-extrabold text-[12.5px] rounded-full shadow-2xl transform translate-y-3 group-hover:translate-y-0 transition-all duration-300 border border-white/40 cursor-pointer active:scale-95"
+            >
               <Eye className="size-4 text-amber-500" /> Quick Overview
-            </span>
+            </button>
           </div>
         </div>
 

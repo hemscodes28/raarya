@@ -14,6 +14,12 @@ export interface ApiResponse<T = any> {
   otp?: string;
   otpToken?: string;
   content?: string;
+  intent?: string;
+  type?: string;
+  filters?: Record<string, any>;
+  propertyIds?: string[];
+  sources?: string[];
+  hasMore?: boolean;
 }
 
 export interface User {
