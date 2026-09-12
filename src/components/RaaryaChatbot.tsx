@@ -254,14 +254,12 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       const response = await apiChat(newMessages, sessionIdRef.current);
       if (response.success) {
         let matchedProps: PropertyListing[] = [];
-        if (response.type === 'property_results' || response.intent === 'property_search' || response.intent === 'property_followup') {
-          if (Array.isArray(response.properties) && response.properties.length > 0) {
-            matchedProps = response.properties;
-          } else if (Array.isArray(response.propertyIds) && response.propertyIds.length > 0) {
-            matchedProps = response.propertyIds
-              .map(id => PROPERTIES.find(p => p.id === id))
-              .filter(Boolean) as PropertyListing[];
-          }
+        if (Array.isArray(response.properties) && response.properties.length > 0) {
+          matchedProps = response.properties;
+        } else if (Array.isArray(response.propertyIds) && response.propertyIds.length > 0) {
+          matchedProps = response.propertyIds
+            .map(id => PROPERTIES.find(p => p.id === id))
+            .filter(Boolean) as PropertyListing[];
         }
 
         setMessages(prev => [
@@ -269,10 +267,11 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
           {
             role: 'model',
             content: response.message || response.content || 'I found matching information for your request.',
+            type: response.type || (matchedProps.length > 0 ? 'property_results' : 'text'),
             properties: matchedProps,
             propertyIds: response.propertyIds,
             sources: response.sources,
-            intent: response.intent
+            intent: response.intent || (matchedProps.length > 0 ? 'NEW_PROPERTY_SEARCH' : '')
           }
         ]);
       } else {
@@ -579,18 +578,21 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
 
                           {/* Inline Property Cards Showcase if properties are returned */}
                           {Boolean(
-                            (msg.type === 'property_results' || msg.type === 'PROPERTY_RESULTS' || ['NEW_PROPERTY_SEARCH', 'PROPERTY_FOLLOWUP', 'PROPERTY_SHOW_MORE', 'PROPERTY_DETAIL'].includes(msg.intent || '')) &&
                             ((msg.properties && msg.properties.length > 0) || (msg.propertyIds && msg.propertyIds.length > 0))
                           ) && (
                             <div className="w-full mt-3 pt-2 pb-1 flex flex-col gap-3">
                               <div className="flex items-center justify-between px-1">
                                 <span className="text-xs font-bold text-[#6E6A63] uppercase tracking-wider">
-                                  Matching Properties ({ (msg.properties || []).length || (msg.propertyIds || []).length })
+                                  Matching Properties ({(msg.properties || []).length || (msg.propertyIds || []).length})
                                 </span>
                               </div>
 
                               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
-                                {(msg.properties || (msg.propertyIds || []).map(id => PROPERTIES.find(p => p.id === id)).filter(Boolean) as PropertyListing[]).slice(0, 6).map((prop) => (
+                                {(
+                                  (msg.properties && msg.properties.length > 0)
+                                    ? msg.properties
+                                    : (msg.propertyIds || []).map(id => PROPERTIES.find(p => p.id === id)).filter(Boolean) as PropertyListing[]
+                                ).slice(0, 6).map((prop) => (
                                   <div key={prop.id} className="w-full">
                                     <PropertyCard
                                       property={prop}
@@ -601,6 +603,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                               </div>
                             </div>
                           )}
+
 
                           {/* Claude Action Toolbar (Copy, Like, Dislike, Retry, Timestamp - Screenshot 4 Template) */}
                           <div className="flex items-center gap-3 pt-2 text-[#4A463F] text-xs select-none px-1">

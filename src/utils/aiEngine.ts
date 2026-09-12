@@ -1,12 +1,21 @@
 import { PROPERTIES } from '../constants';
 import { matchLocationFuzzy, isFuzzyMatch } from './fuzzyMatcher';
 
-export function generateAiResponse(userQuery: string): string {
+export interface AiResponseObject {
+  message: string;
+  properties?: any[];
+  type?: string;
+  intent?: string;
+}
+
+export function generateAiResponseObject(userQuery: string): AiResponseObject {
   const query = userQuery.toLowerCase().trim();
+
 
   // 0. Greetings & Welcome
   if (/^(hi+|hello|hey|namaste|good\s*(morning|afternoon|evening)|greetings|howdy)[\s!.]*$/i.test(query)) {
-    return `👋 **Hello! Welcome to Raarya Properties!**
+    return {
+      message: `👋 **Hello! Welcome to Raarya Properties!**
 
 I am your AI Property Assistant. How can I assist you with your real estate search today?
 
@@ -14,7 +23,11 @@ Here are a few quick things you can ask me:
 - 🏡 **Find Plots & Villas**: Ask for *"Properties in Singanallur"* or *"Plots in Saravanampatti"*
 - 📊 **Calculate Home Loans**: Ask *"Calculate EMI for 35 Lakhs"*
 - 🏡 **Post Your Listing**: Ask *"How to list my property"*
-- 📞 **Contact Us**: Ask for contact numbers or office location`;
+- 📞 **Contact Us**: Ask for contact numbers or office location`,
+      properties: [],
+      type: 'text',
+      intent: 'greetings'
+    };
   }
 
   // 0.5. About Company & Raarya Properties (Flexible Semantic & Pattern Matching)
@@ -47,7 +60,8 @@ Here are a few quick things you can ask me:
   );
 
   if (isCompanyQuery) {
-    return `### 🏠 About Raarya Properties
+    return {
+      message: `### 🏠 About Raarya Properties
 
 Raarya Properties is a premier real estate platform based in Coimbatore, Tamil Nadu. We specialize in verified DTCP & RERA approved layout plots, luxury villas, independent houses, commercial land, and student PG/hostels.
 
@@ -61,7 +75,11 @@ Raarya Properties is a premier real estate platform based in Coimbatore, Tamil N
 📍 **Head Office Address**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037, Tamil Nadu, India.
 📞 **Phone**: **+91 90872 40400**
 ✉️ **Email**: **raaryagroupsinfo@gmail.com**
-⏰ **Working Hours**: Monday to Saturday, 9:00 AM to 7:00 PM.`;
+⏰ **Working Hours**: Monday to Saturday, 9:00 AM to 7:00 PM.`,
+      properties: [],
+      type: 'text',
+      intent: 'company_info'
+    };
   }
 
   // 1. EMI Calculation & Loan / Eligibility Query
@@ -105,7 +123,8 @@ Raarya Properties is a premier real estate platform based in Coimbatore, Tamil N
     const formattedEmi = emi.toLocaleString('en-IN');
     const formattedInterest = Math.round(totalInterest / 100000).toLocaleString('en-IN') + ' Lakhs';
 
-    return `📊 **Home Loan Eligibility & EMI Calculator**
+    return {
+      message: `📊 **Home Loan Eligibility & EMI Calculator**
 
 Here is the estimated loan calculation for **₹${formattedAmount}**:
 
@@ -120,7 +139,11 @@ Here is the estimated loan calculation for **₹${formattedAmount}**:
 - Up to **90% bank funding** available for DTCP & RERA approved plots/villas
 - Partnered with HDFC Bank, SBI, ICICI, and Axis Bank.
 
-📞 **Need direct loan eligibility verification?** Call our financial manager at **+91 90872 40400** or [Send an Enquiry](#contact).`;
+📞 **Need direct loan eligibility verification?** Call our financial manager at **+91 90872 40400** or [Send an Enquiry](#contact).`,
+      properties: [],
+      type: 'text',
+      intent: 'emi_calc'
+    };
   }
 
   // 2. Careers & Job Opportunities
@@ -132,7 +155,8 @@ Here is the estimated loan calculation for **₹${formattedAmount}**:
     query.includes('work') ||
     query.includes('join')
   ) {
-    return `💼 **Careers & Job Openings at Raarya Groups**
+    return {
+      message: `💼 **Careers & Job Openings at Raarya Groups**
 
 Raarya Groups is expanding across Coimbatore & Western Tamil Nadu! We are hiring for:
 
@@ -144,7 +168,11 @@ Raarya Groups is expanding across Coimbatore & Western Tamil Nadu! We are hiring
 - Competitive salary + highest industry sales incentives
 - Career growth & professional training
 
-📧 **How to Apply**: Email your resume/CV to **raaryagroupsinfo@gmail.com** or call HR directly at **+91 90872 40400**.`;
+📧 **How to Apply**: Email your resume/CV to **raaryagroupsinfo@gmail.com** or call HR directly at **+91 90872 40400**.`,
+      properties: [],
+      type: 'text',
+      intent: 'careers'
+    };
   }
 
   // 3. Direct Contact & Customer Support
@@ -158,7 +186,8 @@ Raarya Groups is expanding across Coimbatore & Western Tamil Nadu! We are hiring
     query.includes('agent') ||
     query.includes('rajkumar')
   ) {
-    return `📞 **Contact Raarya Groups & Customer Service**
+    return {
+      message: `📞 **Contact Raarya Groups & Customer Service**
 
 You can reach our official team directly:
 
@@ -168,7 +197,11 @@ You can reach our official team directly:
 - **Office Location**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037, Tamil Nadu, India
 - **Working Hours**: Monday to Saturday, 9:00 AM to 7:00 PM
 
-💬 **Instant Assistance**: [Chat on WhatsApp](https://wa.me/919087240400) or [Submit an Enquiry Form](#contact).`;
+💬 **Instant Assistance**: [Chat on WhatsApp](https://wa.me/919087240400) or [Submit an Enquiry Form](#contact).`,
+      properties: [],
+      type: 'text',
+      intent: 'contact'
+    };
   }
 
   // 4. Listing a Property / Adding Property
@@ -180,7 +213,8 @@ You can reach our official team directly:
     query.includes('register my property') ||
     query.includes('list my property')
   ) {
-    return `🏡 **How to List Your Property on Raarya**
+    return {
+      message: `🏡 **How to List Your Property on Raarya**
 
 Want to sell or rent your plot, house, villa, or commercial property?
 
@@ -189,10 +223,13 @@ Want to sell or rent your plot, house, villa, or commercial property?
 3. **Enter Details**: Provide location, area extent, pricing, and photos.
 4. **Verification**: Our team will verify legal approvals (DTCP/RERA) and make your listing live within 2 hours!
 
-Need help listing? Call **+91 90872 40400** to speak with our listing manager.`;
+Need help listing? Call **+91 90872 40400** to speak with our listing manager.`,
+      properties: [],
+      type: 'text',
+      intent: 'list_property'
+    };
   }
 
-  // 5. Property Search & Recommendations by Location, Type, or Keyword
   // 5. Property Search & Recommendations with Fuzzy Matcher
   const fuzzyLoc = matchLocationFuzzy(query);
 
@@ -201,7 +238,7 @@ Need help listing? Call **+91 90872 40400** to speak with our listing manager.`;
     .split(/\s+/)
     .filter((w) => w.length > 2 && !['the', 'and', 'for', 'are', 'you', 'with', 'in', 'property', 'properties', 'plots', 'plot', 'show', 'give', 'need', 'want', 'about', 'company', 'raarya', 'tell', 'what', 'does', 'who', 'services', 'provide'].includes(w));
 
-  let matchedProps = PROPERTIES.filter((p) => {
+  let matchedProps = PROPERTIES.filter((p: any) => {
     const text = `${p.title} ${p.location} ${p.type} ${p.subType || ''} ${p.description || ''} ${JSON.stringify(
       p.overviewDetails || {}
     )}`.toLowerCase();
@@ -223,18 +260,23 @@ Need help listing? Call **+91 90872 40400** to speak with our listing manager.`;
 
   // Filter by transaction type if specified
   if (query.includes('rent')) {
-    matchedProps = matchedProps.filter(p => p.type === 'rent');
+    matchedProps = matchedProps.filter((p: any) => p.type === 'rent');
   } else if (query.includes('pg') || query.includes('hostel')) {
-    matchedProps = matchedProps.filter(p => p.type === 'pg-hostel');
+    matchedProps = matchedProps.filter((p: any) => p.type === 'pg-hostel');
   }
 
   if (matchedProps.length === 0) {
     const locName = fuzzyLoc || 'your requested area';
-    return `📍 **No verified properties found in ${locName} right now.**
+    return {
+      message: `📍 **No verified properties found in ${locName} right now.**
 
 We currently do not have active property listings in **${locName}** in our database. We specialize in high-growth corridors across Coimbatore (including Saravanampatti, Annur, Kittampalayam, Singanallur, Karumathampatti, Mettupalayam, and Avinashi Road).
 
-📞 **Looking for custom options in ${locName}?** Contact our customer support team at **+91 90872 40400** or [Send an Enquiry](#contact).`;
+📞 **Looking for custom options in ${locName}?** Contact our customer support team at **+91 90872 40400** or [Send an Enquiry](#contact).`,
+      properties: [],
+      type: 'text',
+      intent: 'property_search_empty'
+    };
   }
 
   const totalCount = matchedProps.length;
@@ -248,7 +290,7 @@ We currently do not have active property listings in **${locName}** in our datab
 
   const propListFormatted = displayedProps
     .map(
-      (p, i) =>
+      (p: any, i: number) =>
         `${i + 1}. **${p.title}**
    - **Price**: ${p.price} | **Type**: ${p.type === 'buy' ? 'For Sale' : p.type === 'rent' ? 'For Rent' : 'PG / Hostel'}
    - **Location**: ${p.location}
@@ -257,9 +299,20 @@ We currently do not have active property listings in **${locName}** in our datab
     )
     .join('\n\n');
 
+
   const viewAllMsg = totalCount > 8
     ? `\n\n🔍 **I found ${totalCount} matching properties.** Here are 8 to get you started. [View all ${totalCount} matching properties in our ${sectionName} section →](#${navTab}${searchParam})`
     : `\n\n🔍 **I found ${totalCount} matching properties.** [View all ${totalCount} matching properties in our ${sectionName} section →](#${navTab}${searchParam})`;
 
-  return `Here are verified properties matching your criteria:\n\n${propListFormatted}\n\nReview the interactive property cards below to explore images, specifications, and book a free site visit.${viewAllMsg}`;
+  return {
+    message: `Here are verified properties matching your criteria:\n\n${propListFormatted}\n\nReview the interactive property cards below to explore images, specifications, and book a free site visit.${viewAllMsg}`,
+    properties: displayedProps,
+    type: 'property_results',
+    intent: 'NEW_PROPERTY_SEARCH'
+  };
 }
+
+export function generateAiResponse(userQuery: string): string {
+  return generateAiResponseObject(userQuery).message;
+}
+

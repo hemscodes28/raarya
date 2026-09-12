@@ -423,7 +423,7 @@ export async function apiResetPassword(payload: { email: string; code: string; n
 }
 
 
-import { generateAiResponse } from './aiEngine';
+import { generateAiResponseObject } from './aiEngine';
 
 // ─── AI CHATBOT ───────────────────────────────────────────────────────────────
 
@@ -445,10 +445,14 @@ export async function apiChat(messages: ChatMessagePayload[], sessionId?: string
   }
 
   // Generate intelligent response using local AI Concierge engine
-  const aiContent = generateAiResponse(lastUserMsg);
+  const aiResult = generateAiResponseObject(lastUserMsg);
   return {
     success: true,
-    content: aiContent,
-    message: aiContent
+    content: aiResult.message,
+    message: aiResult.message,
+    properties: aiResult.properties || [],
+    type: aiResult.type || 'text',
+    intent: aiResult.intent || 'general'
   };
 }
+
