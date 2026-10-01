@@ -16,7 +16,9 @@ import {
   ThumbsDown,
   RotateCw,
   Sparkles,
-  ArrowRight
+  ArrowRight,
+  Mic,
+  MicOff
 } from 'lucide-react';
 import { apiChat } from '../utils/api';
 import { PROPERTIES, PropertyListing } from '../constants';
@@ -116,7 +118,10 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null);
   const [feedbackState, setFeedbackState] = useState<Record<number, 'up' | 'down'>>({});
   const [selectedPropertyModal, setSelectedPropertyModal] = useState<PropertyListing | null>(null);
+  const [isListening, setIsListening] = useState(false);
+  const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
   const sessionIdRef = useRef<string>('sess_' + Math.random().toString(36).substring(2, 10));
+  const recognitionRef = useRef<any>(null);
   const [currentQuote, setCurrentQuote] = useState(() => 
     CRISPY_QUOTES[Math.floor(Math.random() * CRISPY_QUOTES.length)]
   );
@@ -175,14 +180,93 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isOpen, onClose]);
 
-  // Close chatbot when a hash link custom event is fired
+  // Stop speech recognition when modal closes or unmounts
   useEffect(() => {
-    const handleCloseEvent = () => onClose();
-    window.addEventListener('close-chatbot', handleCloseEvent);
-    return () => window.removeEventListener('close-chatbot', handleCloseEvent);
-  }, [onClose]);
+    if (!isOpen && recognitionRef.current) {
+      try {
+        recognitionRef.current.abort();
+      } catch (_) {}
+      setIsListening(false);
+    }
+  }, [isOpen]);
+
+  const toggleVoiceListening = () => {
+    if (isListening) {
+      try {
+        recognitionRef.current?.stop();
+      } catch (_) {}
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      setVoiceNotice('Voice recognition is not supported in this browser. Please use Chrome or Microsoft Edge.');
+      setTimeout(() => setVoiceNotice(null), 4000);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = true;
+      recognition.lang = 'en-IN'; // Indian English pronunciation & vocabulary
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setVoiceNotice('🎙️ Listening... Speak your property query clearly.');
+      };
+
+      recognition.onresult = (event: any) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        if (transcript) {
+          setInputValue(transcript);
+        }
+      };
+
+      recognition.onerror = (event: any) => {
+        console.warn('Speech recognition notice:', event.error);
+        if (event.error === 'not-allowed') {
+          setVoiceNotice('Microphone access was denied. Please allow microphone permissions in browser.');
+        } else if (event.error === 'no-speech') {
+          setVoiceNotice('No speech detected. Tap the mic to try again.');
+        } else {
+          setVoiceNotice(`Voice recognition error (${event.error}).`);
+        }
+        setIsListening(false);
+        setTimeout(() => setVoiceNotice(null), 4000);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+        setVoiceNotice('✅ Query captured! Review your message and press Enter or Send.');
+        setTimeout(() => setVoiceNotice(null), 3500);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.error('Failed to start speech recognition:', err);
+      setIsListening(false);
+      setVoiceNotice('Could not start microphone. Please try again.');
+      setTimeout(() => setVoiceNotice(null), 3000);
+    }
+  };
 
   const handleSendMessage = async (textToSend?: string) => {
+    if (isListening) {
+      try {
+        recognitionRef.current?.stop();
+      } catch (_) {}
+      setIsListening(false);
+    }
+
     const text = (textToSend || inputValue).trim();
     if (!text || isLoading || isSendingRef.current) return;
 
@@ -469,7 +553,11 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                     initial={{ scale: 0.98, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.1, duration: 0.3 }}
-                    className="w-full max-w-2xl bg-white border border-[#C9C3B6] focus-within:border-[#D97757] focus-within:ring-4 focus-within:ring-[#D97757]/15 rounded-3xl p-3.5 sm:p-4 shadow-[0_10px_35px_rgba(0,0,0,0.06)] transition-all flex flex-col gap-3 text-left group"
+                    className={`w-full max-w-2xl bg-white border transition-all rounded-3xl p-3.5 sm:p-4 shadow-[0_10px_35px_rgba(0,0,0,0.06)] flex flex-col gap-3 text-left group ${
+                      isListening
+                        ? 'border-[#D97757] ring-4 ring-[#D97757]/20 shadow-[0_0_25px_rgba(217,119,87,0.18)]'
+                        : 'border-[#C9C3B6] focus-within:border-[#D97757] focus-within:ring-4 focus-within:ring-[#D97757]/15'
+                    }`}
                   >
                     <textarea
                       ref={freshTextareaRef}
@@ -480,10 +568,27 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                       }}
                       onInput={e => adjustTextareaHeight(e.currentTarget)}
                       onKeyDown={handleKeyPress}
-                      placeholder="How can I help you today?"
+                      placeholder={isListening ? "Listening... Speak your query (e.g. 'Show 2 BHK villas in Annur')" : "How can I help you today?"}
                       rows={1}
                       className="w-full bg-transparent text-[#22211F] placeholder-[#5A554C] text-[14.5px] sm:text-[15px] font-sans outline-none resize-none overflow-y-auto custom-scrollbar-claude leading-relaxed min-h-[48px]"
                     />
+
+                    {/* Voice Assistant Status Bar if active/notified */}
+                    {voiceNotice && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-2 font-medium ${
+                          isListening
+                            ? 'bg-[#D97757]/10 text-[#D97757] border border-[#D97757]/30 animate-pulse'
+                            : 'bg-[#EAE6DF] text-[#4A463F] border border-[#C9C3B6]'
+                        }`}
+                      >
+                        {isListening && <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />}
+                        <span>{voiceNotice}</span>
+                      </motion.div>
+                    )}
 
                     <div className="flex items-center justify-between pt-2 border-t border-[#E8E4DC]">
                       <div className="flex items-center gap-2">
@@ -493,10 +598,35 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                         </span>
                       </div>
 
-                      <div className="flex items-center gap-2.5 sm:gap-3">
+                      <div className="flex items-center gap-2 sm:gap-2.5">
                         <span className="text-xs text-[#4A463F] font-semibold hidden sm:inline">
                           Raarya 2.5 Flash
                         </span>
+
+                        {/* Voice Assistant Mic Button */}
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.92 }}
+                          onClick={toggleVoiceListening}
+                          className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-xs relative ${
+                            isListening
+                              ? 'bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.55)] animate-pulse'
+                              : 'bg-[#EAE6DF] hover:bg-[#D97757]/15 text-[#4A463F] hover:text-[#D97757] border border-[#D5D0C5]'
+                          }`}
+                          title={isListening ? "Stop Voice Listening" : "Speak Voice Query (Speech to Text)"}
+                        >
+                          {isListening ? (
+                            <>
+                              <span className="absolute inset-0 rounded-xl bg-red-400 opacity-75 animate-ping" />
+                              <MicOff className="w-4 h-4 relative z-10" />
+                            </>
+                          ) : (
+                            <Mic className="w-4 h-4" />
+                          )}
+                        </motion.button>
+
+                        {/* Send Message Button */}
                         <motion.button
                           whileHover={{ scale: 1.08 }}
                           whileTap={{ scale: 0.92 }}
@@ -758,7 +888,11 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                   animate={{ opacity: 1, y: 0 }}
                   className="w-full sticky bottom-3 sm:bottom-4 z-30 pt-2 pb-1"
                 >
-                  <div className="bg-white border border-[#C9C3B6] focus-within:border-[#D97757] focus-within:ring-4 focus-within:ring-[#D97757]/15 rounded-2xl p-2.5 sm:p-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all flex flex-col gap-2.5">
+                  <div className={`bg-white border transition-all rounded-2xl p-2.5 sm:p-3 shadow-[0_8px_30px_rgba(0,0,0,0.06)] flex flex-col gap-2.5 ${
+                    isListening
+                      ? 'border-[#D97757] ring-4 ring-[#D97757]/20 shadow-[0_0_25px_rgba(217,119,87,0.18)]'
+                      : 'border-[#C9C3B6] focus-within:border-[#D97757] focus-within:ring-4 focus-within:ring-[#D97757]/15'
+                  }`}>
                     <textarea
                       ref={activeTextareaRef}
                       value={inputValue}
@@ -768,10 +902,27 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                       }}
                       onInput={e => adjustTextareaHeight(e.currentTarget)}
                       onKeyDown={handleKeyPress}
-                      placeholder="Reply to Raarya AI or ask about plots, home loans, or properties..."
+                      placeholder={isListening ? "Listening... Speak your query clearly" : "Reply to Raarya AI or ask about plots, home loans, or properties..."}
                       rows={1}
                       className="w-full bg-transparent text-[#22211F] placeholder-[#5A554C] text-[14px] sm:text-[14.5px] outline-none resize-none overflow-y-auto custom-scrollbar-claude font-sans leading-relaxed min-h-[48px]"
                     />
+
+                    {/* Voice Assistant Status Bar if active/notified */}
+                    {voiceNotice && (
+                      <motion.div
+                        initial={{ opacity: 0, y: -4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className={`text-xs px-3 py-1.5 rounded-lg flex items-center gap-2 font-medium ${
+                          isListening
+                            ? 'bg-[#D97757]/10 text-[#D97757] border border-[#D97757]/30 animate-pulse'
+                            : 'bg-[#EAE6DF] text-[#4A463F] border border-[#C9C3B6]'
+                        }`}
+                      >
+                        {isListening && <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />}
+                        <span>{voiceNotice}</span>
+                      </motion.div>
+                    )}
 
                     <div className="flex items-center justify-between pt-1 border-t border-[#E8E4DC]">
                       <span className="text-[10.5px] sm:text-[11px] text-[#4A463F] font-semibold flex items-center gap-1.5 select-none">
@@ -779,16 +930,42 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                         Raarya Verified Database • DTCP Approved Listings
                       </span>
 
-                      <motion.button
-                        whileHover={{ scale: 1.08 }}
-                        whileTap={{ scale: 0.92 }}
-                        onClick={() => handleSendMessage()}
-                        disabled={!inputValue.trim() || isLoading}
-                        className="w-9 h-9 rounded-xl bg-[#D97757] hover:bg-[#c8654b] disabled:bg-[#D5D0C5] disabled:text-[#656056] text-white flex items-center justify-center transition-all cursor-pointer shadow-xs disabled:cursor-not-allowed"
-                        title="Send Message"
-                      >
-                        <Send className="w-4 h-4" />
-                      </motion.button>
+                      <div className="flex items-center gap-2">
+                        {/* Voice Assistant Mic Button */}
+                        <motion.button
+                          type="button"
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.92 }}
+                          onClick={toggleVoiceListening}
+                          className={`w-9 h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer shadow-xs relative ${
+                            isListening
+                              ? 'bg-red-500 text-white shadow-[0_0_18px_rgba(239,68,68,0.55)] animate-pulse'
+                              : 'bg-[#EAE6DF] hover:bg-[#D97757]/15 text-[#4A463F] hover:text-[#D97757] border border-[#D5D0C5]'
+                          }`}
+                          title={isListening ? "Stop Voice Listening" : "Speak Voice Query (Speech to Text)"}
+                        >
+                          {isListening ? (
+                            <>
+                              <span className="absolute inset-0 rounded-xl bg-red-400 opacity-75 animate-ping" />
+                              <MicOff className="w-4 h-4 relative z-10" />
+                            </>
+                          ) : (
+                            <Mic className="w-4 h-4" />
+                          )}
+                        </motion.button>
+
+                        {/* Send Message Button */}
+                        <motion.button
+                          whileHover={{ scale: 1.08 }}
+                          whileTap={{ scale: 0.92 }}
+                          onClick={() => handleSendMessage()}
+                          disabled={!inputValue.trim() || isLoading}
+                          className="w-9 h-9 rounded-xl bg-[#D97757] hover:bg-[#c8654b] disabled:bg-[#D5D0C5] disabled:text-[#656056] text-white flex items-center justify-center transition-all cursor-pointer shadow-xs disabled:cursor-not-allowed"
+                          title="Send Message"
+                        >
+                          <Send className="w-4 h-4" />
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
