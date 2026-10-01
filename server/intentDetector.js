@@ -75,13 +75,16 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
 
   // 1. ACKNOWLEDGEMENTS, THANKS, GREETINGS, CASUAL CHAT & GOODBYE
   const isGreeting = (
-    /^(h+e+l+o+|h+i+|h+e+y+|namaste|good\s*(morning|afternoon|evening)|greetings|howdy|hii+|helloo+)(\s+(raarya|ai|bot|assistant|groups|properties|there|team|sir|madam))*$/i.test(cleanQ) ||
+    /^(h+e+l+o+|h+i+|h+e+y+|namaste|good\s*(morning|afternoon|evening|day)|greetings|howdy|hii+|helloo+)(\s+(raarya|ai|bot|assistant|groups|properties|there|team|sir|madam))*$/i.test(cleanQ) ||
     (cleanQ === 'hi' || cleanQ === 'hello' || cleanQ === 'helo' || cleanQ === 'hey' || cleanQ === 'hii' || cleanQ === 'helloo')
   );
 
   const isCasualChat = (
-    /^(how\s*(are|r)\s*(you|u)|how\s*is\s*it\s*going|what'?s\s*up|how\s*do\s*you\s*do)$/i.test(cleanQ) ||
-    cleanQ === 'how are you' || cleanQ === 'how r u'
+    /^(how\s*(are|r)\s*(you|u)|how\s*is\s*it\s*going|what'?s\s*up|how\s*do\s*you\s*do|how\s*are\s*things|hows\s*life|what\s*are\s*you\s*doing|are\s*you\s*there|you\s*there|can\s*we\s*talk|can\s*we\s*chat|talk\s*to\s*me|tell\s*me\s*something|tell\s*me\s*a\s*joke|joke|funny|who\s*are\s*you|what\s*is\s*your\s*name|who\s*made\s*you|who\s*created\s*you)$/i.test(cleanQ) ||
+    cleanQ.includes('how are you') || cleanQ.includes('how r u') || cleanQ.includes('how are u') || cleanQ.includes('how are you doing') ||
+    cleanQ.includes('tell me a joke') || cleanQ.includes('who are you') || cleanQ.includes('what can you do') ||
+    cleanQ.includes('who made you') || cleanQ.includes('tell me about yourself') || cleanQ.includes('what is your name') ||
+    cleanQ.includes('are you an ai') || cleanQ.includes('are you ai') || cleanQ.includes('are you a robot')
   );
 
   const isHelp = (
@@ -109,9 +112,9 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
   if ((isGreeting || isCasualChat || isHelp || isAcknowledgement) && !hasSearchKeyword) {
     const intent = isGreeting ? 'GREETING' :
                    isAcknowledgement ? 'ACKNOWLEDGEMENT' :
-                   isCasualChat ? 'LOCAL_CONVERSATION' : 'LOCAL_CONVERSATION';
+                   isCasualChat ? 'GENERAL_CONVERSATION' : 'GENERAL_CONVERSATION';
     return {
-      domain: 'ACKNOWLEDGEMENT',
+      domain: 'GENERAL_CONVERSATION',
       intent,
       confidence: 0.98,
       entities: {},
@@ -580,12 +583,12 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
   }
 
   // Property Type (Typo-Tolerant)
-  if (/app?art?ment?s?|flats?/i.test(q)) propertyType = 'APARTMENT';
-  else if (/vil+as?/i.test(q)) propertyType = 'VILLA';
-  else if (/plots?|lands?|layouts?|cents?/i.test(q)) propertyType = 'PLOT';
-  else if (/house?s?|homes?/i.test(q) && !q.includes('home loan')) propertyType = 'HOUSE';
-  else if (/com+er+cial|office|shops?|showrooms?/i.test(q)) propertyType = 'COMMERCIAL';
-  else if (/\bpg\b|hostels?/i.test(q)) propertyType = 'PG/HOSTEL';
+  if (/app+art?m[ea]nt?s?|flats?|flts?/i.test(q)) propertyType = 'APARTMENT';
+  else if (/vil+as?|villah?s?|bungalows?/i.test(q)) propertyType = 'VILLA';
+  else if (/pl[oa]+ts?|lands?|layouts?|cents?|sites?/i.test(q)) propertyType = 'PLOT';
+  else if (/hous?e?s?|homes?|individual\s*house|independent\s*house/i.test(q) && !q.includes('home loan')) propertyType = 'HOUSE';
+  else if (/com+er+cial|office|shops?|showrooms?|buildings?/i.test(q)) propertyType = 'COMMERCIAL';
+  else if (/\bpg\b|hostels?|paying\s*guest/i.test(q)) propertyType = 'PG/HOSTEL';
 
   // Transaction Type
   if (q.includes('rent') || q.includes('lease') || q.includes('rental')) type = 'RENT';
@@ -612,14 +615,55 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
     }
   }
 
+  // Informational & Advice Questions (e.g. "what is DTCP approval", "explain RERA", "how to buy land in Coimbatore")
+  const isInformationalQuestion = Boolean(
+    q.startsWith('what is') || q.startsWith('what are') || q.startsWith('why is') ||
+    q.startsWith('why are') || q.startsWith('how to') || q.startsWith('how does') ||
+    q.startsWith('how can i') || q.startsWith('explain') || q.startsWith('difference between') ||
+    q.startsWith('meaning of') || q.includes('what is the difference') ||
+    q.includes('why is it important') || q.includes('how to verify') ||
+    q.includes('is it safe to') || q.includes('is it good to') ||
+    (q.includes('difference') && (q.includes('dtcp') || q.includes('rera')))
+  );
+
+  const isExplicitListingDemand = Boolean(
+    q.includes('show') || q.includes('find') || q.includes('list') || q.includes('search') ||
+    q.includes('available') || q.includes('options') || q.includes('for sale') || q.includes('to buy') ||
+    q.includes('under') || q.includes('budget') || q.includes('plots in') || q.includes('villas in') ||
+    q.includes('apartments in') || q.includes('houses in') || q.includes('flats in') ||
+    q.includes('look for') || q.includes('looking for') || q.includes('i need') || q.includes('i want')
+  );
+
+  if (isInformationalQuestion && !isExplicitListingDemand) {
+    return {
+      domain: 'GENERAL_CONVERSATION',
+      intent: 'GENERAL_CONVERSATION',
+      confidence: 0.98,
+      entities: {},
+      contextAction: 'CONVERSATIONAL_RESPONSE',
+      isNewSearch: false,
+      isCheaperQuery: false,
+      isShowMore: false,
+      isDetailFollowup: false,
+      isBudgetOpinion: false,
+      isEmiQuery: false,
+      isEligibilityQuery: false,
+      targetRoute: null,
+      emiParams: null,
+      eligibilityParams: null,
+      filters: {},
+      propertyId: null
+    };
+  }
+
   // Amenities
   const amenities = [];
   if (q.includes('swimming pool') || q.includes('pool')) amenities.push('swimming pool');
   if (q.includes('parking') || q.includes('car parking')) amenities.push('parking');
   if (q.includes('gym') || q.includes('fitness')) amenities.push('gym');
   if (q.includes('garden') || q.includes('park')) amenities.push('garden');
-  if (q.includes('dtcp')) amenities.push('DTCP Approved');
-  if (q.includes('rera')) amenities.push('RERA Approved');
+  if (q.includes('dtcp') && isExplicitListingDemand) amenities.push('DTCP Approved');
+  if (q.includes('rera') && isExplicitListingDemand) amenities.push('RERA Approved');
   if (q.includes('water') || q.includes('water supply')) amenities.push('24/7 Water Supply');
   if (q.includes('road') || q.includes('blacktop road')) amenities.push('Tar Road Access');
 
@@ -722,6 +766,32 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
     (locality && !hasFollowupConnector)
   );
 
+  const hasAnyPropertyFilter = Boolean(
+    locality || propertyType || bedrooms || maxPrice || minPrice || type || (amenities && amenities.length > 0)
+  );
+
+  if (!hasAnyPropertyFilter && !hasPropertySearchAnchor && !isShowMore && !isCheaperQuery && !isDetailFollowup && !isBudgetOpinion) {
+    return {
+      domain: 'GENERAL_CONVERSATION',
+      intent: 'GENERAL_CONVERSATION',
+      confidence: 0.95,
+      entities: {},
+      contextAction: 'CONVERSATIONAL_RESPONSE',
+      isNewSearch: false,
+      isCheaperQuery: false,
+      isShowMore: false,
+      isDetailFollowup: false,
+      isBudgetOpinion: false,
+      isEmiQuery: false,
+      isEligibilityQuery: false,
+      targetRoute: null,
+      emiParams: null,
+      eligibilityParams: null,
+      filters: {},
+      propertyId: null
+    };
+  }
+
   let intent = 'NEW_PROPERTY_SEARCH';
   let contextAction = 'CREATE_NEW_PROPERTY_SEARCH';
 
@@ -737,7 +807,7 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
   } else if (hasPropertySearchAnchor || (maxPrice && !hasActivePropertyContext)) {
     intent = 'NEW_PROPERTY_SEARCH';
     contextAction = 'CREATE_NEW_PROPERTY_SEARCH';
-  } else if (hasActivePropertyContext) {
+  } else if (hasActivePropertyContext && hasAnyPropertyFilter) {
     intent = 'PROPERTY_FOLLOWUP';
     contextAction = 'MERGE_PROPERTY_FOLLOWUP';
   }

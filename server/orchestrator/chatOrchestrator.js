@@ -139,9 +139,13 @@ export class ChatOrchestrator {
       stateDecision = "NONE";
     }
 
-    // ─── ROUTE 1: ACKNOWLEDGEMENTS / GREETINGS / CASUAL CHAT ────────────────────
-    if (['ACKNOWLEDGEMENT', 'GREETING', 'THANKS', 'LOCAL_CONVERSATION'].includes(detected.intent) || detected.domain === 'ACKNOWLEDGEMENT') {
-      conversationManager.setActiveDomain(sessionId, 'ACKNOWLEDGEMENT');
+    // ─── ROUTE 1: ACKNOWLEDGEMENTS / GREETINGS / CASUAL CHAT / GENERAL CONVERSATION ────
+    if (
+      ['ACKNOWLEDGEMENT', 'GREETING', 'THANKS', 'LOCAL_CONVERSATION', 'GENERAL_CONVERSATION'].includes(detected.intent) ||
+      detected.domain === 'ACKNOWLEDGEMENT' ||
+      detected.domain === 'GENERAL_CONVERSATION'
+    ) {
+      conversationManager.setActiveDomain(sessionId, 'GENERAL_CONVERSATION');
 
       logTelemetry({
         userMessage: latestUserMessage,
@@ -150,36 +154,35 @@ export class ChatOrchestrator {
         stateDecision: 'NONE',
         propertyStateBefore,
         propertyStateAfter: propertyStateBefore,
-        activeDomainAfter: 'ACKNOWLEDGEMENT',
+        activeDomainAfter: 'GENERAL_CONVERSATION',
         retrievalDomain: 'NONE',
-        resultType: 'LOCAL_CONVERSATION',
-        serviceCalled: 'CONVERSATIONAL_RESPONSE'
+        resultType: 'GENERAL_CONVERSATION',
+        serviceCalled: 'GEMINI_CONVERSATIONAL_SERVICE'
       });
 
-      let message = 'Hi! 👋 How can I help you today?';
-      const cleanLower = latestUserMessage.toLowerCase();
-      if (cleanLower.includes('how are you') || cleanLower.includes('how r u')) {
-        message = "I'm doing great, thank you! I am Raarya AI, your real estate assistant for Coimbatore properties. How can I assist your home search today?";
-      } else if (cleanLower.includes('help') || cleanLower.includes('who are you')) {
-        message = "I can help you search layout plots, villas, and apartments across Coimbatore, calculate home loan EMIs, check loan eligibility, and provide company details! What would you like to explore?";
-      } else if (cleanLower.includes('ohh its nice') || cleanLower.includes('oh its nice') || cleanLower.includes('nice') || cleanLower.includes('good') || cleanLower.includes('great')) {
-        message = "Glad you liked them! 😊 Let me know if you'd like to explore more properties or refine your search.";
-      } else if (cleanLower.includes('thanks') || cleanLower.includes('thank you') || cleanLower.includes('thanku') || cleanLower.includes('ok') || cleanLower.includes('okay')) {
-        message = "You're very welcome! Let me know if you need anything else for your property search in Coimbatore. Have a great day! 😊";
-      }
+      const websiteResults = websiteSearchService.search(latestUserMessage, 2);
+      const aiResponse = await geminiService.generateResponse(
+        messages,
+        [], // No property records for pure conversational queries!
+        websiteResults,
+        detected.intent || 'GENERAL_CONVERSATION',
+        {}
+      );
+
+      const message = aiResponse.message || "Hello! How can I assist you today?";
 
       return {
         success: true,
         requestId,
         type: 'local_conversation',
-        intent: detected.intent,
+        intent: detected.intent || 'GENERAL_CONVERSATION',
         message,
         content: message,
         propertyIds: [],
         properties: [],
         filters: {},
         hasMore: false,
-        source: 'local'
+        source: aiResponse.sources?.[0] || 'gemini_ai'
       };
     }
 
