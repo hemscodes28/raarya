@@ -612,7 +612,10 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
 
   // Localities with Fuzzy Matcher Integration & Pattern Extraction
   const matchedFuzzyLoc = extractMentionedLocation(q);
-  if (matchedFuzzyLoc && matchedFuzzyLoc.toLowerCase() !== 'coimbatore') {
+  const isCityName = Boolean(
+    matchedFuzzyLoc && ['coimbatore', 'cbe', 'kovai', 'கோவை', 'கோயம்புத்தூர்', 'tamil nadu', 'tamilnadu', 'cbe city', 'kovai city'].includes(matchedFuzzyLoc.toLowerCase())
+  );
+  if (matchedFuzzyLoc && !isCityName) {
     locality = matchedFuzzyLoc;
   }
 

@@ -127,7 +127,7 @@ export function extractMentionedLocation(queryText) {
   const laMatch = cleanQ.match(/\b([a-zA-Z\u0B80-\u0BFF]{3,20})\s+(?:la|le|lo|il|இல்|ல்|pakka|pakkathula|kitta|area|road)\b/i);
   if (laMatch) {
     const word = laMatch[1].toLowerCase();
-    const stopWords = ['ethana', 'enga', 'enna', 'oru', 'best', 'top', 'any', 'verified', 'good', 'low', 'budget', 'cheap', 'ella', 'unga', 'namma', 'site', 'plot', 'plots', 'villa', 'villas', 'house', 'houses', 'land', 'lands', 'show', 'give', 'tell', 'need', 'want'];
+    const stopWords = ['ethana', 'enga', 'enna', 'oru', 'best', 'top', 'any', 'verified', 'good', 'low', 'budget', 'cheap', 'ella', 'unga', 'namma', 'site', 'plot', 'plots', 'villa', 'villas', 'house', 'houses', 'land', 'lands', 'show', 'give', 'tell', 'need', 'want', 'cbe', 'kovai', 'coimbatore', 'tamilnadu', 'tn', 'கோவை', 'கோயம்புத்தூர்'];
     if (!stopWords.includes(word)) {
       return word.charAt(0).toUpperCase() + word.slice(1);
     }
@@ -137,7 +137,7 @@ export function extractMentionedLocation(queryText) {
   const inMatch = cleanQ.match(/\b(?:in|near|at|around)\s+([a-zA-Z\u0B80-\u0BFF]{3,20})\b/i);
   if (inMatch) {
     const word = inMatch[1].toLowerCase();
-    const stopWords = ['the', 'this', 'that', 'our', 'my', 'your', 'a', 'an', 'coimbatore', 'budget', 'low', 'high', 'cheap', 'best', 'verified', 'dtcp', 'rera', 'total', 'all'];
+    const stopWords = ['the', 'this', 'that', 'our', 'my', 'your', 'a', 'an', 'coimbatore', 'cbe', 'kovai', 'cbe city', 'tamilnadu', 'tamil nadu', 'tn', 'கோவை', 'கோயம்புத்தூர்', 'budget', 'low', 'high', 'cheap', 'best', 'verified', 'dtcp', 'rera', 'total', 'all', 'apartment', 'apartments', 'flat', 'flats', 'plot', 'plots', 'villa', 'villas', 'house', 'houses', 'land', 'lands'];
     if (!stopWords.includes(word)) {
       return word.charAt(0).toUpperCase() + word.slice(1);
     }
@@ -150,6 +150,11 @@ export function isFuzzyMatch(text, targetTerm) {
   if (!text || !targetTerm) return false;
   const lowerText = String(text).toLowerCase();
   const lowerTarget = String(targetTerm).toLowerCase().trim();
+
+  // If search target is general city (Coimbatore / Cbe / Kovai)
+  if (['coimbatore', 'cbe', 'kovai', 'கோவை', 'கோயம்புத்தூர்'].includes(lowerTarget)) {
+    return lowerText.includes('coimbatore') || lowerText.includes('cbe') || lowerText.includes('kovai') || lowerText.includes('tamil nadu');
+  }
 
   if (lowerText.includes(lowerTarget)) return true;
 

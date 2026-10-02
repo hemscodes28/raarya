@@ -336,10 +336,13 @@ export class LocalPropertyRepository {
 
     // 6. Fuzzy Location filter
     const locInput = String(filters.locality || filters.city || filters.location || '').toLowerCase().trim();
+    const isGeneralCity = Boolean(
+      !locInput || ['coimbatore', 'cbe', 'kovai', 'cbe city', 'kovai city', 'கோவை', 'கோயம்புத்தூர்', 'tamil nadu', 'tamilnadu', 'all'].includes(locInput)
+    );
     const fuzzyTarget = matchLocationFuzzy(locInput || queryText);
-    if (fuzzyTarget && fuzzyTarget.toLowerCase() !== 'coimbatore') {
+    if (fuzzyTarget && !isGeneralCity && fuzzyTarget.toLowerCase() !== 'coimbatore') {
       candidates = candidates.filter(p => isFuzzyMatch(p.location, fuzzyTarget) || isFuzzyMatch(p.title, fuzzyTarget));
-    } else if (locInput && locInput !== 'coimbatore') {
+    } else if (locInput && !isGeneralCity && locInput !== 'coimbatore') {
       candidates = candidates.filter(p => isFuzzyMatch(p.location, locInput) || isFuzzyMatch(p.title, locInput));
     }
 
@@ -362,7 +365,15 @@ export class LocalPropertyRepository {
     }
 
     const cleanQuery = cleanQueryStr.replace(/[^\w\s]/g, ' ').trim();
-    const words = cleanQuery.split(/\s+/).filter(w => w.length > 2 && !['the', 'and', 'for', 'are', 'you', 'with', 'in', 'property', 'properties', 'plots', 'plot', 'show', 'give', 'need', 'want', 'list', 'details', 'looking', 'how', 'what', 'who', 'where', 'when', 'why', 'villa', 'villas', 'apartment', 'apartments', 'house', 'houses', 'land', 'lands', 'home', 'homes'].includes(w));
+    const stopWords = new Set([
+      'the', 'and', 'for', 'are', 'you', 'with', 'in', 'ijn', 'property', 'properties', 'plots', 'plot',
+      'show', 'give', 'need', 'want', 'list', 'details', 'looking', 'how', 'what', 'who', 'where', 'when', 'why',
+      'villa', 'villas', 'apartment', 'apartments', 'appartment', 'appartments', 'aprtment', 'aprtments',
+      'flat', 'flats', 'flt', 'flts', 'house', 'houses', 'land', 'lands', 'home', 'homes',
+      'cbe', 'kovai', 'coimbatore', 'city', 'tamilnadu', 'tamil', 'nadu', 'can', 'all', 'any', 'best', 'top',
+      'verified', 'available', 'cheap', 'budget', 'price', 'rates', 'irukka', 'venum', 'kaatunga', 'sollunga'
+    ]);
+    const words = cleanQuery.split(/\s+/).filter(w => w.length > 2 && !stopWords.has(w));
 
     const hasStructuredFilter = Boolean(
       filters.type || 
@@ -395,8 +406,8 @@ export class LocalPropertyRepository {
         if (item.fullText.includes(word)) wordScore += 3;
       });
 
-      // If user provided specific search words (like location or keyword), candidate must match at least one word
-      if (words.length > 0 && wordScore === 0) {
+      // If user provided specific search words without structured filter, candidate must match at least one word
+      if (!hasStructuredFilter && words.length > 0 && wordScore === 0) {
         return { item, score: 0 };
       }
 
