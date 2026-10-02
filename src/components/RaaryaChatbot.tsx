@@ -122,6 +122,13 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
   const [selectedPropertyModal, setSelectedPropertyModal] = useState<PropertyListing | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
+  const [voiceMode, setVoiceMode] = useState<'tanglish' | 'tamil'>(() => {
+    try {
+      return (localStorage.getItem('raarya_voice_mode') as 'tanglish' | 'tamil') || 'tanglish';
+    } catch (_) {
+      return 'tanglish';
+    }
+  });
   const sessionIdRef = useRef<string>('sess_' + Math.random().toString(36).substring(2, 10));
   const recognitionRef = useRef<any>(null);
   const [currentQuote, setCurrentQuote] = useState(() => 
@@ -216,11 +223,15 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       recognition.continuous = false;
       recognition.interimResults = true;
       recognition.maxAlternatives = 5;
-      recognition.lang = 'en-IN'; // Multi-lingual Indian acoustic engine for English, Tamil & Tanglish
+      recognition.lang = voiceMode === 'tamil' ? 'ta-IN' : 'en-IN'; // 'ta-IN' for pure Tamil speech, 'en-IN' for Tanglish & English
 
       recognition.onstart = () => {
         setIsListening(true);
-        setVoiceNotice('🎙️ Auto-Detecting... Speak normally in Tamil, English, or Tanglish');
+        if (voiceMode === 'tamil') {
+          setVoiceNotice('🎙️ தமிழ் குரல் பதிவு... சாதாரணமாக பேசுங்கள் (Listening in Tamil...)');
+        } else {
+          setVoiceNotice('🎙️ Listening in Tanglish / English... Speak naturally');
+        }
       };
 
       recognition.onresult = (event: any) => {
@@ -619,10 +630,38 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                           Chat
                         </span>
 
-                        {/* Auto-Detect Language Badge */}
-                        <div className="flex items-center bg-[#EAE6DF] px-2.5 py-1 rounded-lg border border-[#D5D0C5] text-[11px] font-semibold text-[#4A463F] select-none shadow-2xs gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] animate-pulse" />
-                          <span>Auto-Detect (EN / தமிழ் / Tanglish)</span>
+                        {/* Voice Language Mode Switch */}
+                        <div className="flex items-center bg-[#EAE6DF] p-0.5 rounded-lg border border-[#D5D0C5] text-[11px] font-semibold select-none shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setVoiceMode('tanglish');
+                              try { localStorage.setItem('raarya_voice_mode', 'tanglish'); } catch (_) {}
+                            }}
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1 ${
+                              voiceMode === 'tanglish'
+                                ? 'bg-[#D97757] text-white shadow-2xs font-bold'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="Tanglish & English voice mode"
+                          >
+                            <span>🌐 Tanglish / EN</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setVoiceMode('tamil');
+                              try { localStorage.setItem('raarya_voice_mode', 'tamil'); } catch (_) {}
+                            }}
+                            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer flex items-center gap-1 ${
+                              voiceMode === 'tamil'
+                                ? 'bg-[#D97757] text-white shadow-2xs font-bold'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="Pure Tamil voice mode (தமிழ் பேச்சு)"
+                          >
+                            <span>🗣️ தமிழ்</span>
+                          </button>
                         </div>
                       </div>
 
@@ -959,10 +998,38 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                           Raarya Verified Database
                         </span>
 
-                        {/* Auto-Detect Language Badge */}
-                        <div className="flex items-center bg-[#EAE6DF] px-2 py-0.5 rounded-lg border border-[#D5D0C5] text-[10.5px] font-semibold text-[#4A463F] select-none shadow-2xs gap-1.5">
-                          <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] animate-pulse" />
-                          <span>Auto-Detect (EN / தமிழ் / Tanglish)</span>
+                        {/* Voice Language Mode Switch */}
+                        <div className="flex items-center bg-[#EAE6DF] p-0.5 rounded-lg border border-[#D5D0C5] text-[10.5px] font-semibold select-none shadow-2xs">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setVoiceMode('tanglish');
+                              try { localStorage.setItem('raarya_voice_mode', 'tanglish'); } catch (_) {}
+                            }}
+                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer flex items-center gap-1 ${
+                              voiceMode === 'tanglish'
+                                ? 'bg-[#D97757] text-white shadow-2xs font-bold'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="Tanglish & English voice mode"
+                          >
+                            <span>🌐 Tanglish / EN</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setVoiceMode('tamil');
+                              try { localStorage.setItem('raarya_voice_mode', 'tamil'); } catch (_) {}
+                            }}
+                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer flex items-center gap-1 ${
+                              voiceMode === 'tamil'
+                                ? 'bg-[#D97757] text-white shadow-2xs font-bold'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="Pure Tamil voice mode (தமிழ் பேச்சு)"
+                          >
+                            <span>🗣️ தமிழ்</span>
+                          </button>
                         </div>
                       </div>
 
