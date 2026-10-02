@@ -5,6 +5,7 @@ import { conversationManager } from '../conversationManager.js';
 import { geminiService } from '../geminiService.js';
 import { jsonSchemaValidator } from '../validators/jsonSchemaValidator.js';
 import { matchLocationFuzzy } from '../fuzzyMatcher.js';
+import { normalizeSpeechText } from '../speechNormalizer.js';
 
 function calculateEmiDetails({ loanAmount, interestRate = 8.5, tenureYears = 20 }) {
   const P = loanAmount;
@@ -120,7 +121,8 @@ function logTelemetry({ userMessage, activeDomainBefore, detected, stateDecision
 export class ChatOrchestrator {
   async processChat({ messages, sessionId = 'default' }) {
     const requestId = 'req_' + Math.random().toString(36).substring(2, 8);
-    const latestUserMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
+    const rawUserMessage = messages.filter(m => m.role === 'user').pop()?.content || '';
+    const latestUserMessage = normalizeSpeechText(rawUserMessage);
 
     // Fetch active conversation state & domain before extraction
     const activeDomainBefore = conversationManager.getActiveDomain(sessionId);

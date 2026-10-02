@@ -24,6 +24,7 @@ import { apiChat } from '../utils/api';
 import { PROPERTIES, PropertyListing } from '../constants';
 import { PropertyCard } from './PropertyCard';
 import { PropertyDetailModal } from './PropertyDetailModal';
+import { normalizeSpeechText } from '../utils/speechNormalizer';
 
 interface RaaryaChatbotProps {
   isOpen: boolean;
@@ -231,7 +232,8 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
           transcript += event.results[i][0].transcript;
         }
         if (transcript) {
-          setInputValue(transcript);
+          const normalized = normalizeSpeechText(transcript);
+          setInputValue(normalized);
         }
       };
 
