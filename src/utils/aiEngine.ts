@@ -1,5 +1,5 @@
 import { PROPERTIES } from '../constants';
-import { matchLocationFuzzy, isFuzzyMatch } from './fuzzyMatcher';
+import { extractMentionedLocation, isFuzzyMatch } from './fuzzyMatcher';
 import { normalizeSpeechText } from './speechNormalizer';
 
 export interface AiResponseObject {
@@ -347,7 +347,7 @@ We are hiring talented professionals across Coimbatore:
   const wantsPg = Boolean(/\bpg\b|hostels?|paying\s*guest|விடுதி/i.test(query));
   const wantsGeneral = Boolean(/propert(?:y|ies|ys|is)|real\s*estate|listings?|spaces?|சொத்துக்கள்/i.test(query));
   const hasActionVerb = Boolean(/list|show|find|search|give|tell|get|display|view|check|see|any|looking|want|need|kaatunga|sollunga|venum|irukka|paakkanum|காட்டு|சொல்லு|இருக்கா/i.test(query));
-  const fuzzyLoc = matchLocationFuzzy(query);
+  const fuzzyLoc = extractMentionedLocation(query);
   const mentionsCoimbatore = Boolean(query.includes('coimbatore') || query.includes('cbe') || query.includes('kovai') || query.includes('கோவை') || query.includes('கோயம்புத்தூர்'));
 
   const isExplicitPropertySearch = Boolean(
@@ -372,50 +372,35 @@ We are hiring talented professionals across Coimbatore:
 
     // 2. Property SubType Filter
     if (wantsPlot) {
-      const plotFiltered = filtered.filter((p: any) => {
+      filtered = filtered.filter((p: any) => {
         const sub = (p.subType || '').toLowerCase();
         const title = (p.title || '').toLowerCase();
         return sub.includes('plot') || sub.includes('land') || title.includes('plot') || title.includes('land') || title.includes('layout') || title.includes('cent');
       });
-      if (plotFiltered.length > 0) {
-        filtered = plotFiltered;
-      }
     } else if (wantsVilla) {
-      const villaFiltered = filtered.filter((p: any) => {
+      filtered = filtered.filter((p: any) => {
         const sub = (p.subType || '').toLowerCase();
         const title = (p.title || '').toLowerCase();
         return sub.includes('villa') || title.includes('villa');
       });
-      if (villaFiltered.length > 0) {
-        filtered = villaFiltered;
-      }
     } else if (wantsApartment) {
-      const aptFiltered = filtered.filter((p: any) => {
+      filtered = filtered.filter((p: any) => {
         const sub = (p.subType || '').toLowerCase();
         const title = (p.title || '').toLowerCase();
         return sub.includes('apartment') || sub.includes('flat') || title.includes('apartment') || title.includes('flat');
       });
-      if (aptFiltered.length > 0) {
-        filtered = aptFiltered;
-      }
     } else if (wantsHouse) {
-      const houseFiltered = filtered.filter((p: any) => {
+      filtered = filtered.filter((p: any) => {
         const sub = (p.subType || '').toLowerCase();
         const title = (p.title || '').toLowerCase();
         return sub.includes('house') || sub.includes('villa') || title.includes('house') || title.includes('villa');
       });
-      if (houseFiltered.length > 0) {
-        filtered = houseFiltered;
-      }
     } else if (wantsCommercial) {
-      const commFiltered = filtered.filter((p: any) => {
+      filtered = filtered.filter((p: any) => {
         const sub = (p.subType || '').toLowerCase();
         const title = (p.title || '').toLowerCase();
         return sub.includes('commercial') || sub.includes('office') || sub.includes('shop') || title.includes('commercial');
       });
-      if (commFiltered.length > 0) {
-        filtered = commFiltered;
-      }
     }
 
     // 3. Transaction Type Filter

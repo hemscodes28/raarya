@@ -1,4 +1,4 @@
-import { matchLocationFuzzy } from './fuzzyMatcher.js';
+import { matchLocationFuzzy, extractMentionedLocation } from './fuzzyMatcher.js';
 
 export function extractEligibilityParamsFromText(text) {
   if (!text || typeof text !== 'string') return {};
@@ -610,24 +610,10 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
   else if (q.includes('pg') || q.includes('hostel')) type = 'PG-HOSTEL';
   else if (q.includes('buy') || q.includes('sale') || q.includes('purchase') || (maxPrice && maxPrice >= 100000)) type = 'SALE';
 
-  // Localities with Fuzzy Matcher Integration
-  const matchedFuzzyLoc = matchLocationFuzzy(q);
+  // Localities with Fuzzy Matcher Integration & Pattern Extraction
+  const matchedFuzzyLoc = extractMentionedLocation(q);
   if (matchedFuzzyLoc && matchedFuzzyLoc.toLowerCase() !== 'coimbatore') {
     locality = matchedFuzzyLoc;
-  } else {
-    const knownLocalities = [
-      'singanallur', 'sulur', 'ondipudur', 'peelamedu', 'gandhipuram', 'vadamadurai', 
-      'thudiyalur', 'hopes', 'ramanathapuram', 'saibaba colony', 'ganapathy', 'saravanampatti', 
-      'annur', 'kinathukadavu', 'karumathampatti', 'sirumugai', 'thekkalur', 'coimbatore', 
-      'avinashi', 'kaniyur', 'kovaipudur', 'kurumbapalayam', 'kalapatti', 'tidel park', 'karanampettai', 'arasur', 'tiruppur', 'karamadai', 'sevur'
-    ];
-
-    for (const loc of knownLocalities) {
-      if (q.includes(loc)) {
-        locality = loc.charAt(0).toUpperCase() + loc.slice(1);
-        break;
-      }
-    }
   }
 
   // Informational & Advice Questions (e.g. "what is DTCP approval", "explain RERA", "how to buy land in Coimbatore")

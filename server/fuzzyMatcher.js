@@ -3,6 +3,7 @@
 export const KNOWN_LOCATIONS = [
   { canonical: 'Gandhipuram', aliases: ['gandhipuram', 'gandipuram', 'gandhipram', 'gandipurm', 'gandi puram', 'gandhi puram', 'gandhipuram la', 'காந்திபுரம்', 'காந்திபுரத்தில்', 'காந்திபுரம்ல'] },
   { canonical: 'Saravanampatti', aliases: ['saravanampatti', 'saravanampati', 'saravanam patti', 'saravanampattii', 'saravanampatty', 'saravanapatty', 'saravampatti', 'sharavanampatti', 'saravanampatti la', 'saravana patti', 'சரவணம்பட்டி', 'சரவணம்பட்டியில்', 'சரவணம்பட்டில'] },
+  { canonical: 'Neelambur', aliases: ['neelambur', 'nellambur', 'neelamboor', 'nellamboor', 'neelambur la', 'nellambur la', 'neelambur bypass', 'நீலம்பூர்', 'நீலம்பூரில்', 'நீலம்பூர்ல', 'நெல்லம்பூர்'] },
   { canonical: 'Vadavalli', aliases: ['vadavalli', 'vadavali', 'vadapalli', 'vadavli', 'vadavallii', 'vadavally', 'vadavalli la', 'வடவள்ளி', 'வடவள்ளியில்', 'வடவள்ளில'] },
   { canonical: 'Mettupalayam', aliases: ['mettupalayam', 'metupalayam', 'mettupalym', 'metupalaiyam', 'mettupalaiyam', 'mettu palayam', 'mettupalayam road', 'mettupalayam la', 'மேட்டுப்பாளையம்', 'மேட்டுப்பாளையத்தில்', 'மேட்டுப்பாளையம்ல'] },
   { canonical: 'Karanampettai', aliases: ['karanampettai', 'karanampet', 'karanampetai', 'karanampattai', 'காரணம்பேட்டை', 'காரணம்பேட்டையில்'] },
@@ -16,6 +17,31 @@ export const KNOWN_LOCATIONS = [
   { canonical: 'Ganapathy', aliases: ['ganapathy', 'ganapathi', 'ganapthy', 'ganapathy la', 'கணபதி', 'கணபதியில்', 'கணபதில'] },
   { canonical: 'Karumathampatti', aliases: ['karumathampatti', 'karumathampati', 'karumathampaty', 'karumathanpatti', 'karumathampatti la', 'கருமத்தம்பட்டி', 'கருமத்தம்பட்டியில்', 'கருமத்தம்பட்டில'] },
   { canonical: 'Kovaipudur', aliases: ['kovaipudur', 'kovaipudr', 'kovai pudur', 'kovapudur', 'kovaipudur la', 'கோவைப்புதூர்', 'கோவைப்புதூரில்', 'கோவைப்புதூர்ல'] },
+  { canonical: 'Kalapatti', aliases: ['kalapatti', 'kalapatty', 'kalapatti la', 'காளப்பட்டி', 'காளப்பட்டியில்', 'காளப்பட்டில'] },
+  { canonical: 'Irugur', aliases: ['irugur', 'irugur la', 'இருகூர்', 'இருகூரில்'] },
+  { canonical: 'Vellalore', aliases: ['vellalore', 'vellalor', 'vellalore la', 'வெள்ளலூர்', 'வெள்ளலூரில்'] },
+  { canonical: 'Eachanari', aliases: ['eachanari', 'echanari', 'eachanari la', 'ஈச்சனாரி', 'ஈச்சனாரியில்'] },
+  { canonical: 'Malumichampatti', aliases: ['malumichampatti', 'malumichampatty', 'மலுமிச்சம்பட்டி'] },
+  { canonical: 'Madukkarai', aliases: ['madukkarai', 'madukari', 'மதுக்கரை'] },
+  { canonical: 'Pollachi', aliases: ['pollachi', 'pollachi road', 'பொள்ளாச்சி'] },
+  { canonical: 'Perur', aliases: ['perur', 'பேரூர்'] },
+  { canonical: 'Alandurai', aliases: ['alandurai', 'ஆலந்துறை'] },
+  { canonical: 'Thondamuthur', aliases: ['thondamuthur', 'தொண்டாமுத்தூர்'] },
+  { canonical: 'Kuniyamuthur', aliases: ['kuniyamuthur', 'குனியமுத்தூர்'] },
+  { canonical: 'Ukkadam', aliases: ['ukkadam', 'உக்கடம்'] },
+  { canonical: 'Townhall', aliases: ['townhall', 'town hall', 'டவுன்ஹால்'] },
+  { canonical: 'RS Puram', aliases: ['rs puram', 'r.s. puram', 'ஆர்.எஸ். புரம்'] },
+  { canonical: 'Race Course', aliases: ['race course', 'racecourse', 'ரேஸ் கோர்ஸ்'] },
+  { canonical: 'Sowripalayam', aliases: ['sowripalayam', 'சௌரிபாளையம்'] },
+  { canonical: 'Pappampatti', aliases: ['pappampatti', 'பாப்பம்பட்டி'] },
+  { canonical: 'Chettipalayam', aliases: ['chettipalayam', 'செட்டிபாளையம்'] },
+  { canonical: 'Podanur', aliases: ['podanur', 'போத்தனூர்'] },
+  { canonical: 'Vilankurichi', aliases: ['vilankurichi', 'விளாங்குறிச்சி'] },
+  { canonical: 'Chinniyampalayam', aliases: ['chinniyampalayam', 'சின்னியம்பாளையம்'] },
+  { canonical: 'Goldwins', aliases: ['goldwins', 'கோல்ட்வின்ஸ்'] },
+  { canonical: 'Civil Aerodrome', aliases: ['civil aerodrome', 'coimbatore airport', 'airport'] },
+  { canonical: 'KMCH', aliases: ['kmch', 'kovai medical center'] },
+  { canonical: 'Palladam', aliases: ['palladam', 'பல்லடம்'] },
   { canonical: 'Arasur', aliases: ['arasur', 'arasr', 'arasur la', 'அரசூர்', 'அரசூரில்', 'அரசூர்ல'] },
   { canonical: 'Kinathukadavu', aliases: ['kinathukadavu', 'kinathukadav', 'kinathukadavu la', 'கிணத்துக்கடவு', 'கிணத்துக்கடவில்', 'கிணத்துக்கடவுல'] },
   { canonical: 'Annur', aliases: ['annur', 'anur', 'annoor', 'anoor', 'annur la', 'அன்னூர்', 'அன்னூரில்', 'அன்னூர்ல'] },
@@ -84,6 +110,36 @@ export function matchLocationFuzzy(queryText) {
           return loc.canonical;
         }
       }
+    }
+  }
+
+  return null;
+}
+
+export function extractMentionedLocation(queryText) {
+  const fuzzy = matchLocationFuzzy(queryText);
+  if (fuzzy) return fuzzy;
+
+  if (!queryText) return null;
+  const cleanQ = String(queryText).toLowerCase().replace(/[^\w\s\u0B80-\u0BFF]/g, ' ').trim();
+
+  // Pattern 1: "<location> la" or "<location> le" or "<location> il" or "<location> kitta"
+  const laMatch = cleanQ.match(/\b([a-zA-Z\u0B80-\u0BFF]{3,20})\s+(?:la|le|lo|il|இல்|ல்|pakka|pakkathula|kitta|area|road)\b/i);
+  if (laMatch) {
+    const word = laMatch[1].toLowerCase();
+    const stopWords = ['ethana', 'enga', 'enna', 'oru', 'best', 'top', 'any', 'verified', 'good', 'low', 'budget', 'cheap', 'ella', 'unga', 'namma', 'site', 'plot', 'plots', 'villa', 'villas', 'house', 'houses', 'land', 'lands', 'show', 'give', 'tell', 'need', 'want'];
+    if (!stopWords.includes(word)) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
+    }
+  }
+
+  // Pattern 2: "in <location>" or "near <location>" or "at <location>"
+  const inMatch = cleanQ.match(/\b(?:in|near|at|around)\s+([a-zA-Z\u0B80-\u0BFF]{3,20})\b/i);
+  if (inMatch) {
+    const word = inMatch[1].toLowerCase();
+    const stopWords = ['the', 'this', 'that', 'our', 'my', 'your', 'a', 'an', 'coimbatore', 'budget', 'low', 'high', 'cheap', 'best', 'verified', 'dtcp', 'rera', 'total', 'all'];
+    if (!stopWords.includes(word)) {
+      return word.charAt(0).toUpperCase() + word.slice(1);
     }
   }
 
