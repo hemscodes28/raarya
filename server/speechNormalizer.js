@@ -74,3 +74,100 @@ export function normalizeSpeechText(rawText) {
 
   return text;
 }
+
+export function autoDetectAndFormatSpeech(rawText) {
+  if (!rawText || typeof rawText !== 'string') return '';
+  const normalized = normalizeSpeechText(rawText);
+  if (!normalized) return '';
+
+  // If already in Tamil Unicode script, return it directly
+  if (/[\u0B80-\u0BFF]/.test(normalized)) {
+    return normalized;
+  }
+
+  const lower = normalized.toLowerCase();
+
+  // Check for Tamil / Tanglish indicators
+  const isTanglish = Boolean(
+    lower.match(/\b(la|le|lo|il|kitta|pakka|irukka|venum|kaatunga|sollunga|edam|manai|nilam|veedu|ethana|vilai|vanakkam|nandri|eppadi|epdi|irukinga|kedaikuma|kulla|paakkanum|romba|unga|namma|kadi|siripu|solli|pesu)\b/i)
+  );
+
+  if (!isTanglish) {
+    // Keep in pure English!
+    return normalized;
+  }
+
+  // Convert Tanglish into clear Tamil text for display and matching!
+  let tamilText = normalized;
+
+  // Locations with optional locality suffix in Tamil
+  tamilText = tamilText.replace(/\bSinganallur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'சிங்காநல்லூர்ல');
+  tamilText = tamilText.replace(/\bSaravanampatti(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'சரவணம்பட்டில');
+  tamilText = tamilText.replace(/\bNeelambur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'நீலம்பூர்ல');
+  tamilText = tamilText.replace(/\bNellambur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'நீலம்பூர்ல');
+  tamilText = tamilText.replace(/\bAnnur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'அன்னூர்ல');
+  tamilText = tamilText.replace(/\bGandhipuram(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'காந்திபுரம்ல');
+  tamilText = tamilText.replace(/\bVadavalli(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'வடவள்ளில');
+  tamilText = tamilText.replace(/\bPeelamedu(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'பீளமேடுல');
+  tamilText = tamilText.replace(/\bSulur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'சூலூர்ல');
+  tamilText = tamilText.replace(/\bThudiyalur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'துடியலூர்ல');
+  tamilText = tamilText.replace(/\bKarumathampatti(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'கருமத்தம்பட்டில');
+  tamilText = tamilText.replace(/\bKovaipudur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'கோவைப்புதூர்ல');
+  tamilText = tamilText.replace(/\bMettupalayam(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'மேட்டுப்பாளையம்ல');
+  tamilText = tamilText.replace(/\bKinathukadavu(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'கிணத்துக்கடவுல');
+  tamilText = tamilText.replace(/\bSirumugai(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'சிறுமுகைல');
+  tamilText = tamilText.replace(/\bThekkalur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'தெக்கலூர்ல');
+  tamilText = tamilText.replace(/\bAvinashi(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'அவினாசில');
+  tamilText = tamilText.replace(/\bKaniyur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'கனியூர்ல');
+  tamilText = tamilText.replace(/\bKalapatti(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'காளப்பட்டில');
+  tamilText = tamilText.replace(/\bEachanari(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'ஈச்சனாரில');
+  tamilText = tamilText.replace(/\bIrugur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'இருகூர்ல');
+  tamilText = tamilText.replace(/\bVellalore(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'வெள்ளலூர்ல');
+  tamilText = tamilText.replace(/\bMalumichampatti(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'மலுமிச்சம்பட்டில');
+  tamilText = tamilText.replace(/\bMadukkarai(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'மதுக்கரைல');
+  tamilText = tamilText.replace(/\bPollachi(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'பொள்ளாச்சில');
+  tamilText = tamilText.replace(/\bPerur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'பேரூர்ல');
+  tamilText = tamilText.replace(/\bRS Puram(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'ஆர்.எஸ். புரம்ல');
+  tamilText = tamilText.replace(/\bRace Course(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'ரேஸ் கோர்ஸ்ல');
+  tamilText = tamilText.replace(/\bTownhall(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'டவுன்ஹால்ல');
+  tamilText = tamilText.replace(/\bUkkadam(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'உக்கடம்ல');
+  tamilText = tamilText.replace(/\bKurumbapalayam(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'குரும்பபாளையம்ல');
+  tamilText = tamilText.replace(/\bKittampalayam(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'கிட்டம்பாளையம்ல');
+  tamilText = tamilText.replace(/\bArasur(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'அரசூர்ல');
+  tamilText = tamilText.replace(/\bCoimbatore(?:\s*(?:la|le|lo|il|kitta|pakka))?\b/gi, 'கோயம்புத்தூர்ல');
+
+  // Clean up any double 'la' / 'le'
+  tamilText = tamilText.replace(/\b(?:la|le|lo|il)\b/gi, '');
+
+  // Property & Common words in Tamil
+  tamilText = tamilText.replace(/\bplots?\b/gi, 'பிளாட்ஸ்');
+  tamilText = tamilText.replace(/\bvillas?\b/gi, 'வில்லாக்கள்');
+  tamilText = tamilText.replace(/\bflats?|apartments?\b/gi, 'அபார்ட்மெண்ட்');
+  tamilText = tamilText.replace(/\bhouses?|homes?\b/gi, 'வீடு');
+  tamilText = tamilText.replace(/\bveedu\b/gi, 'வீடு');
+  tamilText = tamilText.replace(/\bmanai\b/gi, 'மனை');
+  tamilText = tamilText.replace(/\bnilam\b/gi, 'நிலம்');
+  tamilText = tamilText.replace(/\bedam\b/gi, 'இடம்');
+  tamilText = tamilText.replace(/\bethana\b/gi, 'எத்தனை');
+  tamilText = tamilText.replace(/\birukka\b/gi, 'இருக்கா');
+  tamilText = tamilText.replace(/\bvenum\b/gi, 'வேணும்');
+  tamilText = tamilText.replace(/\bkaatunga\b/gi, 'காட்டுங்க');
+  tamilText = tamilText.replace(/\bsollunga\b/gi, 'சொல்லுங்க');
+  tamilText = tamilText.replace(/\bvanakkam\b/gi, 'வணக்கம்');
+  tamilText = tamilText.replace(/\bnandri\b/gi, 'நன்றி');
+  tamilText = tamilText.replace(/\beppadi\b/gi, 'எப்படி');
+  tamilText = tamilText.replace(/\birukinga\b/gi, 'இருக்கீங்க');
+  tamilText = tamilText.replace(/\bkedaikuma\b/gi, 'கிடைக்குமா');
+  tamilText = tamilText.replace(/\bkulla\b/gi, 'குள்ள');
+  tamilText = tamilText.replace(/\bpaakkanum\b/gi, 'பார்க்கணும்');
+  tamilText = tamilText.replace(/\bromba\b/gi, 'ரொம்ப');
+  tamilText = tamilText.replace(/\bjoke\b/gi, 'ஜோக்');
+  tamilText = tamilText.replace(/\bsiripu\b/gi, 'சிரிப்பு');
+  tamilText = tamilText.replace(/\bbest\b/gi, 'சிறந்த');
+  tamilText = tamilText.replace(/\btop\b/gi, 'டாப்');
+  tamilText = tamilText.replace(/\bbro\b/gi, 'ப்ரோ');
+  tamilText = tamilText.replace(/\bunga\b/gi, 'உங்க');
+  tamilText = tamilText.replace(/\bnamma\b/gi, 'நம்ம');
+
+  return tamilText.trim().replace(/\s+/g, ' ');
+}

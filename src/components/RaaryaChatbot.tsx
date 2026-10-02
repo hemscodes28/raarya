@@ -24,7 +24,7 @@ import { apiChat } from '../utils/api';
 import { PROPERTIES, PropertyListing } from '../constants';
 import { PropertyCard } from './PropertyCard';
 import { PropertyDetailModal } from './PropertyDetailModal';
-import { normalizeSpeechText } from '../utils/speechNormalizer';
+import { normalizeSpeechText, autoDetectAndFormatSpeech } from '../utils/speechNormalizer';
 import { matchLocationFuzzy } from '../utils/fuzzyMatcher';
 
 interface RaaryaChatbotProps {
@@ -216,11 +216,11 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       recognition.continuous = false;
       recognition.interimResults = true;
       recognition.maxAlternatives = 5;
-      recognition.lang = 'ta-IN'; // Native auto-detecting Tamil & multi-lingual speech model
+      recognition.lang = 'en-IN'; // Multi-lingual Indian acoustic engine for English, Tamil & Tanglish
 
       recognition.onstart = () => {
         setIsListening(true);
-        setVoiceNotice('🎙️ Auto-Detecting... சாதாரணமாக பேசுங்கள் (Speak naturally)');
+        setVoiceNotice('🎙️ Auto-Detecting... Speak in English, Tamil, or Tanglish');
       };
 
       recognition.onresult = (event: any) => {
@@ -236,7 +236,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
             const normalizedAlt = normalizeSpeechText(alt);
             if (
               matchLocationFuzzy(normalizedAlt) ||
-              /\b(plots?|villas?|flats?|lands?|houses?|bhk|dtcp|rera|emi|loan|irukka|venum|kaatunga|sollunga)\b/i.test(normalizedAlt)
+              /\b(plots?|villas?|flats?|lands?|houses?|bhk|dtcp|rera|emi|loan|irukka|venum|kaatunga|sollunga|manai|nilam|edam|veedu)\b/i.test(normalizedAlt)
             ) {
               bestCandidate = alt;
               break;
@@ -246,8 +246,8 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
         }
 
         if (transcript) {
-          const normalized = normalizeSpeechText(transcript);
-          setInputValue(normalized);
+          const formatted = autoDetectAndFormatSpeech(transcript);
+          setInputValue(formatted);
           adjustTextareaHeight(activeTextareaRef.current || freshTextareaRef.current);
         }
       };
