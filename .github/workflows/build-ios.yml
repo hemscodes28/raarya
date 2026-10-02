@@ -26,29 +26,33 @@ jobs:
           npm run build
           npx cap sync ios
 
-      - name: Build iOS Archive and Package IPA
+      - name: Build iOS App and Package IPA
         run: |
           cd ios/App
           xcodebuild \
             -project App.xcodeproj \
             -scheme App \
             -configuration Release \
-            -destination "generic/platform=iOS" \
-            -archivePath ./build/App.xcarchive \
+            -sdk iphoneos \
+            -derivedDataPath ./build \
             CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="" \
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
-            archive
+            CODE_SIGN_ENTITLEMENTS="" \
+            PROVISIONING_PROFILE_SPECIFIER="" \
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            build
+
+          APP_PATH=$(find ./build -name "*.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            echo "Error: .app file not found in build directory!"
+            exit 1
+          fi
+          echo "Found app at: $APP_PATH"
 
           mkdir -p Payload
-          APP_DIR=$(find ./build/App.xcarchive/Products/Applications -name "*.app" | head -n 1)
-          if [ -z "$APP_DIR" ]; then
-            APP_DIR=$(find ./build -name "*.app" | head -n 1)
-          fi
-          
-          echo "Found app bundle at: $APP_DIR"
-          cp -r "$APP_DIR" Payload/
+          cp -r "$APP_PATH" Payload/
           zip -r RaaryaProperties.ipa Payload/
 
       - name: Upload IPA Artifact
