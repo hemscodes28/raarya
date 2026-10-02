@@ -68,26 +68,36 @@ Agent: ${p.agentName || 'Rajkumar'} (${p.agentPhone || '9787255522'})
         retrievedWebsite.map(w => `[${w.title} (${w.category})]:\n${w.content}`).join('\n\n');
     }
 
-    return `You are Raarya AI, a highly intelligent, empathetic, and communicative AI conversational assistant (powered by state-of-the-art LLM intelligence, just like ChatGPT) representing Raarya Properties / Raarya Groups in Coimbatore, Tamil Nadu.
+    return `You are Raarya AI, an exceptionally intelligent, multilingual, and empathetic conversational assistant (powered by state-of-the-art LLM intelligence, just like ChatGPT) representing Raarya Properties / Raarya Groups in Coimbatore, Tamil Nadu.
 
-CORE BEHAVIOR & CONVERSATIONAL PRINCIPLES:
-1. **NATURAL & COMMUNICATIVE (Like ChatGPT)**:
-   - When the user engages in normal conversation, greetings ("how are you", "hello", "who created you", "tell me a joke", "what is your purpose", "how was your day?"), respond naturally, warmly, smartly, and conversationally.
-   - When the user asks general questions, real estate market questions, advice ("difference between DTCP and RERA", "guidance on home loan EMIs", "best investment zones in Coimbatore", "overview of Saravanampatti or Annur"), provide comprehensive, articulate, structured, and insightful answers.
-   - Do NOT force property cards or dump random property listings when the user is simply chatting or asking a non-search question! Set \`"propertyIds": []\` for conversational/general questions.
+CORE MULTILINGUAL INTELLIGENCE (CRITICAL):
+You have native mastery of THREE communication modes:
+1. **Tamil (தமிழ் Script)**:
+   - If the user asks in Tamil (e.g., "வணக்கம்", "சரவணம்பட்டியில் பிளாட் இருக்கா?", "DTCP மற்றும் RERA வித்தியாசம் என்ன?", "ஒரு ஜோக் சொல்லு"):
+   - Reply in pure, respectful, fluent Tamil script (e.g., "வணக்கம்! நான் ரார்யா AI. கோவையில் உங்கள் கனவு இல்லம் அல்லது பிளாட் தேர்ந்தெடுக்க நான் உதவுகிறேன்...").
+2. **Tanglish (Tamil typed in English / Roman Script)**:
+   - If the user queries in Tanglish (e.g., "Vanakkam bro", "Saravanampatti la plots irukka?", "Eppadi irukinga?", "Annur la 30 lakhs kulla villas kaatunga", "Oru siripaana joke sollu"):
+   - Reply in natural, friendly, fluent Tanglish (e.g., "Vanakkam! Naan romba nalla irukken! Raarya-la ungalukku eppadi help pannattum? Saravanampatti-la top DTCP approved plots list kizhaye kaatren paarunga!").
+3. **English**:
+   - If the user queries in English, reply in articulate, professional, and engaging English.
 
-2. **PROPERTY SEARCH & LISTINGS**:
-   - When the user explicitly searches for properties, plots, villas, flats, lands, locations, budgets, or bedrooms (and retrieved records are provided below):
-     - Give a friendly summary of matching options, highlight key features (title, price, location, approvals, size), and include their exact IDs in the \`"propertyIds"\` array so the interactive property cards render.
-   - If the user asks for properties and NO matching records are in the database, politely explain that no exact match is available in inventory and offer helpful alternatives (e.g. relaxing budget or nearby areas).
+CONVERSATIONAL BEHAVIOR (Like ChatGPT):
+1. **Natural Chat & Chit-Chat**:
+   - Greetings, jokes, identity questions ("who created you", "how are you", "joke sollu", "eppadi irukinga", "vanakkam"): Respond naturally and delightfully.
+   - Do NOT attach property listings for casual chat! Keep \`"propertyIds": []\`.
+2. **Real Estate Advice & Knowledge**:
+   - For queries on DTCP vs RERA, guideline values, loan EMIs, legal verification, or Coimbatore neighborhood insights: provide structured, comprehensive, and helpful answers in the user's chosen language.
+3. **Property Search**:
+   - When searching for plots, villas, lands, flats, budget, or locations (e.g., Saravanampatti, Annur, Singanallur, Karumathampatti, Mettupalayam, Avinashi):
+   - Summarize the best matches in the chosen language and output their IDs in \`"propertyIds"\` so visual cards render.
+   - If no properties match, explain politely in their language and recommend nearby Coimbatore corridors.
 
-3. **RESPONSE FORMAT**:
-   Always reply in valid, clean JSON with this exact schema:
+RESPONSE FORMAT (Strict JSON):
 {
   "intent": "GENERAL_CONVERSATION | PROPERTY_SEARCH | ADVICE | WEBSITE_QUERY",
-  "message": "Your fluent, well-formatted markdown message to display to the user.",
+  "message": "Your fluent markdown response in the matching language (Tamil, Tanglish, or English).",
   "filters": {},
-  "propertyIds": ["prop-1", "prop-2"], // ONLY populate when presenting actual matching property listings. For casual talk, chit-chat, or general advice, keep this empty []
+  "propertyIds": ["prop-1", "prop-2"], // ONLY when returning actual matching property cards
   "sources": ["gemini_ai"]
 }
 
@@ -199,23 +209,51 @@ ${webContext ? '\n' + webContext : ''}
 
   generateOfflineFallbackResponse(userMessage, retrievedProperties, retrievedWebsite, intent, filters) {
     const q = (userMessage || '').toLowerCase().trim();
-    const cleanQ = q.replace(/[^\w\s]/g, '').trim();
+    const cleanQ = q.replace(/[^\w\s\u0B80-\u0BFF]/g, '').trim();
 
-    // 1. Check for casual conversation / greetings
-    const isCasual = (
+    // Detect language mode
+    const isTamilScript = /[\u0B80-\u0BFF]/.test(userMessage);
+    const isTanglish = (
+      cleanQ.includes('vanakkam') || cleanQ.includes('eppadi') || cleanQ.includes('nalama') ||
+      cleanQ.includes('irukka') || cleanQ.includes('venum') || cleanQ.includes('kaatunga') ||
+      cleanQ.includes('sollunga') || cleanQ.includes('vilai') || cleanQ.includes('edam') ||
+      cleanQ.includes('nandri') || cleanQ.includes('pathi') || cleanQ.includes('kadhai') ||
+      cleanQ.includes('siripu') || cleanQ.includes('kadi')
+    );
+
+    // 1. Check for casual conversation / greetings / jokes
+    const isJoke = cleanQ.includes('joke') || cleanQ.includes('kadi') || cleanQ.includes('siripu') || cleanQ.includes('ஜோக்') || cleanQ.includes('கதை');
+    const isGreeting = (
       cleanQ.includes('how are you') || cleanQ.includes('how r u') ||
       cleanQ.includes('who are you') || cleanQ.includes('what can you do') ||
       cleanQ === 'hi' || cleanQ === 'hello' || cleanQ === 'hey' || cleanQ === 'namaste' ||
-      cleanQ.includes('joke') || cleanQ.includes('help')
+      cleanQ.includes('vanakkam') || cleanQ.includes('வணக்கம்') || cleanQ.includes('eppadi') || cleanQ.includes('nalama') ||
+      isJoke
     );
 
-    if (isCasual || intent === 'GENERAL_CONVERSATION' || intent === 'GREETING' || intent === 'LOCAL_CONVERSATION') {
+    if (isGreeting || intent === 'GENERAL_CONVERSATION' || intent === 'GREETING' || intent === 'LOCAL_CONVERSATION') {
       let message = "Hello! 👋 I'm doing great, thank you! I am **Raarya AI**, your intelligent assistant for all real estate inquiries in Coimbatore. How can I help you today?";
-      if (cleanQ.includes('joke')) {
-        message = "Why do real estate agents make great friends? Because they always know how to find the right space for you! 😄 How can I assist you with your property plans today?";
-      } else if (cleanQ.includes('who are you') || cleanQ.includes('what can you do')) {
-        message = "I am **Raarya AI**, an intelligent conversational assistant. You can chat with me naturally about:\n- 📍 **DTCP & RERA Approved Plots & Villas** in Coimbatore (Saravanampatti, Annur, etc.)\n- 💰 **Home Loan EMI Calculations & Eligibility**\n- 📜 **Real Estate Regulations & Advice**\n- 🏢 **Company Information & Careers at Raarya**\n\nWhat would you like to explore today?";
+      
+      if (isTamilScript) {
+        if (isJoke) {
+          message = "ஏன் ரியல் எஸ்டேட் ஏஜென்ட்க்கு எப்பவும் நண்பர்கள் அதிகம்? \n\nஏன்னா அவங்களுக்கு மட்டும்தான் உங்க வாழ்க்கைக்கு சரியான இடத்தை (space) எப்படி அமைத்துக் கொடுப்பது என்று தெரியும்! 😄🏠\n\nகோவையில் உங்களுக்கு தேவையான பிளாட் அல்லது வில்லா பற்றி பேசலாமா?";
+        } else {
+          message = "வணக்கம்! 🙏 நான் **ரார்யா AI (Raarya AI)**. கோவையில் உள்ள சிறந்த DTCP & RERA அங்கீகரிக்கப்பட்ட பிளாட்டுகள், வில்லாக்கள், மற்றும் மனை முதலீடு பற்றிய அனைத்து தகவல்களையும் தெரிந்துகொள்ள நான் உங்களுக்கு உதவுகிறேன். \n\nஇன்று உங்களுக்கு எவ்வாறு உதவட்டும்?";
+        }
+      } else if (isTanglish) {
+        if (isJoke) {
+          message = "Oru real estate agent-ku yen friends adhigam theriyuma? \n\nBecause avangalukku dhaan unga life-ku correct-aana space epdi arrange pannanum-nu theriyum! 😄🏠\n\nCoimbatore-la plots or villas pathi edhavadhu therinjikka venuma bro?";
+        } else {
+          message = "Vanakkam! 🙏 Naan romba nalla irukken! Naan dhaan **Raarya AI**. \n\nCoimbatore-la Saravanampatti, Annur, Singanallur matrum Avinashi Road-la irukkira top DTCP/RERA plots, villas & loan EMI calculation pathi ungalukku help panna naan ready! \n\nUngalukku enna details venum bro?";
+        }
+      } else {
+        if (isJoke) {
+          message = "Why do real estate agents make great friends? Because they always know how to find the right space for you! 😄 How can I assist you with your property plans today?";
+        } else if (cleanQ.includes('who are you') || cleanQ.includes('what can you do')) {
+          message = "I am **Raarya AI**, an intelligent conversational assistant. You can chat with me naturally in **English, Tamil (தமிழ்), or Tanglish** about:\n- 📍 **DTCP & RERA Approved Plots & Villas** in Coimbatore (Saravanampatti, Annur, etc.)\n- 💰 **Home Loan EMI Calculations & Eligibility**\n- 📜 **Real Estate Regulations & Advice**\n- 🏢 **Company Information & Careers at Raarya**\n\nWhat would you like to explore today?";
+        }
       }
+
       return {
         success: true,
         intent: 'GENERAL_CONVERSATION',
@@ -228,11 +266,18 @@ ${webContext ? '\n' + webContext : ''}
 
     // 2. If properties are found and user asked for properties
     if (retrievedProperties && retrievedProperties.length > 0) {
+      let leadMsg = `Here are verified properties matching your query in Coimbatore:`;
+      if (isTamilScript) {
+        leadMsg = `நீங்கள் கேட்ட இடத்திற்கு ஏற்ற சரிபார்க்கப்பட்ட சிறந்த சொத்துக்கள் இதோ:`;
+      } else if (isTanglish) {
+        leadMsg = `Neenga keta area-la irukkira top verified properties list idho paarunga:`;
+      }
+
       const summaryList = retrievedProperties.slice(0, 5).map((p, i) => `${i + 1}. **${p.title}** — ₹${p.price || 'Contact for price'} | ${p.location}`).join('\n');
       return {
         success: true,
         intent: intent || 'PROPERTY_SEARCH',
-        message: `Here are verified properties matching your query in Coimbatore:\n\n${summaryList}\n\nExplore the interactive property cards below for complete details, images, and to book a free site visit.`,
+        message: `${leadMsg}\n\n${summaryList}\n\n${isTamilScript ? 'முழு விவரங்கள் மற்றும் புகைப்படங்களை கீழே உள்ள கார்டுகளில் பார்க்கலாம்.' : isTanglish ? 'Complete details & photos kizhaye irukkira interactive cards-la paarkalam.' : 'Explore the interactive property cards below for complete details, images, and to book a free site visit.'}`,
         filters: filters,
         propertyIds: retrievedProperties.map(p => p.id),
         sources: ['property_data']

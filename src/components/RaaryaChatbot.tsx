@@ -73,11 +73,11 @@ const PROMPT_CARDS = [
 
 const QUICK_CHIPS = [
   { label: '📍 Saravanampatti Plots', prompt: 'Show plots in Saravanampatti' },
-  { label: '🏡 Annur Villas & Land', prompt: 'Show properties in Annur' },
-  { label: '💰 Home Loan EMI Calc', prompt: 'Calculate home loan EMI' },
-  { label: '🏬 Ganapathy Layouts', prompt: 'Plots for sale in Ganapathy' },
-  { label: '📜 DTCP & RERA Approved', prompt: 'DTCP approved layout plots' },
-  { label: '💼 Raarya Careers', prompt: 'Jobs at Raarya Groups' }
+  { label: '🏡 Annur Villas', prompt: 'Annur la villas irukka' },
+  { label: '🗣️ Vanakkam / வணக்கம்', prompt: 'Vanakkam bro, ungaloda top DTCP plots kaatunga' },
+  { label: '💰 Home Loan EMI', prompt: 'Calculate home loan EMI for 35 lakhs' },
+  { label: '📜 DTCP vs RERA', prompt: 'DTCP and RERA difference enna?' },
+  { label: '😄 Oru Joke Sollu', prompt: 'Oru siripaana joke sollu' }
 ];
 
 const CRISPY_QUOTES = [
@@ -120,6 +120,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
   const [selectedPropertyModal, setSelectedPropertyModal] = useState<PropertyListing | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
+  const [voiceLang, setVoiceLang] = useState<'en-IN' | 'ta-IN'>('en-IN');
   const sessionIdRef = useRef<string>('sess_' + Math.random().toString(36).substring(2, 10));
   const recognitionRef = useRef<any>(null);
   const [currentQuote, setCurrentQuote] = useState(() => 
@@ -213,11 +214,15 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = true;
-      recognition.lang = 'en-IN'; // Indian English pronunciation & vocabulary
+      recognition.lang = voiceLang; // 'en-IN' (English & Tanglish) or 'ta-IN' (Pure Tamil)
 
       recognition.onstart = () => {
         setIsListening(true);
-        setVoiceNotice('🎙️ Listening... Speak your property query clearly.');
+        if (voiceLang === 'ta-IN') {
+          setVoiceNotice('🎙️ கேட்கிறேன்... தமிழில் பேசுங்கள் (Listening in Tamil...)');
+        } else {
+          setVoiceNotice('🎙️ Listening... Speak your query in English or Tanglish.');
+        }
       };
 
       recognition.onresult = (event: any) => {
@@ -245,7 +250,11 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
 
       recognition.onend = () => {
         setIsListening(false);
-        setVoiceNotice('✅ Query captured! Review your message and press Enter or Send.');
+        if (voiceLang === 'ta-IN') {
+          setVoiceNotice('✅ தமிழில் பதிவு செய்யப்பட்டது! Press Enter or Send.');
+        } else {
+          setVoiceNotice('✅ Query captured! Review your message and press Enter or Send.');
+        }
         setTimeout(() => setVoiceNotice(null), 3500);
       };
 
@@ -596,6 +605,34 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                           <Sparkles className="w-3.5 h-3.5 text-[#D97757] animate-spin-slow" />
                           Chat
                         </span>
+
+                        {/* Language Selector Switch */}
+                        <div className="flex items-center bg-[#EAE6DF] p-0.5 rounded-lg border border-[#D5D0C5] text-[11px] font-semibold select-none">
+                          <button
+                            type="button"
+                            onClick={() => setVoiceLang('en-IN')}
+                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                              voiceLang === 'en-IN'
+                                ? 'bg-[#D97757] text-white shadow-2xs'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="English & Tanglish (தமிழ் in English words)"
+                          >
+                            EN / Tanglish
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setVoiceLang('ta-IN')}
+                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                              voiceLang === 'ta-IN'
+                                ? 'bg-[#D97757] text-white shadow-2xs'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="Tamil (தமிழ் எழுத்துக்கள்)"
+                          >
+                            தமிழ்
+                          </button>
+                        </div>
                       </div>
 
                       <div className="flex items-center gap-2 sm:gap-2.5">
@@ -925,10 +962,40 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                     )}
 
                     <div className="flex items-center justify-between pt-1 border-t border-[#E8E4DC]">
-                      <span className="text-[10.5px] sm:text-[11px] text-[#4A463F] font-semibold flex items-center gap-1.5 select-none">
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                        Raarya Verified Database • DTCP Approved Listings
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-[10.5px] sm:text-[11px] text-[#4A463F] font-semibold hidden md:flex items-center gap-1.5 select-none">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                          Raarya Verified Database
+                        </span>
+
+                        {/* Language Selector Switch */}
+                        <div className="flex items-center bg-[#EAE6DF] p-0.5 rounded-lg border border-[#D5D0C5] text-[11px] font-semibold select-none">
+                          <button
+                            type="button"
+                            onClick={() => setVoiceLang('en-IN')}
+                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                              voiceLang === 'en-IN'
+                                ? 'bg-[#D97757] text-white shadow-2xs'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="English & Tanglish (தமிழ் in English words)"
+                          >
+                            EN / Tanglish
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setVoiceLang('ta-IN')}
+                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
+                              voiceLang === 'ta-IN'
+                                ? 'bg-[#D97757] text-white shadow-2xs'
+                                : 'text-[#4A463F] hover:text-[#D97757]'
+                            }`}
+                            title="Tamil (தமிழ் எழுத்துக்கள்)"
+                          >
+                            தமிழ்
+                          </button>
+                        </div>
+                      </div>
 
                       <div className="flex items-center gap-2">
                         {/* Voice Assistant Mic Button */}

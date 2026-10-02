@@ -75,31 +75,36 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
 
   // 1. ACKNOWLEDGEMENTS, THANKS, GREETINGS, CASUAL CHAT & GOODBYE
   const isGreeting = (
-    /^(h+e+l+o+|h+i+|h+e+y+|namaste|good\s*(morning|afternoon|evening|day)|greetings|howdy|hii+|helloo+)(\s+(raarya|ai|bot|assistant|groups|properties|there|team|sir|madam))*$/i.test(cleanQ) ||
-    (cleanQ === 'hi' || cleanQ === 'hello' || cleanQ === 'helo' || cleanQ === 'hey' || cleanQ === 'hii' || cleanQ === 'helloo')
+    /^(h+e+l+o+|h+i+|h+e+y+|namaste|good\s*(morning|afternoon|evening|day)|greetings|howdy|hii+|helloo+|vanakkam|namaskaram|வணக்கம்)(\s+(raarya|ai|bot|assistant|groups|properties|there|team|sir|madam|bro))*$/i.test(cleanQ) ||
+    (cleanQ === 'hi' || cleanQ === 'hello' || cleanQ === 'helo' || cleanQ === 'hey' || cleanQ === 'hii' || cleanQ === 'helloo' || cleanQ === 'vanakkam' || cleanQ === 'வணக்கம்' || cleanQ.startsWith('vanakkam') || cleanQ.startsWith('வணக்கம்'))
   );
 
   const isCasualChat = (
-    /^(how\s*(are|r)\s*(you|u)|how\s*is\s*it\s*going|what'?s\s*up|how\s*do\s*you\s*do|how\s*are\s*things|hows\s*life|what\s*are\s*you\s*doing|are\s*you\s*there|you\s*there|can\s*we\s*talk|can\s*we\s*chat|talk\s*to\s*me|tell\s*me\s*something|tell\s*me\s*a\s*joke|joke|funny|who\s*are\s*you|what\s*is\s*your\s*name|who\s*made\s*you|who\s*created\s*you)$/i.test(cleanQ) ||
+    /^(how\s*(are|r)\s*(you|u)|how\s*is\s*it\s*going|what'?s\s*up|how\s*do\s*you\s*do|how\s*are\s*things|hows\s*life|what\s*are\s*you\s*doing|are\s*you\s*there|you\s*there|can\s*we\s*talk|can\s*we\s*chat|talk\s*to\s*me|tell\s*me\s*something|tell\s*me\s*a\s*joke|joke|funny|who\s*are\s*you|what\s*is\s*your\s*name|who\s*made\s*you|who\s*created\s*you|eppadi\s*irukinga|eppadi\s*irukeenga|nalama|nalla\s*irukingala|joke\s*sollu|kadi\s*joke|siripu|கதை\s*சொல்லு|ஜோக்\s*சொல்லு)$/i.test(cleanQ) ||
     cleanQ.includes('how are you') || cleanQ.includes('how r u') || cleanQ.includes('how are u') || cleanQ.includes('how are you doing') ||
     cleanQ.includes('tell me a joke') || cleanQ.includes('who are you') || cleanQ.includes('what can you do') ||
     cleanQ.includes('who made you') || cleanQ.includes('tell me about yourself') || cleanQ.includes('what is your name') ||
-    cleanQ.includes('are you an ai') || cleanQ.includes('are you ai') || cleanQ.includes('are you a robot')
+    cleanQ.includes('are you an ai') || cleanQ.includes('are you ai') || cleanQ.includes('are you a robot') ||
+    cleanQ.includes('eppadi irukinga') || cleanQ.includes('eppadi irukeenga') || cleanQ.includes('nalama') || cleanQ.includes('nalla irukingala') ||
+    cleanQ.includes('joke sollu') || cleanQ.includes('kadi joke') || cleanQ.includes('siripu') || cleanQ.includes('ஜோக்') || cleanQ.includes('கதை')
   );
 
   const isHelp = (
     cleanQ.includes('who are you') ||
     cleanQ.includes('what can you do') ||
     cleanQ.includes('who created you') ||
+    cleanQ.includes('yaar nee') ||
+    cleanQ.includes('unna yaar create pannadhu') ||
     cleanQ === 'help' ||
     cleanQ === 'capabilities'
   );
 
   const isAcknowledgement = (
-    /^(thanks|thank\s*you|thanku|thx|ty|great|awesome|cool|ok|okay|bye|goodbye|see\s*you|nice|good|ohh?\s*ok|ohh?\s*okay|got\s*it|understood|sounds\s*good|perfect|that'?s\s*nice|interesting|wow|ohh?\s*its\s*nice|ohh?\s*it'?s\s*nice)$/i.test(cleanQ) ||
+    /^(thanks|thank\s*you|thanku|thx|ty|great|awesome|cool|ok|okay|bye|goodbye|see\s*you|nice|good|ohh?\s*ok|ohh?\s*okay|got\s*it|understood|sounds\s*good|perfect|that'?s\s*nice|interesting|wow|ohh?\s*its\s*nice|ohh?\s*it'?s\s*nice|nandri|mikka\s*nandri|romba\s*nandri|seri\s*bro|ok\s*bro|super\s*bro|நன்றி)$/i.test(cleanQ) ||
     cleanQ === 'thanks' || cleanQ === 'thank you' || cleanQ === 'thanku' || cleanQ === 'ok' || cleanQ === 'okay' ||
     cleanQ === 'ohh ok' || cleanQ === 'oh ok' || cleanQ === 'ohh okay' || cleanQ === 'oh okay' ||
-    cleanQ === 'ohh its nice' || cleanQ === 'oh its nice' || cleanQ === 'nice' || cleanQ === 'good' || cleanQ === 'great' || cleanQ === 'awesome'
+    cleanQ === 'ohh its nice' || cleanQ === 'oh its nice' || cleanQ === 'nice' || cleanQ === 'good' || cleanQ === 'great' || cleanQ === 'awesome' ||
+    cleanQ === 'nandri' || cleanQ === 'நன்றி' || cleanQ === 'seri bro' || cleanQ === 'ok bro' || cleanQ === 'super bro'
   );
 
   const hasSearchKeyword = Boolean(
