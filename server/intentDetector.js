@@ -598,7 +598,7 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
   }
 
   // Property Type (Typo-Tolerant & Multi-Lingual)
-  if (/app+art?m[ea]nt?s?|flats?|flts?|அபார்ட்மெண்ட்/i.test(q)) propertyType = 'APARTMENT';
+  if (/ap+ar?t?m[ea]nt?s?|flats?|flts?|அபார்ட்மெண்ட்/i.test(q)) propertyType = 'APARTMENT';
   else if (/vil+as?|villah?s?|bungalows?|வில்லா/i.test(q)) propertyType = 'VILLA';
   else if (/pl[oa]+ts?|lands?|layouts?|cents?|sites?|edam|manai|nilam|பிளாட்ஸ்?|பிளாட்|மனை|நிலம்|இடம்|சென்ட்/i.test(q)) propertyType = 'PLOT';
   else if (/hous?e?s?|homes?|individual\s*house|independent\s*house|veedu|வீடு/i.test(q) && !q.includes('home loan')) propertyType = 'HOUSE';

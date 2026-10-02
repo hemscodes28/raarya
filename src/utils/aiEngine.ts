@@ -237,79 +237,39 @@ export function generateAiResponseObject(userQuery: string): AiResponseObject {
 - 🏡 **Verified Plots & Villas**: Prime corridors including Saravanampatti, Annur, Mettupalayam Road, Ganapathy, Singanallur, and Avinashi Road.
 - 📋 **Free Property Listings**: Sell or lease your land, villa, or commercial space to verified buyers.
 - 💰 **Home Loan Facilitation**: Up to 90% funding with partner banks (SBI, HDFC, ICICI, Axis Bank) starting at 8.5% interest.
-- 🚗 **Assisted Site Visits**: Free accompanied site visits with transparent legal document verification.
+- 🚗 **Assisted Site Visits**: Free accompanied site visits with transparent legal documentation support.
 
-📍 **Head Office**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037.
-📞 **Phone**: **+91 90872 40400** | ✉️ **Email**: **raaryagroupsinfo@gmail.com**`,
+**Head Office**: 2D, A-Block, Ram Apartment, Avinashi Road, Lakshmi Mills Junction, Coimbatore - 641037.
+📞 **Helpline**: +91 90872 40400 | 🌐 [Visit raaryaproperties.com](https://raaryaproperties.com)`,
       properties: [],
       type: 'text',
-      intent: 'company_info'
+      intent: 'about'
     };
   }
 
-  // ─── 7. EMI & LOAN CALCULATION ───────────────────────────────────────────────
-  if (
-    query.includes('emi') || query.includes('loan') || query.includes('interest') ||
-    query.includes('calculate') || query.includes('finance') || query.includes('eligibility') ||
-    query.includes('eligible') || query.includes('mortgage')
-  ) {
-    let amount = 3500000; // default 35 Lakhs
-    const lakhMatch = query.match(/(\d+(?:\.\d+)?)\s*(?:lakh|lac|lakhs|l)/i);
-    const croreMatch = query.match(/(\d+(?:\.\d+)?)\s*(?:crore|cr)/i);
-    const rawNumberMatch = query.match(/(\d{6,8})/);
-
-    if (croreMatch) {
-      amount = parseFloat(croreMatch[1]) * 10000000;
-    } else if (lakhMatch) {
-      amount = parseFloat(lakhMatch[1]) * 100000;
-    } else if (rawNumberMatch) {
-      amount = parseInt(rawNumberMatch[1], 10);
-    }
-
-    const ratePerYear = 8.5; // 8.5% interest rate p.a.
-    const tenureYears = 20; // 20 years
-    const monthlyRate = ratePerYear / (12 * 100);
-    const totalMonths = tenureYears * 12;
-
-    const emi = Math.round(
-      (amount * monthlyRate * Math.pow(1 + monthlyRate, totalMonths)) /
-        (Math.pow(1 + monthlyRate, totalMonths) - 1)
-    );
-    const totalPayment = emi * totalMonths;
-    const totalInterest = totalPayment - amount;
-
-    const formattedAmount = (amount / 100000).toLocaleString('en-IN') + ' Lakhs';
-    const formattedEmi = emi.toLocaleString('en-IN');
-    const formattedInterest = Math.round(totalInterest / 100000).toLocaleString('en-IN') + ' Lakhs';
-
+  // ─── 7. SELL / LIST PROPERTY ────────────────────────────────────────────────
+  if (query.includes('sell') || (query.includes('list') && (query.includes('property') || query.includes('land') || query.includes('plot') || query.includes('my') || query.includes('post')))) {
     return {
-      message: `📊 **Home Loan Eligibility & EMI Estimate**
+      message: `### 📢 Sell or Post Your Property with Raarya
+Looking to sell or rent your plot, house, or land in Coimbatore?
 
-Here is the loan calculation for **₹${formattedAmount}**:
+**Why List with Raarya?**
+- 🚀 **Direct Verified Buyers**: Reach thousands of genuine, pre-qualified property buyers across Coimbatore.
+- 🆓 **Zero Listing Fees**: Free basic listing submission.
+- 📞 **Dedicated Lead Management**: Our field agents handle site visits and negotiation.
 
-- **Loan Amount**: ₹${amount.toLocaleString('en-IN')}
-- **Interest Rate**: 8.5% p.a. (Estimated)
-- **Tenure**: ${tenureYears} Years (${totalMonths} Months)
-- **Monthly EMI**: **₹${formattedEmi} / month**
-- **Total Interest Payable**: ₹${formattedInterest}
-
-💡 **Bank Assistance**:
-- Up to **90% bank funding** available for DTCP & RERA approved plots and villas.
-- Partnered with SBI, HDFC, ICICI, and Axis Bank with quick approval.
-
-[Open Full Interactive EMI Calculator →](#emi-calculator)`,
+👉 [Click here to Post Your Property Free](#post-property) or contact **Mr. Rajkumar** at **+91 90872 40400**.`,
       properties: [],
       type: 'text',
-      intent: 'emi_calc'
+      intent: 'list_property'
     };
   }
 
-  // ─── 8. CAREERS & JOBS ───────────────────────────────────────────────────────
-  if (query.includes('career') || query.includes('job') || query.includes('hiring') || query.includes('vacancy') || query.includes('work with us')) {
+  // ─── 8. CAREERS / HIRING ───────────────────────────────────────────────────
+  if (query.includes('career') || query.includes('job') || query.includes('hiring') || query.includes('vacancy') || query.includes('apply')) {
     return {
-      message: `💼 **Careers at Raarya Groups**
-
-We are hiring talented professionals across Coimbatore:
+      message: `### 💼 Careers at Raarya Groups
+We are constantly looking for passionate, driven real estate professionals across Coimbatore:
 1. **Real Estate Sales Executive** (DTCP layout plots & villa sales)
 2. **Digital Marketing & Lead Specialist**
 3. **Property Verification & Legal Assistant**

@@ -153,10 +153,18 @@ export class LocalPropertyRepository {
     const descLower = (p.description || '').toLowerCase();
     const fullText = `${titleLower} ${subTypeLower} ${descLower}`.toLowerCase();
 
-    if (titleLower.includes('apartment') || titleLower.includes('flat') || subTypeLower.includes('apartment') || subTypeLower.includes('flat')) return 'Apartment';
-    if (titleLower.includes('villa') || subTypeLower.includes('villa')) return 'Villa';
-    if (titleLower.includes('house') || subTypeLower.includes('house')) return 'House';
-    if (titleLower.includes('pg') || titleLower.includes('hostel') || subTypeLower.includes('pg') || subTypeLower.includes('hostel')) return 'PG/Hostel';
+    if (titleLower.includes('apartment') || titleLower.includes('flat')) return 'Apartment';
+    if (titleLower.includes('villa')) return 'Villa';
+    if (titleLower.includes('house') || titleLower.includes('veedu') || titleLower.includes('home')) return 'House';
+    if (titleLower.includes('pg') || titleLower.includes('hostel')) return 'PG/Hostel';
+    if (titleLower.includes('plot') || titleLower.includes('land') || titleLower.includes('cent') || titleLower.includes('layout') || titleLower.includes('manai') || titleLower.includes('site')) {
+      return 'Plot';
+    }
+
+    if (subTypeLower.includes('apartment') || subTypeLower.includes('flat') || descLower.includes('apartment') || descLower.includes('flat')) return 'Apartment';
+    if (subTypeLower.includes('villa') || descLower.includes('villa')) return 'Villa';
+    if (subTypeLower.includes('house') || descLower.includes('independent house')) return 'House';
+    if (subTypeLower.includes('pg') || subTypeLower.includes('hostel')) return 'PG/Hostel';
     if (fullText.includes('plot') || fullText.includes('land') || fullText.includes('layout') || fullText.includes('cents') || fullText.includes('cent plot')) {
       return 'Plot';
     }
