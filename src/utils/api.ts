@@ -89,10 +89,14 @@ function saveLocalDB(db: LocalDB) {
   localStorage.setItem(DB_KEY, JSON.stringify(db));
 }
 
-// Reliable fetch helper with 15s timeout to support Vercel Serverless Function & Nodemailer SMTP response times
-async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs = 15000): Promise<Response> {
+// Reliable fetch helper with fast failover on mobile/local environments
+async function fetchWithTimeout(url: string, options: RequestInit = {}, timeoutMs?: number): Promise<Response> {
+  const isCapacitorOrLocal = typeof window !== 'undefined' && 
+    ((window as any).Capacitor?.isNativePlatform() || window.location.hostname === 'localhost');
+  const timeout = timeoutMs ?? (isCapacitorOrLocal ? 1500 : 12000);
+  
   const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
+  const timer = setTimeout(() => controller.abort(), timeout);
   try {
     return await fetch(url, { ...options, signal: controller.signal });
   } finally {

@@ -16,4 +16,4 @@ for (const name of readdirSync(dist)) {
   }
 }
 
-rmSync(dist, { recursive: true, force: true });
+// Preserve dist/ directory for Capacitor native mobile build and package assets

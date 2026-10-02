@@ -3,4 +3,8 @@ dist
 index.html
 .env
 scratch/
-
+*.apk
+*.aab
+android/.gradle
+android/app/build
+android/build

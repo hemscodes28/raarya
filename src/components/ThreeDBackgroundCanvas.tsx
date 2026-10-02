@@ -18,9 +18,14 @@ export function ThreeDBackgroundCanvas() {
     const camera = new THREE.PerspectiveCamera(55, width / height, 0.1, 1000);
     camera.position.z = 12;
 
-    const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true, powerPreference: 'high-performance' });
+    const isMobile = window.innerWidth < 768;
+    const renderer = new THREE.WebGLRenderer({ 
+      alpha: true, 
+      antialias: !isMobile, 
+      powerPreference: isMobile ? 'default' : 'high-performance' 
+    });
     renderer.setSize(width, height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, isMobile ? 1.2 : 2));
     renderer.domElement.style.position = 'absolute';
     renderer.domElement.style.top = '0';
     renderer.domElement.style.left = '0';
@@ -46,8 +51,8 @@ export function ThreeDBackgroundCanvas() {
     pointLight.position.set(0, 0, 8);
     scene.add(pointLight);
 
-    // 3. Minimal 3D Fluid Liquid Sphere
-    const sphereGeo = new THREE.IcosahedronGeometry(4.2, 32);
+    // 3. Minimal 3D Fluid Liquid Sphere (Optimized subdivision for mobile)
+    const sphereGeo = new THREE.IcosahedronGeometry(4.2, isMobile ? 8 : 18);
     const initialPositions = new Float32Array(sphereGeo.attributes.position.array);
 
     const sphereMat = new THREE.MeshStandardMaterial({
@@ -127,6 +132,7 @@ export function ThreeDBackgroundCanvas() {
 
     const animate = () => {
       animationFrameId = requestAnimationFrame(animate);
+      if (document.hidden) return;
       const time = clock.getElapsedTime();
 
       // Fluid Sine Wave Vertex Displacement (Smooth 3D liquid morph)
