@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
       - name: Checkout repository
@@ -35,15 +35,20 @@ jobs:
             -configuration Release \
             -sdk iphoneos \
             -derivedDataPath ./DerivedData \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_STYLE=Manual \
             CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
             CODE_SIGN_ENTITLEMENTS="" \
             PROVISIONING_PROFILE_SPECIFIER="" \
-            clean build
+            COMPILER_INDEX_STORE_ENABLE=NO \
+            build
 
-          # Find the compiled .app bundle
-          APP_PATH=$(find ./DerivedData -name "*.app" -type d | head -n 1)
+          APP_PATH=$(find ./DerivedData -name "App.app" -type d | head -n 1)
+          if [ -z "$APP_PATH" ]; then
+            APP_PATH=$(find ./DerivedData -name "*.app" -type d | head -n 1)
+          fi
+          
           if [ -z "$APP_PATH" ]; then
             echo "Error: .app file not found in DerivedData!"
             find ./DerivedData
@@ -51,7 +56,6 @@ jobs:
           fi
           echo "Found compiled app at: $APP_PATH"
 
-          # Package into IPA
           mkdir -p Payload
           cp -r "$APP_PATH" Payload/
           zip -r RaaryaProperties.ipa Payload/
