@@ -66,7 +66,7 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
   }
 
   const q = userQuery.trim().toLowerCase();
-  const cleanQ = q.replace(/[^\w\s]/g, '').trim();
+  const cleanQ = q.replace(/[^\w\s\u0B80-\u0BFF]/g, '').trim();
 
   const hasActivePropertyContext = Boolean(
     previousState &&
@@ -111,7 +111,12 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
     q.includes('property') || q.includes('properties') || q.includes('apartment') || q.includes('villa') ||
     q.includes('plot') || q.includes('bhk') || q.includes('lakh') || q.includes('crore') ||
     q.includes('emi') || q.includes('loan') || q.includes('show') || q.includes('under') ||
-    q.includes('search') || q.includes('find') || q.includes('more')
+    q.includes('search') || q.includes('find') || q.includes('more') ||
+    q.includes('பிளாட்') || q.includes('மனை') || q.includes('நிலம்') ||
+    q.includes('வீடு') || q.includes('வில்லா') || q.includes('காட்டு') ||
+    q.includes('இருக்கா') || q.includes('இடம்') || q.includes('edam') ||
+    q.includes('manai') || q.includes('irukka') || q.includes('kaatunga') ||
+    matchLocationFuzzy(q)
   );
 
   if ((isGreeting || isCasualChat || isHelp || isAcknowledgement) && !hasSearchKeyword) {
@@ -540,7 +545,12 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
     q.includes('plot') || q.includes('land') || q.includes('house') ||
     q.includes('commercial') || q.includes('bhk') || q.includes('bedroom') ||
     q.includes('show') || q.includes('find') || q.includes('search') ||
-    q.includes('properties in') || q.includes('looking for property')
+    q.includes('properties in') || q.includes('looking for property') ||
+    q.includes('பிளாட்') || q.includes('மனை') || q.includes('நிலம்') ||
+    q.includes('வீடு') || q.includes('வில்லா') || q.includes('காட்டு') ||
+    q.includes('இருக்கா') || q.includes('இடம்') || q.includes('edam') ||
+    q.includes('manai') || q.includes('irukka') || q.includes('kaatunga') ||
+    matchLocationFuzzy(q)
   );
 
   const maxLakhMatch = q.match(/(?:under|below|less\s+than|max|within|budget|around|keep\s*(?:it)?\s*(?:around|at)?|make\s*(?:it)?|bring\s*(?:it)?\s*(?:down)?\s*(?:to)?|about|up\s+to|cap\s+at|target|price)\s*₹?\s*(\d+(?:\.\d+)?)\s*(?:lakhs?|lacs?|l)\b/i);
@@ -587,13 +597,13 @@ export function detectIntentAndExtractFilters(userQuery, previousState = {}, act
     }
   }
 
-  // Property Type (Typo-Tolerant)
-  if (/app+art?m[ea]nt?s?|flats?|flts?/i.test(q)) propertyType = 'APARTMENT';
-  else if (/vil+as?|villah?s?|bungalows?/i.test(q)) propertyType = 'VILLA';
-  else if (/pl[oa]+ts?|lands?|layouts?|cents?|sites?/i.test(q)) propertyType = 'PLOT';
-  else if (/hous?e?s?|homes?|individual\s*house|independent\s*house/i.test(q) && !q.includes('home loan')) propertyType = 'HOUSE';
-  else if (/com+er+cial|office|shops?|showrooms?|buildings?/i.test(q)) propertyType = 'COMMERCIAL';
-  else if (/\bpg\b|hostels?|paying\s*guest/i.test(q)) propertyType = 'PG/HOSTEL';
+  // Property Type (Typo-Tolerant & Multi-Lingual)
+  if (/app+art?m[ea]nt?s?|flats?|flts?|அபார்ட்மெண்ட்/i.test(q)) propertyType = 'APARTMENT';
+  else if (/vil+as?|villah?s?|bungalows?|வில்லா/i.test(q)) propertyType = 'VILLA';
+  else if (/pl[oa]+ts?|lands?|layouts?|cents?|sites?|edam|manai|nilam|பிளாட்ஸ்?|பிளாட்|மனை|நிலம்|இடம்|சென்ட்/i.test(q)) propertyType = 'PLOT';
+  else if (/hous?e?s?|homes?|individual\s*house|independent\s*house|veedu|வீடு/i.test(q) && !q.includes('home loan')) propertyType = 'HOUSE';
+  else if (/com+er+cial|office|shops?|showrooms?|buildings?|கடைகள்/i.test(q)) propertyType = 'COMMERCIAL';
+  else if (/\bpg\b|hostels?|paying\s*guest|விடுதி/i.test(q)) propertyType = 'PG/HOSTEL';
 
   // Transaction Type
   if (q.includes('rent') || q.includes('lease') || q.includes('rental')) type = 'RENT';

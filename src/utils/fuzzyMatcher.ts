@@ -61,7 +61,7 @@ export function levenshteinDistance(a: string, b: string): number {
 
 export function matchLocationFuzzy(queryText: string): string | null {
   if (!queryText) return null;
-  const cleanLower = String(queryText).toLowerCase().replace(/[^\w\s]/g, ' ').trim();
+  const cleanLower = String(queryText).toLowerCase().replace(/[^\w\s\u0B80-\u0BFF]/g, ' ').trim();
   const words = cleanLower.split(/\s+/).filter(w => w.length >= 3 && !['the', 'and', 'for', 'are', 'in', 'near', 'plots', 'plot', 'villas', 'villa', 'house', 'houses', 'land', 'lands', 'apartment', 'apartments', 'buy', 'rent', 'pg', 'hostel', 'coimbatore', 'show', 'need'].includes(w));
 
   // 1. Direct Alias & Substring Match

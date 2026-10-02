@@ -340,18 +340,19 @@ We are hiring talented professionals across Coimbatore:
 
   // ─── 10. PROPERTY SEARCH & INVENTORY MATCHING (English, Tamil, Tanglish) ────
   const wantsApartment = Boolean(/app+art?m[ea]nt?s?|flats?|flts?|அபார்ட்மெண்ட்/i.test(query));
-  const wantsPlot = Boolean(/pl[oa]+ts?|lands?|cents?|layouts?|sites?|edam|manai|nilam|பிளாட்|மனை|நிலம்|இடம்/i.test(query));
+  const wantsPlot = Boolean(/pl[oa]+ts?|lands?|cents?|layouts?|sites?|edam|manai|nilam|பிளாட்ஸ்?|பிளாட்|மனை|நிலம்|இடம்|சென்ட்/i.test(query));
   const wantsVilla = Boolean(/vil+as?|villah?s?|bungalows?|வில்லா/i.test(query));
   const wantsHouse = Boolean(/hous?e?s?|homes?|veedu|individual\s*house|independent\s*house|வீடு/i.test(query) && !query.includes('home loan'));
   const wantsCommercial = Boolean(/com+er+cial|office|shops?|showrooms?|buildings?|கடைகள்/i.test(query));
-  const wantsPg = Boolean(/\bpg\b|hostels?|paying\s*guest/i.test(query));
+  const wantsPg = Boolean(/\bpg\b|hostels?|paying\s*guest|விடுதி/i.test(query));
   const wantsGeneral = Boolean(/propert(?:y|ies|ys|is)|real\s*estate|listings?|spaces?|சொத்துக்கள்/i.test(query));
-  const hasActionVerb = Boolean(/list|show|find|search|give|tell|get|display|view|check|see|any|looking|want|need|kaatunga|sollunga|venum|irukka|paakkanum|காட்டு|சொல்லு/i.test(query));
+  const hasActionVerb = Boolean(/list|show|find|search|give|tell|get|display|view|check|see|any|looking|want|need|kaatunga|sollunga|venum|irukka|paakkanum|காட்டு|சொல்லு|இருக்கா/i.test(query));
   const fuzzyLoc = matchLocationFuzzy(query);
   const mentionsCoimbatore = Boolean(query.includes('coimbatore') || query.includes('cbe') || query.includes('kovai') || query.includes('கோவை') || query.includes('கோயம்புத்தூர்'));
 
   const isExplicitPropertySearch = Boolean(
     wantsApartment || wantsPlot || wantsVilla || wantsHouse || wantsCommercial || wantsPg ||
+    Boolean(fuzzyLoc) ||
     (wantsGeneral && (hasActionVerb || fuzzyLoc || mentionsCoimbatore)) ||
     ((fuzzyLoc || mentionsCoimbatore) && (hasActionVerb || query.includes('in') || query.includes('at') || query.includes('near') || query.includes('la') || wantsGeneral))
   );
