@@ -39,23 +39,40 @@ export class LocalPropertyRepository {
 
   loadProperties() {
     try {
-      const projectRoot = path.join(__dirname, '..');
-      
+      const candidates = [
+        path.join(__dirname, '..'),
+        process.cwd(),
+        path.join(process.cwd(), 'server', '..'),
+        __dirname
+      ];
+
       // Load user database properties
-      const userDbPath = path.join(projectRoot, 'user_database.json');
       let dbProps = [];
-      if (fs.existsSync(userDbPath)) {
-        const raw = fs.readFileSync(userDbPath, 'utf8');
-        const db = JSON.parse(raw || '{}');
-        dbProps = db.properties || [];
+      for (const root of candidates) {
+        const userDbPath = path.join(root, 'user_database.json');
+        if (fs.existsSync(userDbPath)) {
+          try {
+            const raw = fs.readFileSync(userDbPath, 'utf8');
+            const db = JSON.parse(raw || '{}');
+            dbProps = db.properties || [];
+            if (dbProps.length > 0) break;
+          } catch (_) {}
+        }
       }
 
       // Load extracted properties
-      const extractedPath = path.join(projectRoot, 'src', 'data', 'extracted_properties.json');
       let extractedProps = [];
-      if (fs.existsSync(extractedPath)) {
-        const raw = fs.readFileSync(extractedPath, 'utf8');
-        extractedProps = JSON.parse(raw || '[]');
+      for (const root of candidates) {
+        const extractedPath = path.join(root, 'src', 'data', 'extracted_properties.json');
+        const altPath = path.join(root, 'extracted_properties.json');
+        const targetPath = fs.existsSync(extractedPath) ? extractedPath : fs.existsSync(altPath) ? altPath : null;
+        if (targetPath) {
+          try {
+            const raw = fs.readFileSync(targetPath, 'utf8');
+            extractedProps = JSON.parse(raw || '[]');
+            if (extractedProps.length > 0) break;
+          } catch (_) {}
+        }
       }
 
       // Combine and deduplicate
