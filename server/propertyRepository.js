@@ -312,10 +312,10 @@ export class LocalPropertyRepository {
     // 6. Fuzzy Location filter
     const locInput = String(filters.locality || filters.city || filters.location || '').toLowerCase().trim();
     const fuzzyTarget = matchLocationFuzzy(locInput || queryText);
-    if (fuzzyTarget) {
-      candidates = candidates.filter(p => isFuzzyMatch(p.fullText, fuzzyTarget) || isFuzzyMatch(p.location, fuzzyTarget));
+    if (fuzzyTarget && fuzzyTarget.toLowerCase() !== 'coimbatore') {
+      candidates = candidates.filter(p => isFuzzyMatch(p.location, fuzzyTarget) || isFuzzyMatch(p.title, fuzzyTarget));
     } else if (locInput && locInput !== 'coimbatore') {
-      candidates = candidates.filter(p => isFuzzyMatch(p.fullText, locInput) || isFuzzyMatch(p.location, locInput));
+      candidates = candidates.filter(p => isFuzzyMatch(p.location, locInput) || isFuzzyMatch(p.title, locInput));
     }
 
     // 7. Amenities filter

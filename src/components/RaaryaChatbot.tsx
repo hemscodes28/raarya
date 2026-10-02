@@ -25,6 +25,7 @@ import { PROPERTIES, PropertyListing } from '../constants';
 import { PropertyCard } from './PropertyCard';
 import { PropertyDetailModal } from './PropertyDetailModal';
 import { normalizeSpeechText } from '../utils/speechNormalizer';
+import { matchLocationFuzzy } from '../utils/fuzzyMatcher';
 
 interface RaaryaChatbotProps {
   isOpen: boolean;
@@ -215,25 +216,44 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       const recognition = new SpeechRecognition();
       recognition.continuous = false;
       recognition.interimResults = true;
+      recognition.maxAlternatives = 5;
       recognition.lang = voiceLang; // 'en-IN' (English & Tanglish) or 'ta-IN' (Pure Tamil)
 
       recognition.onstart = () => {
         setIsListening(true);
         if (voiceLang === 'ta-IN') {
-          setVoiceNotice('🎙️ கேட்கிறேன்... தமிழில் பேசுங்கள் (Listening in Tamil...)');
+          setVoiceNotice('🎙️ கேட்கிறேன்... தமிழில் சாதாரணமாக பேசுங்கள் (Listening in Tamil...)');
         } else {
-          setVoiceNotice('🎙️ Listening... Speak your query in English or Tanglish.');
+          setVoiceNotice('🎙️ Listening... Speak naturally in English, Tamil, or Tanglish.');
         }
       };
 
       recognition.onresult = (event: any) => {
         let transcript = '';
         for (let i = event.resultIndex; i < event.results.length; i++) {
-          transcript += event.results[i][0].transcript;
+          const res = event.results[i];
+          if (!res || res.length === 0) continue;
+
+          // Pick the best hypothesis across alternatives that matches Coimbatore locations or real-estate intents
+          let bestCandidate = res[0].transcript;
+          for (let j = 0; j < res.length; j++) {
+            const alt = res[j].transcript;
+            const normalizedAlt = normalizeSpeechText(alt);
+            if (
+              matchLocationFuzzy(normalizedAlt) ||
+              /\b(plots?|villas?|flats?|lands?|houses?|bhk|dtcp|rera|emi|loan|irukka|venum|kaatunga|sollunga)\b/i.test(normalizedAlt)
+            ) {
+              bestCandidate = alt;
+              break;
+            }
+          }
+          transcript += bestCandidate;
         }
+
         if (transcript) {
           const normalized = normalizeSpeechText(transcript);
           setInputValue(normalized);
+          adjustTextareaHeight(activeTextareaRef.current || freshTextareaRef.current);
         }
       };
 
@@ -244,7 +264,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
         } else if (event.error === 'no-speech') {
           setVoiceNotice('No speech detected. Tap the mic to try again.');
         } else {
-          setVoiceNotice(`Voice recognition error (${event.error}).`);
+          setVoiceNotice(`Voice recognition (${event.error}).`);
         }
         setIsListening(false);
         setTimeout(() => setVoiceNotice(null), 4000);
@@ -253,11 +273,11 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       recognition.onend = () => {
         setIsListening(false);
         if (voiceLang === 'ta-IN') {
-          setVoiceNotice('✅ தமிழில் பதிவு செய்யப்பட்டது! Press Enter or Send.');
+          setVoiceNotice('✅ பதிவு செய்யப்பட்டது! Press Enter or Send.');
         } else {
-          setVoiceNotice('✅ Query captured! Review your message and press Enter or Send.');
+          setVoiceNotice('✅ Captured! Review message or press Send.');
         }
-        setTimeout(() => setVoiceNotice(null), 3500);
+        setTimeout(() => setVoiceNotice(null), 3000);
       };
 
       recognitionRef.current = recognition;

@@ -5,23 +5,35 @@ export function normalizeSpeechText(rawText: string): string {
 
   let text = rawText.trim();
 
-  // 1. Property Type Phonetic Corrections
-  text = text.replace(/\b(lords|lord|bloats|plants|plts|lots|plotz|bloat)\b/gi, 'plots');
-  text = text.replace(/\b(wheelas|willa|willas|villah|villaz|wila|willy)\b/gi, 'villas');
-  text = text.replace(/\b(flight|flights|flts)\b/gi, 'flats');
-  text = text.replace(/\b(lnd|lends)\b/gi, 'land');
+  // 1. Common acoustic composite errors when speaking casually (e.g., "signal love plots" -> "Singanallur la plots")
+  text = text.replace(/\b(signal\s*love|signal\s*lord|signallur\s*love|signal\s*law|signal\s*lock)\b/gi, 'Singanallur la');
+  text = text.replace(/\b(saravanampatti\s*love|saravampatti\s*love|saravana\s*patti\s*love)\b/gi, 'Saravanampatti la');
+  text = text.replace(/\b(annur\s*love|anur\s*love|annoor\s*love)\b/gi, 'Annur la');
+  text = text.replace(/\b(vadavalli\s*love|vadavali\s*love)\b/gi, 'Vadavalli la');
+  text = text.replace(/\b(peelamedu\s*love|pelamedu\s*love)\b/gi, 'Peelamedu la');
+  text = text.replace(/\b(sulur\s*love|suloor\s*love)\b/gi, 'Sulur la');
 
-  // 2. Tanglish & Spoken Action Words Phonetic Corrections
-  text = text.replace(/\b(sirrika|sirika|sirikah|eruka|erukka|rika|irruka|irukkaa|irukaa|iruku)\b/gi, 'irukka');
-  text = text.replace(/\b(winum|waynum|veenum|venumaa|venum)\b/gi, 'venum');
-  text = text.replace(/\b(cottunga|kattunga|kaatu|katunga|katuga)\b/gi, 'kaatunga');
+  // 2. Property Type Phonetic Corrections (capturing soft/casual speech variations)
+  text = text.replace(/\b(lords|lord|bloats|bloat|plants|plant|plts|lots|lot|plotz|flots)\b/gi, 'plots');
+  text = text.replace(/\b(wheelas|wheela|willa|willas|villah|villaz|wila|willy)\b/gi, 'villas');
+  text = text.replace(/\b(flight|flights|flts)\b/gi, 'flats');
+  text = text.replace(/\b(horses|horse)\b/gi, 'houses');
+  text = text.replace(/\b(lnd|lends|lend)\b/gi, 'land');
+
+  // 3. Tanglish & Spoken Action Words Phonetic Corrections (for normal unstrained voice)
+  text = text.replace(/\b(sirrika|sirika|sirikah|sirikatha|eruka|erukka|rika|rica|erica|irruka|irukkaa|irukaa|iruku|irukku|irukura)\b/gi, 'irukka');
+  text = text.replace(/\b(winum|waynum|veenum|venumaa|venuma|venuum)\b/gi, 'venum');
+  text = text.replace(/\b(cottunga|kattunga|kaatu|kattu|katunga|katuga|kattungaa)\b/gi, 'kaatunga');
   text = text.replace(/\b(solu|solunga|solungaa|sollu)\b/gi, 'sollunga');
+  text = text.replace(/\b(pakanum|paakanum|paakanum|parkanum)\b/gi, 'paakkanum');
+  text = text.replace(/\b(koola|coola|gulla|kula|ulla|ulle)\b/gi, 'kulla');
   text = text.replace(/\b(wanakkam|vanakam|vankkam)\b/gi, 'vanakkam');
   text = text.replace(/\b(epdi|ipdi|eppadi)\b/gi, 'eppadi');
-  text = text.replace(/\b(irukingala|irukeengala|irukura)\b/gi, 'irukinga');
+  text = text.replace(/\b(irukingala|irukeengala)\b/gi, 'irukinga');
+  text = text.replace(/\b(kedaikuma|kedaikkuma|kedaikumaa|kadikuma)\b/gi, 'kedaikuma');
 
-  // 3. Coimbatore Locality Phonetic Normalizations
-  text = text.replace(/\b(siganallur|singanllur|singanallor|singanaloor|singanalloor|singanalluru|singanellur|singanallur)\b/gi, 'Singanallur');
+  // 4. Coimbatore Locality Phonetic Normalizations
+  text = text.replace(/\b(siganallur|signallur|signalur|singanllur|singanallor|singanaloor|singanalloor|singanalluru|singanellur)\b/gi, 'Singanallur');
   text = text.replace(/\b(saravanampaty|saravampatti|saravana\s*patti|sharavanampatti|sharavana\s*patti|saravanapatti)\b/gi, 'Saravanampatti');
   text = text.replace(/\b(anur|annoor|anoor|annor)\b/gi, 'Annur');
   text = text.replace(/\b(gandipuram|gandi\s*puram|gandhi\s*puram)\b/gi, 'Gandhipuram');
@@ -39,6 +51,7 @@ export function normalizeSpeechText(rawText: string): string {
   text = text.replace(/\b(sullur|suloor)\b/gi, 'Sulur');
   text = text.replace(/\b(ondipudr|ondiputhur|ondi\s*pudur)\b/gi, 'Ondipudur');
   text = text.replace(/\b(kittam\s*palayam|kittampalayam)\b/gi, 'Kittampalayam');
+  text = text.replace(/\b(kurumba\s*palayam|kurumbapalayam)\b/gi, 'Kurumbapalayam');
   text = text.replace(/\b(arasr|arasur)\b/gi, 'Arasur');
 
   return text;

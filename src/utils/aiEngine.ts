@@ -1,5 +1,6 @@
 import { PROPERTIES } from '../constants';
 import { matchLocationFuzzy, isFuzzyMatch } from './fuzzyMatcher';
+import { normalizeSpeechText } from './speechNormalizer';
 
 export interface AiResponseObject {
   message: string;
@@ -9,7 +10,8 @@ export interface AiResponseObject {
 }
 
 export function generateAiResponseObject(userQuery: string): AiResponseObject {
-  const query = (userQuery || '').toLowerCase().trim();
+  const normalizedRaw = normalizeSpeechText(userQuery || '');
+  const query = (normalizedRaw || '').toLowerCase().trim();
   const cleanQ = query.replace(/[^\w\s\u0B80-\u0BFF]/g, ' ').replace(/\s+/g, ' ').trim();
 
   const isTamilScript = /[\u0B80-\u0BFF]/.test(userQuery);
@@ -359,9 +361,11 @@ We are hiring talented professionals across Coimbatore:
 
     // 1. Strict Location Filter (if specific locality is requested)
     if (fuzzyLoc && fuzzyLoc.toLowerCase() !== 'coimbatore') {
+      const locTarget = fuzzyLoc.toLowerCase();
       filtered = filtered.filter((p: any) => {
-        const text = `${p.location || ''} ${p.title || ''} ${p.description || ''}`.toLowerCase();
-        return isFuzzyMatch(text, fuzzyLoc) || isFuzzyMatch(p.location, fuzzyLoc);
+        const loc = (p.location || '').toLowerCase();
+        const title = (p.title || '').toLowerCase();
+        return isFuzzyMatch(loc, locTarget) || isFuzzyMatch(title, locTarget);
       });
     }
 
