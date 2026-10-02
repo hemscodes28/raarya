@@ -12,6 +12,10 @@ export function normalizeSpeechText(rawText: string): string {
   text = text.replace(/\b(vadavalli\s*love|vadavali\s*love)\b/gi, 'Vadavalli la');
   text = text.replace(/\b(peelamedu\s*love|pelamedu\s*love)\b/gi, 'Peelamedu la');
   text = text.replace(/\b(sulur\s*love|suloor\s*love)\b/gi, 'Sulur la');
+  text = text.replace(/\b(sirumugai\s*love|sirumugai\s*lord)\b/gi, 'Sirumugai la');
+  text = text.replace(/\b(thekkalur\s*love|thekkalur\s*lord)\b/gi, 'Thekkalur la');
+  text = text.replace(/\b(nellambur\s*love|neelambur\s*love|nellambur\s*lord|neelambur\s*lord)\b/gi, 'Neelambur la');
+  text = text.replace(/\b(kalapatti\s*love|kalapatti\s*lord)\b/gi, 'Kalapatti la');
 
   // 2. Property Type Phonetic Corrections (capturing soft/casual speech variations)
   text = text.replace(/\b(lords|lord|bloats|bloat|plants|plant|plts|lots|lot|plotz|flots)\b/gi, 'plots');
@@ -25,7 +29,7 @@ export function normalizeSpeechText(rawText: string): string {
   text = text.replace(/\b(winum|waynum|veenum|venumaa|venuma|venuum)\b/gi, 'venum');
   text = text.replace(/\b(cottunga|kattunga|kaatu|kattu|katunga|katuga|kattungaa)\b/gi, 'kaatunga');
   text = text.replace(/\b(solu|solunga|solungaa|sollu)\b/gi, 'sollunga');
-  text = text.replace(/\b(pakanum|paakanum|paakanum|parkanum)\b/gi, 'paakkanum');
+  text = text.replace(/\b(pakanum|paakanum|parkanum)\b/gi, 'paakkanum');
   text = text.replace(/\b(koola|coola|gulla|kula|ulla|ulle)\b/gi, 'kulla');
   text = text.replace(/\b(wanakkam|vanakam|vankkam)\b/gi, 'vanakkam');
   text = text.replace(/\b(epdi|ipdi|eppadi)\b/gi, 'eppadi');
@@ -36,6 +40,12 @@ export function normalizeSpeechText(rawText: string): string {
   text = text.replace(/\b(siganallur|signallur|signalur|singanllur|singanallor|singanaloor|singanalloor|singanalluru|singanellur)\b/gi, 'Singanallur');
   text = text.replace(/\b(saravanampaty|saravampatti|saravana\s*patti|sharavanampatti|sharavana\s*patti|saravanapatti)\b/gi, 'Saravanampatti');
   text = text.replace(/\b(anur|annoor|anoor|annor)\b/gi, 'Annur');
+  text = text.replace(/\b(nellambur|neelamboor|nellamboor|neelambur\s*bypass|nellam\s*pur)\b/gi, 'Neelambur');
+  text = text.replace(/\b(kalapatty|kala\s*patti)\b/gi, 'Kalapatti');
+  text = text.replace(/\b(echanari|eechanari|eachanari)\b/gi, 'Eachanari');
+  text = text.replace(/\b(vellalor|vella\s*lore)\b/gi, 'Vellalore');
+  text = text.replace(/\b(malumichampatty|malumicham\s*patti)\b/gi, 'Malumichampatti');
+  text = text.replace(/\b(madukari|maduka\s*rai)\b/gi, 'Madukkarai');
   text = text.replace(/\b(gandipuram|gandi\s*puram|gandhi\s*puram)\b/gi, 'Gandhipuram');
   text = text.replace(/\b(vadavali|vadavally|vada\s*valli|vadavli)\b/gi, 'Vadavalli');
   text = text.replace(/\b(pelamedu|pilamedu|pela\s*medu|peela\s*medu)\b/gi, 'Peelamedu');

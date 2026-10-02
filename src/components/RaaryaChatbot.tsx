@@ -122,7 +122,6 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
   const [selectedPropertyModal, setSelectedPropertyModal] = useState<PropertyListing | null>(null);
   const [isListening, setIsListening] = useState(false);
   const [voiceNotice, setVoiceNotice] = useState<string | null>(null);
-  const [voiceLang, setVoiceLang] = useState<'en-IN' | 'ta-IN'>('en-IN');
   const sessionIdRef = useRef<string>('sess_' + Math.random().toString(36).substring(2, 10));
   const recognitionRef = useRef<any>(null);
   const [currentQuote, setCurrentQuote] = useState(() => 
@@ -217,15 +216,11 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
       recognition.continuous = false;
       recognition.interimResults = true;
       recognition.maxAlternatives = 5;
-      recognition.lang = voiceLang; // 'en-IN' (English & Tanglish) or 'ta-IN' (Pure Tamil)
+      recognition.lang = 'en-IN'; // Multi-lingual Indian acoustic engine for English, Tamil & Tanglish
 
       recognition.onstart = () => {
         setIsListening(true);
-        if (voiceLang === 'ta-IN') {
-          setVoiceNotice('🎙️ கேட்கிறேன்... தமிழில் சாதாரணமாக பேசுங்கள் (Listening in Tamil...)');
-        } else {
-          setVoiceNotice('🎙️ Listening... Speak naturally in English, Tamil, or Tanglish.');
-        }
+        setVoiceNotice('🎙️ Auto-Detecting... Speak normally in Tamil, English, or Tanglish');
       };
 
       recognition.onresult = (event: any) => {
@@ -272,11 +267,7 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
 
       recognition.onend = () => {
         setIsListening(false);
-        if (voiceLang === 'ta-IN') {
-          setVoiceNotice('✅ பதிவு செய்யப்பட்டது! Press Enter or Send.');
-        } else {
-          setVoiceNotice('✅ Captured! Review message or press Send.');
-        }
+        setVoiceNotice('✅ Captured! Tap Send or review query.');
         setTimeout(() => setVoiceNotice(null), 3000);
       };
 
@@ -628,32 +619,10 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                           Chat
                         </span>
 
-                        {/* Language Selector Switch */}
-                        <div className="flex items-center bg-[#EAE6DF] p-0.5 rounded-lg border border-[#D5D0C5] text-[11px] font-semibold select-none">
-                          <button
-                            type="button"
-                            onClick={() => setVoiceLang('en-IN')}
-                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                              voiceLang === 'en-IN'
-                                ? 'bg-[#D97757] text-white shadow-2xs'
-                                : 'text-[#4A463F] hover:text-[#D97757]'
-                            }`}
-                            title="English & Tanglish (தமிழ் in English words)"
-                          >
-                            EN / Tanglish
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setVoiceLang('ta-IN')}
-                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                              voiceLang === 'ta-IN'
-                                ? 'bg-[#D97757] text-white shadow-2xs'
-                                : 'text-[#4A463F] hover:text-[#D97757]'
-                            }`}
-                            title="Tamil (தமிழ் எழுத்துக்கள்)"
-                          >
-                            தமிழ்
-                          </button>
+                        {/* Auto-Detect Language Badge */}
+                        <div className="flex items-center bg-[#EAE6DF] px-2.5 py-1 rounded-lg border border-[#D5D0C5] text-[11px] font-semibold text-[#4A463F] select-none shadow-2xs gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] animate-pulse" />
+                          <span>Auto-Detect (EN / தமிழ் / Tanglish)</span>
                         </div>
                       </div>
 
@@ -990,32 +959,10 @@ export function RaaryaChatbot({ isOpen, onClose }: RaaryaChatbotProps) {
                           Raarya Verified Database
                         </span>
 
-                        {/* Language Selector Switch */}
-                        <div className="flex items-center bg-[#EAE6DF] p-0.5 rounded-lg border border-[#D5D0C5] text-[11px] font-semibold select-none">
-                          <button
-                            type="button"
-                            onClick={() => setVoiceLang('en-IN')}
-                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                              voiceLang === 'en-IN'
-                                ? 'bg-[#D97757] text-white shadow-2xs'
-                                : 'text-[#4A463F] hover:text-[#D97757]'
-                            }`}
-                            title="English & Tanglish (தமிழ் in English words)"
-                          >
-                            EN / Tanglish
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => setVoiceLang('ta-IN')}
-                            className={`px-2 py-0.5 rounded-md transition-all cursor-pointer ${
-                              voiceLang === 'ta-IN'
-                                ? 'bg-[#D97757] text-white shadow-2xs'
-                                : 'text-[#4A463F] hover:text-[#D97757]'
-                            }`}
-                            title="Tamil (தமிழ் எழுத்துக்கள்)"
-                          >
-                            தமிழ்
-                          </button>
+                        {/* Auto-Detect Language Badge */}
+                        <div className="flex items-center bg-[#EAE6DF] px-2 py-0.5 rounded-lg border border-[#D5D0C5] text-[10.5px] font-semibold text-[#4A463F] select-none shadow-2xs gap-1.5">
+                          <span className="w-1.5 h-1.5 rounded-full bg-[#D97757] animate-pulse" />
+                          <span>Auto-Detect (EN / தமிழ் / Tanglish)</span>
                         </div>
                       </div>
 
